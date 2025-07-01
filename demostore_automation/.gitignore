@@ -16,6 +16,8 @@ dist/
 venv/
 env/
 .venv/
+pytest_venv/
+
 
 # VS Code settings
 .vscode/
