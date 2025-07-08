@@ -12,6 +12,9 @@ class SeleniumExtended:
         self.driver = driver
         self.default_timeout = 5
 
+    def go_to_url(self, url):
+        self.driver.get(url)
+
     def wait_and_input_text(self, locator, text, timeout=None):
         timeout = timeout if timeout else self.default_timeout
 
