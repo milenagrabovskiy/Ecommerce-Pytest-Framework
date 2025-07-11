@@ -9,8 +9,7 @@ class TestProductDescriptionPageVariableProduct:
 
     @pytest.fixture(scope="class")
     def setup(self, request):
-        """
-          Class-level fixture that prepares test data and navigates to the product page.
+        """Class-level fixture that prepares test data and navigates to the product page.
 
           - Sets expected product name and ID.
           - Fetches product image URLs from the WooCommerce API.
@@ -34,10 +33,16 @@ class TestProductDescriptionPageVariableProduct:
     @pytest.mark.efe27
     @pytest.mark.ecomfe124
     def test_verify_product_name_displayed_variable_product(self, setup):
-        """
-        This test verifies that the product name (h1 header) for a variable product is displayed.
-        The variable product is hardcoded in order to keep the test frontend only.
+        """Verify that the product name (h1 header) is correctly displayed for a variable product.
 
+        This test checks that the displayed product name on the frontend matches the expected value
+        for a known variable product. The product is hardcoded to keep the test frontend-only.
+
+        Args:
+            setup: A pytest fixture that sets up the test environment and necessary page objects.
+
+        Raises:
+            AssertionError: If the displayed product name does not match the expected name.
         """
         logger.info("Starting test: 'test_verify_product_name_displayed_variable_product'")
 
@@ -53,8 +58,17 @@ class TestProductDescriptionPageVariableProduct:
     @pytest.mark.efe28
     @pytest.mark.ecom125
     def test_verify_main_image_variable_prod(self, setup):
-        """
-            Verifies the main product image on the frontend matches one returned by the API.
+        """Verify that the main product image on the frontend matches the one returned by the API.
+
+        This test fetches the displayed product image URL from the frontend and compares it
+        against a list of image URLs retrieved from the API. It also checks that the displayed
+        URL is valid (i.e., starts with 'http' and ends with '.jpg').
+
+        Args:
+            setup: A pytest fixture that sets up the browser and test environment.
+
+        Raises:
+            AssertionError: If the image URL is invalid or does not match any from the API.
         """
         logger.info("Starting test: 'test_verify_main_image_variable_prod'")
 
@@ -64,7 +78,7 @@ class TestProductDescriptionPageVariableProduct:
         #verify url is valid
         assert displayed_image_url.startswith('http') and displayed_image_url.endswith('.jpg'), \
             "Invalid image url. Must start with 'http' and end with '.jpg'"
-
+        #verify api contains url of displayed image
         assert displayed_image_url in self.api_image_urls, "Displayed image url not found in api"
 
 
@@ -72,11 +86,18 @@ class TestProductDescriptionPageVariableProduct:
     @pytest.mark.efe29
     @pytest.mark.ecom126
     def test_verify_alternate_images_variable_prod(self, setup):
-        """
-           Verifies that all alternate product images displayed on the frontend
-           match the image URLs returned by the WooCommerce API.
+        """Verify that all alternate product images on the frontend match the API response.
 
-           This comparison ignores the order of images but requires an exact URL match.
+        This test retrieves all alternate product image URLs displayed on the frontend
+        and compares them to the image URLs returned by the WooCommerce API.
+
+        The comparison ignores the order of images but requires exact URL matches.
+
+        Args:
+            setup: A pytest fixture that initializes the test environment and page objects.
+
+        Raises:
+            AssertionError: If the displayed alternate image URLs do not match the API URLs.
         """
         logger.info("Starting test: 'test_verify_alternate_images_variable_prod'")
 

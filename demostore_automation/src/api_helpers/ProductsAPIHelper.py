@@ -22,6 +22,7 @@ class ProductsAPIHelper:
             
             all_products.extend(api_response)
 
+            # The last page is reached when there are less than 100 products per page. Break the loop.
             if len(api_response) < per_page:
                 break
 
