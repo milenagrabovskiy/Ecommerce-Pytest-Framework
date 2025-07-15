@@ -29,7 +29,7 @@ def test_get_product_by_id():
 
     # make the api call
     product_helper = ProductsAPIHelper()
-    rs_api = product_helper.call_get_product_py_id(product_id)
+    rs_api = product_helper.call_get_product_by_id(product_id)
 
     assert rs_api['id'] == product_id, f"Get product call. Id in request does not match id in response."
     assert rs_api['slug'] == product_name, f'name mismatch'
