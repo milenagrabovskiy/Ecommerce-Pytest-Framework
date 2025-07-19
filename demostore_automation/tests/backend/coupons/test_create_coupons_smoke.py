@@ -10,7 +10,7 @@ Attributes:
 """
 import pytest
 import logging as logger
-from demostore_automation.src.utilities.genericUtilities import generate_random_coupon_code
+from demostore_automation.src.utilities.genericUtilities import generate_random_string
 from demostore_automation.src.api_helpers.CouponAPIHelper import CouponAPIHelper
 
 pytestmark = [pytest.mark.coupon_api]
@@ -21,7 +21,7 @@ def setup_teardown():
 
     Yields:
         dict: A dictionary containing the CouponAPIHelper instance under
-            the key 'coupon_api_helper'.
+            the key 'coupon_api_helper' and 'coupon_ids'
 
     Cleanup:
         Deletes any coupons created during the tests by deleting coupon IDs
@@ -29,22 +29,25 @@ def setup_teardown():
     """
 
     coupon_api_helper = CouponAPIHelper()
-    coupon_ids = [] # collects
+    coupon_ids = [] # collects coupon ids for teardown
 
     info = {
-        "coupon_api_helper": coupon_api_helper
+        "coupon_api_helper": coupon_api_helper,
+        "coupon_ids": coupon_ids
     }
 
     yield info
 
+    deleted = []
     for coupon_id in coupon_ids:
         try:
-            coupon_api_helper.delete(coupon_id)
+            coupon_api_helper.call_delete_coupon(coupon_id)
+            deleted.append(coupon_id)
 
         except Exception as e:
             logger.warning(f"ERROR: {e}. Unable to delete coupon id: {coupon_id}")
 
-    logger.info(f"Deleted coupon ids: {coupon_ids}")
+    logger.info(f"Deleted coupon ids: {deleted}")
 
 
 @pytest.mark.parametrize(
@@ -72,7 +75,7 @@ def test_create_coupon_with_discount_type(setup_teardown, discount_type):
     logger.info(f"Running test: 'test_create_coupon_with_valid_discount_types' for '{discount_type}'")
 
     coupon_api_helper = setup_teardown["coupon_api_helper"]
-    coupon_code = generate_random_coupon_code()
+    coupon_code = generate_random_string("automation")
     amount = "100.00"
     expected_discount_type = discount_type if discount_type else "fixed_cart"
 
@@ -130,7 +133,7 @@ def test_create_coupon_invalid_discount_type(setup_teardown):
     logger.info("Running test: 'test_create_coupon_invalid_discount_type'")
     # need to generate random coupon code each time or api call will fail
     coupon_api_helper = setup_teardown["coupon_api_helper"]
-    coupon_code = generate_random_coupon_code()
+    coupon_code = generate_random_string()
     amount = "50.00"
     discount_type = "free_cart" # invalid option hardcoded for negative test
     payload = {
