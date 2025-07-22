@@ -144,16 +144,27 @@ def test_create_coupon_invalid_discount_type(setup_teardown):
     # make api call
     response = coupon_api_helper.call_create_coupon(payload, expected_status_code=400)
 
-    expected_failure_response = {'code': 'rest_invalid_param',
- 'data': {'details': {'discount_type': {'code': 'rest_not_in_enum',
-                                        'data': None,
-                                        'message': 'discount_type is not one '
-                                                   'of percent, fixed_cart, '
-                                                   'and fixed_product.'}},
-          'params': {'discount_type': 'discount_type is not one of percent, '
-                                      'fixed_cart, and fixed_product.'},
-          'status': 400},
- 'message': 'Invalid parameter(s): discount_type'}
+    expected_failure_response = {
+        "code": "rest_invalid_param",
+        "message": "Invalid parameter(s): discount_type",
+        "data": {
+            "status": 400,
+            "params": {
+                "discount_type": (
+                    "discount_type is not one of percent, fixed_cart, and fixed_product."
+                )
+            },
+            "details": {
+                "discount_type": {
+                    "code": "rest_not_in_enum",
+                    "message": (
+                        "discount_type is not one of percent, fixed_cart, and fixed_product."
+                    ),
+                    "data": None
+                }
+            }
+        }
+    }
 
     # POST api assertion
     assert response == expected_failure_response, (f"Create coupon with invalid discount_type returned unexpected response."

@@ -3,24 +3,53 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# C extensions
+*.so
+
 # Distribution / packaging
 build/
 dist/
 *.egg-info/
-
-# Environment variables & secrets
-.env
-*.env
+.eggs/
+pip-wheel-metadata/
 
 # Virtual environments
 venv/
 env/
 .venv/
 pytest_venv/
+my_venv/
 
+# Python environment & secrets
+.env
+.env.*
+*.env
 
-# VS Code settings
+# IDE settings
 .vscode/
+.idea/
+*.iml
 
 # macOS files
 .DS_Store
+
+# Unit test / coverage / lint
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+.coverage
+.pytest_cache/
+.cache/
+
+# Type checkers & linters
+.mypy_cache/
+.pyright/
+.pyre/
+.bandit/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Logs
+*.log
