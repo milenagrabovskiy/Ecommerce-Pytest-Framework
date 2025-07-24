@@ -30,4 +30,10 @@ class ProductsAPIHelper:
             
         return all_products
 
-        
+
+    def call_create_product(self, payload):
+        return self.woo_api_utility.post("products", params=payload, expected_status_code=201)
+
+
+    def call_delete_product(self, product_id):
+        return self.woo_api_utility.delete(f"products/{product_id}")
