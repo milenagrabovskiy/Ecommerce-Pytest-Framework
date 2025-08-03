@@ -5,6 +5,8 @@ import logging as logger
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChOptions
 from selenium.webdriver.firefox.options import Options as FFOptions
+from selenium.webdriver.firefox.service import Service as FFService
+
 
 
 @pytest.fixture(scope="class")
@@ -69,7 +71,8 @@ def init_driver(request):
         ff_options.add_argument("--disable-gpu")
         ff_options.add_argument("--no-sandbox")
         ff_options.add_argument("--headless")
-        driver = webdriver.Firefox(options=ff_options)
+        service = FFService(executable_path="/usr/local/bin/geckodriver")
+        driver = webdriver.Firefox(service=service, options=ff_options)
 
     logger.debug("############### BROWSER INFORMATION #####################")
     for k, v in driver.capabilities.items():
