@@ -5,19 +5,20 @@ import logging as logger
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChOptions
 from selenium.webdriver.firefox.options import Options as FFOptions
-from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.service import Service as FFService
+
 
 
 @pytest.fixture(scope="class")
 def init_driver(request):
 
-    supported_browsers = ['chrome', 
-                          'ch', 
-                          'headlesschrome', 
-                          'remote_chrome', 
-                          'firefox', 
-                          'ff', 
-                          'headlessfirefox', 
+    supported_browsers = ['chrome',
+                          'ch',
+                          'headlesschrome',
+                          'remote_chrome',
+                          'firefox',
+                          'ff',
+                          'headlessfirefox',
                           'remote_firefox']
 
     browser = os.environ.get('BROWSER', None)
@@ -66,13 +67,11 @@ def init_driver(request):
         }
         driver = webdriver.Remote(command_executor=remote_url, desired_capabilities=capabilities)
     elif browser == 'headlessfirefox':
-        from selenium.webdriver.firefox.service import Service
-        from webdriver_manager.firefox import GeckoDriverManager
         ff_options = FFOptions()
         ff_options.add_argument("--disable-gpu")
         ff_options.add_argument("--no-sandbox")
         ff_options.add_argument("--headless")
-        service = Service(GeckoDriverManager().install())
+        service = FFService(executable_path="/usr/local/bin/geckodriver")
         driver = webdriver.Firefox(service=service, options=ff_options)
 
     logger.debug("############### BROWSER INFORMATION #####################")
