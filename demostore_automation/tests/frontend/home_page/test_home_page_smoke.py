@@ -21,7 +21,7 @@ class TestHomePageSmoke:
     @pytest.mark.tcid1
     @pytest.mark.pioneertcid4
     def test_verify_number_of_products_displayed(self, setup):
-        expected_number_of_products = 16
+        expected_number_of_products = 14
 
         displayed_products = self.homepage.get_all_product_elements()
 

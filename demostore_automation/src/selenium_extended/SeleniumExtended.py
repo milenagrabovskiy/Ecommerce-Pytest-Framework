@@ -57,15 +57,21 @@ class SeleniumExtended:
         """
         timeout = timeout if timeout else self.default_timeout
         try:
-            WebDriverWait(self.driver, timeout).until(
+            element = WebDriverWait(self.driver, timeout).until(
                 EC.element_to_be_clickable(locator)
-            ).click()
+            )
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+            time.sleep(1)  # allow for scroll completion
+            element.click()
         except StaleElementReferenceException:
             time.sleep(2)
-            WebDriverWait(self.driver, timeout).until(
+            element = WebDriverWait(self.driver, timeout).until(
                 EC.visibility_of_element_located(locator),
                 message=f"Element with locator {locator}, is not clickable."
-            ).click()
+            )
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+            time.sleep(1)
+            element.click()
 
     def wait_until_element_contains_text(self, locator, text, timeout=None):
         """Wait until the element contains specific text.
