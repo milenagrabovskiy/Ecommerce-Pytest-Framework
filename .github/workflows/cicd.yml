@@ -29,8 +29,9 @@ jobs:
             WOO_SECRET: ${{ secrets.WOO_SECRET }}
             DB_USER: ${{ secrets.DB_USER }}
             DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-            PYTHONPATH: "${{ github.workspace }}/src"
+            PYTHONPATH: "${{ github.workspace }}"
+
           run : |
             echo "Setting up environment variables"
             source variables_local.env
-            pytest tests/backend -v -s --html=reports/backend-regression.html
+            pytest demostore_automation/tests/backend -v -s --html=reports/backend-regression.html
