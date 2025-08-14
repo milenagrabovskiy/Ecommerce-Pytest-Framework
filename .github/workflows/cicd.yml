@@ -133,24 +133,34 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v4
 
-        - name: Create index.html for GitHub Pages
+    # Download report artifacts first
+        - name: Download backend report
+          uses: actions/download-artifact@v4
+          with:
+            name: backend-regression-results
+            path: ./demostore_automation/reports
+
+        - name: Download frontend Chrome report
+          uses: actions/download-artifact@v4
+          with:
+            name: frontend-regression-chrome-results
+            path: ./demostore_automation/reports
+
+        - name: Download frontend Firefox report
+          uses: actions/download-artifact@v4
+          with:
+            name: frontend-regression-firefox-results
+            path: ./demostore_automation/reports
+
+        # <- Now the reports folder exists
+        - name: Ensure index.html
           run: |
             cd demostore_automation/reports
-            echo "<!DOCTYPE html>
-            <html>
-            <head><title>QA Test Reports</title></head>
-            <body>
-              <h1>QA Automation Reports</h1>
-              <ul>
-                <li><a href='backend-regression.html'>Backend Report</a></li>
-                <li><a href='frontend-regression-chrome.html'>Frontend Chrome Report</a></li>
-                <li><a href='frontend-regression-firefox.html'>Frontend Firefox Report</a></li>
-              </ul>
-            </body>
-            </html>" > index.html
+            # create or copy one report to index.html
+            cp frontend-regression-chrome.html index.html
 
         - name: Deploy reports to GitHub Pages
-          uses: peaceiris/actions-gh-pages@v3
+          uses: peaceiris/actions-gh-pages@v7
           with:
             github_token: ${{ secrets.GH_PAT }}
             publish_dir: ./demostore_automation/reports
