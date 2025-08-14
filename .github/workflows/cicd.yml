@@ -160,7 +160,7 @@ jobs:
             cp frontend-regression-chrome.html index.html
 
         - name: Deploy reports to GitHub Pages
-          uses: peaceiris/actions-gh-pages@v7
+          uses: peaceiris/actions-gh-pages@v4
           with:
             github_token: ${{ secrets.GH_PAT }}
             publish_dir: ./demostore_automation/reports
