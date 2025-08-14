@@ -134,7 +134,7 @@ jobs:
           uses: actions/checkout@v4
 
         - name: Deploy reports to GitHub Pages
-          uses: peaceiris/actions-gh-pages@v7 # not official, but recommended for GH pages
+          uses: peaceiris/actions-gh-pages@v4 # not official, but recommended for GH pages
           with:
             github_token: ${{ secrets.GH_PAT }}
             publish_dir: ./demostore_automation/reports
