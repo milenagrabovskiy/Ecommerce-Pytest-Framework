@@ -69,3 +69,35 @@ jobs:
             source variables_local.env
             cd demostore_automation
             pytest tests/frontend -v -s --html=reports/frontend-regression-chrome.html
+
+    frontend-regression-tests-firefox:
+      runs-on: ubuntu-latest
+      services:
+        firefox:
+          image: selenium/standalone-firefox:latest
+          ports:
+            - 4444:4444
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.13'
+
+        - name: Install dependencies
+          run: pip install -r requirements.txt
+
+        - name: Run frontend tests on Firefox
+          env:
+            WOO_KEY: ${{ secrets.WOO_KEY }}
+            WOO_SECRET: ${{ secrets.WOO_SECRET }}
+            PYTHONPATH: "${{ github.workspace }}"
+            BROWSER: remote_firefox
+            REMOTE_WEBDRIVER: http://localhost:4444
+          run: |
+            echo "Running frontend tests on Firefox..."
+            source variables_local.env
+            cd demostore_automation
+            pytest tests/frontend -v -s --html=reports/frontend-regression-firefox.html
