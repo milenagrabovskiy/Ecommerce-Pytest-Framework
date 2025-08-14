@@ -63,19 +63,13 @@ def init_driver(request):
     elif browser == 'remote_firefox':
         remote_url = os.environ.get("REMOTE_WEBDRIVER")
         if not remote_url:
-            raise Exception("If 'browser=remote_firefox', 'REMOTE_WEBDRIVER' must be set.")
+            raise Exception("REMOTE_WEBDRIVER must be set for remote_firefox")
 
         ff_options = FFOptions()
-        ff_options.add_argument("--disable-gpu")
-        ff_options.add_argument("--no-sandbox")
-        # ff_options.add_argument("--headless")  # optional for CI
-
-        capabilities = ff_options.to_capabilities()
-        capabilities['acceptInsecureCerts'] = True
-
+        ff_options.accept_insecure_certs = True
         driver = webdriver.Remote(
-            command_executor=remote_url,
-            desired_capabilities=capabilities
+        command_executor=remote_url,
+        options=ff_options
         )
     elif browser == 'headlessfirefox':
         ff_options = FFOptions()
