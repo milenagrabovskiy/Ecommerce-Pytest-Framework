@@ -122,21 +122,23 @@ jobs:
           with:
             name: frontend-regression-firefox-results
             path: demostore_automation/reports/
-deploy-reports:
-  runs-on: ubuntu-latest
-  needs: # tests must finish running before deploying results
-    - backend-regression-tests
-    - frontend-regression-tests-chrome
-    - frontend-regression-tests-firefox
-  if: always()  # deploy runs even if tests fail
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    deploy-reports:
+      runs-on: ubuntu-latest
+      needs: # tests must finish running before deploying results
+        - backend-regression-tests
+        - frontend-regression-tests-chrome
+        - frontend-regression-tests-firefox
+      if: always()  # deploy runs even if tests fail
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
 
-    - name: Deploy reports to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v7 # not official, but recommended for GH pages
-      with:
-        github_token: ${{ secrets.GH_PAT }}
-        publish_dir: ./demostore_automation/reports
-      run: |
-        echo "Successfully deployed QA automation test reports from ./demostore_automation/reports to GitHub Pages! Check them at: https://milenagrabovskiy.github.io/Ecommerce-Pytest-Framework/"
+        - name: Deploy reports to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v7 # not official, but recommended for GH pages
+          with:
+            github_token: ${{ secrets.GH_PAT }}
+            publish_dir: ./demostore_automation/reports
+
+        - name: Deployment success message
+          run: |
+          echo "Successfully deployed QA automation test reports from ./demostore_automation/reports to GitHub Pages! Check them at: https://milenagrabovskiy.github.io/Ecommerce-Pytest-Framework/"
