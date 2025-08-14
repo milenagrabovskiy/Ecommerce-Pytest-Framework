@@ -46,17 +46,20 @@ def init_driver(request):
         driver = webdriver.Chrome(options=chrome_options)
 
     elif browser == 'remote_chrome':
-        logger.info("Starting remote Chrome")
-        chrome_remote_url = os.environ.get("REMOTE_WEBDRIVER")
-        if not chrome_remote_url:
-            raise Exception(f"If 'browser=remote_chrome' then 'REMOTE_WEBDRIVER' variable must be set.")
+
+        remote_url = os.environ.get("REMOTE_WEBDRIVER")
+        if not remote_url:
+            raise Exception("If 'browser=remote_chrome', 'REMOTE_WEBDRIVER' must be set.")
         chrome_options = ChOptions()
-        chrome_options.add_argument('--ignore-ssl-errors=yes')
-        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")  # required for CI
+        capabilities = chrome_options.to_capabilities()
+        capabilities['acceptInsecureCerts'] = True
 
         driver = webdriver.Remote(
-            command_executor=chrome_remote_url,
-            options=chrome_options
+        command_executor=remote_url,
+        desired_capabilities=capabilities
         )
     elif browser == 'remote_firefox':
         remote_url = os.environ.get("REMOTE_WEBDRIVER")
