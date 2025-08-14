@@ -141,4 +141,4 @@ jobs:
 
         - name: Deployment success message
           run: |
-          echo "Successfully deployed QA automation test reports from ./demostore_automation/reports to GitHub Pages! Check them at: https://milenagrabovskiy.github.io/Ecommerce-Pytest-Framework/"
+            echo "Successfully deployed QA automation test reports from ./demostore_automation/reports to GitHub Pages! Check them at: https://milenagrabovskiy.github.io/Ecommerce-Pytest-Framework/"
