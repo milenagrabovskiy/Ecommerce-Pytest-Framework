@@ -12,13 +12,13 @@ from selenium.webdriver.firefox.service import Service as FFService
 @pytest.fixture(scope="class")
 def init_driver(request):
 
-    supported_browsers = ['chrome', 
-                          'ch', 
-                          'headlesschrome', 
-                          'remote_chrome', 
-                          'firefox', 
-                          'ff', 
-                          'headlessfirefox', 
+    supported_browsers = ['chrome',
+                          'ch',
+                          'headlesschrome',
+                          'remote_chrome',
+                          'firefox',
+                          'ff',
+                          'headlessfirefox',
                           'remote_firefox']
 
     browser = os.environ.get('BROWSER', None)
@@ -41,7 +41,7 @@ def init_driver(request):
         chrome_options.add_argument('--disable-extensions')
         chrome_options.add_argument('--disable-gpu')
         chrome_options.add_argument('--no-sandbox')
-        # chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(options=chrome_options)
 
@@ -58,14 +58,17 @@ def init_driver(request):
             command_executor=chrome_remote_url,
             options=chrome_options
         )
-
     elif browser == 'remote_firefox':
+        remote_url = os.environ.get("REMOTE_WEBDRIVER")
+        if not remote_url:
+            raise Exception("If 'browser=remote_firefox', 'REMOTE_WEBDRIVER' must be set.")
         capabilities = {
             'browserName': 'firefox',
             'marionette': True,
             'acceptInsecureCerts': True
         }
         driver = webdriver.Remote(command_executor=remote_url, desired_capabilities=capabilities)
+
     elif browser == 'headlessfirefox':
         ff_options = FFOptions()
         ff_options.add_argument("--disable-gpu")

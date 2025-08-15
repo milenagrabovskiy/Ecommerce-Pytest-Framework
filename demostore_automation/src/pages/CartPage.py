@@ -33,9 +33,15 @@ class CartPage(CartPageLocators):
     def click_apply_coupon(self):
         self.sl.wait_and_click(self.APPLY_COUPON_BTN)
 
+    def click_apply_coupon_arrow(self):
+        self.sl.wait_and_click(self.APPLY_COUPON_ARROW)
+
     def apply_coupon(self, coupon_code):
         self.input_coupon(coupon_code)
         self.click_apply_coupon()
+
+    def verify_order_total_is_0(self):
+        self.sl.wait_until_element_contains_text(self.CART_TOTAL, '$0.00')
 
     def click_on_proceed_to_checkout(self):
         self.sl.wait_and_click(self.PROCEED_TO_CHECKOUT_BTN)

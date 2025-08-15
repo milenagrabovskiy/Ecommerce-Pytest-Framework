@@ -44,8 +44,10 @@ class TestEndToEndCheckoutGuestUser:
         assert len(product_names) == 1, f"Expected 1 product in cart but found {len(product_names)}"
 
         #  apply coupon
+        cart_page.click_apply_coupon_arrow()
         coupon_code = MainConfigs.get_coupon_code('FREE_COUPON')
         cart_page.apply_coupon(coupon_code)
+        cart_page.verify_order_total_is_0()
 
         # proceed to checkout
         cart_page.click_on_proceed_to_checkout()
@@ -55,6 +57,7 @@ class TestEndToEndCheckoutGuestUser:
 
         # submit
         checkout_page.click_place_order()
+        checkout_page.click_place_order()
 
         # verify order is placed
         order_received.verify_order_received_page_loaded()
@@ -63,4 +66,3 @@ class TestEndToEndCheckoutGuestUser:
         print('********')
         print(order_number)
         print('********')
-
