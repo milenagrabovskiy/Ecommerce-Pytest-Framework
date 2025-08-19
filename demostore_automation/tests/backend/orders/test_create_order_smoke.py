@@ -1,8 +1,8 @@
-"""Smoke tests for WooCommerce order API.
+"""Smoke tests for the WooCommerce Orders API.
 
-Includes setup fixtures for fetching random products and ensures
-cleanup of created orders after tests. Supports tests for various
-order creation scenarios.
+This module includes setup fixtures for fetching a random product and creating orders.
+It ensures cleanup of created orders after tests. Supports order creation for both
+guest and registered users, verifying the API response and database consistency.
 """
 import pytest
 import re
@@ -10,6 +10,7 @@ import logging as logger
 
 from demostore_automation.src.api_helpers.OrdersAPIHelper import OrdersAPIHelper
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
+from demostore_automation.src.dao.customers_dao import CustomersDAO
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
 
@@ -48,34 +49,53 @@ def my_orders_smoke_setup():
         info["orders_api_helper"].call_delete_order(ord_id)
         logger.info(f"Successfully deleted order id: {ord_id}")
 
-@pytest.mark.ecom_orders1
-def test_create_order_guest_user(my_orders_smoke_setup):
-    """Verify an order can be created and retrieved via API.
 
-    Checks that the order creation response is valid, order ID is an integer,
-    customer ID is correct, and order key format is valid. Also ensures the
-    order can be retrieved by ID.
+@pytest.mark.parametrize(
+    "user_type",
+    [
+        pytest.param("guest_user", marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
+        pytest.param("registered_user", marks=[pytest.mark.orders, pytest.mark.ecomorders2])
+    ]
+)
 
-    Args:
-        my_orders_smoke_setup (dict): Fixture providing product info and API helpers.
 
-    Asserts:
+def test_create_order(my_orders_smoke_setup, user_type):
+    """Verify that orders can be created and retrieved via the WooCommerce API.
+
+    Creates an order for a guest or registered user and asserts the following:
         - API response is not empty.
         - Order ID is an integer.
-        - Customer ID is correct (0 for guest orders, otherwise appropriate).
-        - Order key has valid format.
-        - Retrieved order matches created order ID.
+        - Customer ID matches expected value (0 for guest, or the correct customer ID).
+        - Order key format starts with 'wc_order_'.
+        - Newly created order can be retrieved via API and exists in the database.
+
+    Args:
+        my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+        user_type (str): Type of user creating the order, either "guest_user" or "registered_user".
     """
     product_id = my_orders_smoke_setup["product_id"]
     product_price = my_orders_smoke_setup["product_price"]
     logger.info(f"Product ID: {product_id}, Product price: {product_price}")
 
+
     #overwrite 'line_items' with custom product(s)
     product_args = {"line_items": [{"product_id": product_id, "quantity": 1}]}
+    if user_type == "registered_user":
+        customers_dao = CustomersDAO()
+        random_customer = customers_dao.get_random_customer_from_db(qty=1)[0]
+        expected_customer_id = random_customer['ID']
+        product_args.update({"customer_id": random_customer['ID']})
+        logger.info(f"Fetched random customer from database with id: {expected_customer_id}")
+    else:
+        expected_customer_id = 0
 
     # make api call and verify it is not empty
     create_order_response = my_orders_smoke_setup["generic_orders_helper"].create_order(additional_args=product_args)
     assert create_order_response, f"Create order as guest user API response is empty"
+
+    # verify customer id
+    assert create_order_response['customer_id'] == expected_customer_id, \
+        f"Incorrect customer id in api response. Expected: {expected_customer_id}, Actual: {create_order_response['customer_id']}"
 
     # verify order_id is an int
     order_id = create_order_response['id']
@@ -83,14 +103,11 @@ def test_create_order_guest_user(my_orders_smoke_setup):
 
     my_orders_smoke_setup["order_ids"].append(order_id) # keeps track of newly created order_id for teardown
 
-    customer_id = create_order_response['customer_id']
-    assert customer_id == 0, f"Create order as guest user should have customer_id of 0. Actual {customer_id}"
-
     # assert order key starts with 'wc_order_'
     assert re.match(r"^wc_order_.+", create_order_response["order_key"]), \
         f"Order key is invalid. Must start with 'wc_order_' Got: {create_order_response['order_key']}"
 
-    logger.info("Successfully created order as guest user")
+    logger.info(f"Successfully created order as {user_type} user")
 
     # verify new order via GET api call and DB query
     my_orders_smoke_setup["generic_orders_helper"].verify_new_order_exists(order_id)
