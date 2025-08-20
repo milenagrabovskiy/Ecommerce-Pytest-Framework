@@ -3,7 +3,7 @@ name: "QA Automation Testing"
 on:
   push:
     branches:
-      - github_actions_yml
+      - github_pages_2
   pull_request:
     branches:
       - main
@@ -151,13 +151,6 @@ jobs:
           with:
             name: frontend-regression-firefox-results
             path: ./demostore_automation/reports
-
-        # <- Now the reports folder exists
-        - name: Ensure index.html
-          run: |
-            cd demostore_automation/reports
-            # create or copy one report to index.html
-            cp frontend-regression-chrome.html index.html
 
         - name: Deploy reports to GitHub Pages
           uses: peaceiris/actions-gh-pages@v4
