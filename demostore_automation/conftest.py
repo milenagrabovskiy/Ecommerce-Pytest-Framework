@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChOptions
 from selenium.webdriver.firefox.options import Options as FFOptions
 from selenium.webdriver.firefox.service import Service as FFService
+import tempfile
 
 
 
@@ -50,25 +51,26 @@ def init_driver(request):
         chrome_remote_url = os.environ.get("REMOTE_WEBDRIVER")
         if not chrome_remote_url:
             raise Exception(f"If 'browser=remote_chrome' then 'REMOTE_WEBDRIVER' variable must be set.")
+
         chrome_options = ChOptions()
         chrome_options.add_argument('--ignore-ssl-errors=yes')
         chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        driver = webdriver.Remote(command_executor=chrome_remote_url, options=chrome_options)
 
-        driver = webdriver.Remote(
-            command_executor=chrome_remote_url,
-            options=chrome_options
-        )
     elif browser == 'remote_firefox':
         remote_url = os.environ.get("REMOTE_WEBDRIVER")
         if not remote_url:
-            raise Exception("If 'browser=remote_firefox', 'REMOTE_WEBDRIVER' must be set.")
-        capabilities = {
-            'browserName': 'firefox',
-            'marionette': True,
-            'acceptInsecureCerts': True
-        }
-        driver = webdriver.Remote(command_executor=remote_url, desired_capabilities=capabilities)
+            raise Exception("REMOTE_WEBDRIVER must be set for remote_firefox")
 
+        ff_options = FFOptions()
+        ff_options.accept_insecure_certs = True
+        driver = webdriver.Remote(
+        command_executor=remote_url,
+        options=ff_options
+        )
     elif browser == 'headlessfirefox':
         ff_options = FFOptions()
         ff_options.add_argument("--disable-gpu")

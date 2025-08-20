@@ -1,0 +1,171 @@
+name: "QA Automation Testing"
+
+on:
+  push:
+    branches:
+      - github_actions_yml
+  pull_request:
+    branches:
+      - main
+
+jobs:
+    backend-regression-tests:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.13'
+
+        - name: Install dependencies via requirements.txt
+          run: pip install -r requirements.txt
+
+        - name: Run Backend tests
+          env:
+            WOO_KEY: ${{ secrets.WOO_KEY }}
+            WOO_SECRET: ${{ secrets.WOO_SECRET }}
+            DB_USER: ${{ secrets.DB_USER }}
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+            PYTHONPATH: "${{ github.workspace }}"
+
+          run: |
+            echo "Setting up environment variables"
+            source variables_local.env
+            cd demostore_automation
+            pytest tests/backend -v -s --html=reports/backend-regression.html --self-contained-html
+            echo "Successfully ran backend tests"
+
+        - name: Upload backend test results
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: backend-regression-results
+            path: demostore_automation/reports/
+
+    frontend-regression-tests-chrome:
+      runs-on: ubuntu-latest
+      services:
+        chrome:
+          image: selenium/standalone-chrome:latest
+          ports:
+            - 4444:4444
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.13'
+
+        - name: Install dependencies
+          run: pip install -r requirements.txt
+
+        - name: Run frontend tests on Chrome
+          env:
+            WOO_KEY: ${{ secrets.WOO_KEY }}
+            WOO_SECRET: ${{ secrets.WOO_SECRET }}
+            PYTHONPATH: "${{ github.workspace }}"
+            BROWSER: remote_chrome
+            REMOTE_WEBDRIVER: http://localhost:4444
+          run: |
+            echo "Running frontend tests on Chrome..."
+            source variables_local.env
+            cd demostore_automation
+            pytest tests/frontend -v -s --html=reports/frontend-regression-chrome.html --self-contained-html
+
+        - name: Upload frontend chrome test results
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: frontend-regression-chrome-results
+            path: demostore_automation/reports/
+
+    frontend-regression-tests-firefox:
+      runs-on: ubuntu-latest
+      services:
+        firefox:
+          image: selenium/standalone-firefox:latest
+          ports:
+            - 4444:4444
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.13'
+
+        - name: Install dependencies
+          run: pip install -r requirements.txt
+
+        - name: Run frontend tests on Firefox
+          env:
+            WOO_KEY: ${{ secrets.WOO_KEY }}
+            WOO_SECRET: ${{ secrets.WOO_SECRET }}
+            PYTHONPATH: "${{ github.workspace }}"
+            BROWSER: remote_firefox
+            REMOTE_WEBDRIVER: http://localhost:4444
+          run: |
+            echo "Running frontend tests on Firefox..."
+            source variables_local.env
+            cd demostore_automation
+            pytest tests/frontend -v -s --html=reports/frontend-regression-firefox.html --self-contained-html
+
+        - name: Upload frontend firefox test results
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: frontend-regression-firefox-results
+            path: demostore_automation/reports/
+    deploy-reports:
+      runs-on: ubuntu-latest
+      needs:
+        - backend-regression-tests
+        - frontend-regression-tests-chrome
+        - frontend-regression-tests-firefox
+      if: always()
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+    # Download report artifacts first
+        - name: Download backend report
+          uses: actions/download-artifact@v4
+          with:
+            name: backend-regression-results
+            path: ./demostore_automation/reports
+
+        - name: Download frontend Chrome report
+          uses: actions/download-artifact@v4
+          with:
+            name: frontend-regression-chrome-results
+            path: ./demostore_automation/reports
+
+        - name: Download frontend Firefox report
+          uses: actions/download-artifact@v4
+          with:
+            name: frontend-regression-firefox-results
+            path: ./demostore_automation/reports
+
+        # <- Now the reports folder exists
+        - name: Ensure index.html
+          run: |
+            cd demostore_automation/reports
+            # create or copy one report to index.html
+            cp frontend-regression-chrome.html index.html
+
+        - name: Deploy reports to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v4
+          with:
+            github_token: ${{ secrets.GH_PAT }}
+            publish_dir: ./demostore_automation/reports
+
+        - name: Deployment success message
+          run: |
+            echo "Successfully deployed QA automation test reports from ./demostore_automation/reports to GitHub Pages!"
+            echo "Check them at: https://milenagrabovskiy.github.io/Ecommerce-Pytest-Framework/"
