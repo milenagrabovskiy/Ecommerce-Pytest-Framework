@@ -151,11 +151,23 @@ jobs:
             name: frontend-regression-firefox-results
             path: ./demostore_automation/reports
 
+        - name: Install Allure CLI
+          run: |
+            curl -o allure.tgz -Ls https://github.com/allure-framework/allure2/releases/latest/download/allure-2.29.0.tgz
+            tar -zxvf allure.tgz
+            sudo mv allure-2.29.0 /opt/allure
+            sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+        - name: Generate Allure dashboard
+          run: |
+            mkdir -p demostore_automation/reports/allure-report
+            allure generate demostore_automation/reports/allure-results -o demostore_automation/reports/allure-report --clean
+
         - name: Deploy reports to GitHub Pages
           uses: peaceiris/actions-gh-pages@v4
           with:
             github_token: ${{ secrets.GH_PAT }}
-            publish_dir: ./demostore_automation/reports
+            publish_dir: ./demostore_automation/reports/allure-report
 
         - name: Deployment success message
           run: |
