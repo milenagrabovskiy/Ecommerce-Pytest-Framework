@@ -151,6 +151,15 @@ jobs:
             name: frontend-regression-firefox-results
             path: ./demostore_automation/reports
 
+        - name: Install Allure CLI
+          run: |
+            sudo apt update
+            sudo apt install -y wget unzip
+            wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip
+            unzip allure-2.29.0.zip
+            sudo mv allure-2.29.0 /opt/allure
+            sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
         - name: Generate Allure dashboard
           run: |
             mkdir -p demostore_automation/reports/allure-report
