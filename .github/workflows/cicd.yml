@@ -151,6 +151,15 @@ jobs:
             name: frontend-regression-firefox-results
             path: ./demostore_automation/reports
 
+        - name: Merge Allure results
+          run: |
+              mkdir -p demostore_automation/reports/allure-results-merged
+              cp -r demostore_automation/reports/allure-results/backend/* demostore_automation/reports/allure-results-merged/ || true
+              cp -r demostore_automation/reports/allure-results/frontend-chrome/* demostore_automation/reports/allure-results-merged/ || true
+              cp -r demostore_automation/reports/allure-results/frontend-firefox/* demostore_automation/reports/allure-results-merged/ || true
+
+        # Install Allure CLI
+
         - name: Install Allure CLI
           run: |
             sudo apt update
@@ -163,7 +172,8 @@ jobs:
         - name: Generate Allure dashboard
           run: |
             mkdir -p demostore_automation/reports/allure-report
-            allure generate demostore_automation/reports/allure-results -o demostore_automation/reports/allure-report --clean
+            allure generate demostore_automation/reports/allure-results-merged -o demostore_automation/reports/allure-report --clean
+
 
         - name: List generated files
           run: ls -R demostore_automation/reports/allure-report
