@@ -1,12 +1,11 @@
 name: "QA Automation Testing"
 
 on:
-  push:
-    branches:
-      - github_pages_2
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: "0 7 * * *"
 
 jobs:
     backend-regression-tests:
