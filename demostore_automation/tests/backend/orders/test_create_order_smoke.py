@@ -54,7 +54,7 @@ def my_orders_smoke_setup():
     "user_type",
     [
         pytest.param("guest_user", marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
-        pytest.param("registered_user", marks=[pytest.mark.orders, pytest.mark.ecomorders2])
+        pytest.param("registered_user", marks=[pytest.mark.orders, pytest.mark.ecomorders2]),
     ]
 )
 
@@ -111,3 +111,47 @@ def test_create_order(my_orders_smoke_setup, user_type):
 
     # verify new order via GET api call and DB query
     my_orders_smoke_setup["generic_orders_helper"].verify_new_order_exists(order_id)
+
+
+@pytest.mark.ecomorders3
+def test_create_order_empty_form_negative(my_orders_smoke_setup):
+    """Verify order creation with missing billing, shipping, and payment data.
+
+    Ensures the API still creates an order when critical fields are empty and
+    sets the correct flags and status.
+
+    Args:
+        my_orders_smoke_setup (dict): Fixture with product info, API helpers,
+            and order tracking.
+
+    Asserts:
+        - Response is not empty.
+        - Order ID is generated and tracked for teardown.
+        - `needs_processing` is True.
+        - `needs_payment` is True.
+        - Status equals "pending".
+    """
+    product_id = my_orders_smoke_setup["product_id"]
+    product_price = my_orders_smoke_setup["product_price"]
+    logger.info(f"Product ID: {product_id}, Product price: {product_price}")
+
+    product_args = {
+                    "line_items": [{"product_id": product_id, "quantity": 1}],
+                    "shipping": {},
+                    "billing": {},
+                    "shipping_lines": {},
+                    "set_paid": False,
+                    "payment_method": '',
+                    "payment_method_title": ''
+                    }
+
+    create_order_response = my_orders_smoke_setup["generic_orders_helper"].create_order(additional_args=product_args)
+    assert create_order_response, f"Create order as guest user API response is empty"
+    order_id = create_order_response['id']
+    my_orders_smoke_setup["order_ids"].append(order_id)
+    assert create_order_response["needs_processing"], (f"Create order without billing, shipping, and payment info returned"
+                                                     f" 'False' for 'needs_processing'")
+    assert create_order_response["needs_payment"], (f"Create order without billing, shipping, and payment info returned"
+                                                    f" 'False' for 'needs_payment'")
+    assert create_order_response["status"] == "pending", (f"Create order without billing, shipping, and payment info"
+                                                                                f"returned wrong order status: {create_order_response['status']}")
