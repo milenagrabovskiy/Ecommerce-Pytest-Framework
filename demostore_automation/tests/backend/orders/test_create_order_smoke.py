@@ -160,6 +160,16 @@ def test_create_order_no_payment_info(my_orders_smoke_setup):
 
 @pytest.mark.ecomorders4
 def test_create_order_empty_line_items_negative(my_orders_smoke_setup):
+    """Verify that an order can be created without products (empty line_items).
+
+    WooCommerce allows order creation without mandatory product fields.
+    This test ensures:
+      - The order is created with an empty `line_items` list.
+      - The order status is returned as "completed".
+
+    Args:
+        my_orders_smoke_setup (fixture): Provides API helpers and teardown tracking.
+    """
     product_args = {"line_items": []}
     create_order_response = my_orders_smoke_setup["generic_orders_helper"].create_order(additional_args=product_args)
     order_id = create_order_response['id']
