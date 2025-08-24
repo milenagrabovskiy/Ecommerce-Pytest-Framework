@@ -56,15 +56,25 @@ def my_orders_smoke_setup():
     [
         pytest.param("guest_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
         pytest.param("guest_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
+        pytest.param("guest_user", 1, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
         pytest.param("registered_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2]),
-        pytest.param("registered_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders2])
+        pytest.param("registered_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders2]),
+        pytest.param("registered_user", 5, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2])
     ]
 )
 
 def test_create_order(my_orders_smoke_setup, user_type, order_qty, product_qty):
     """Verify that orders can be created and retrieved via the WooCommerce API.
 
-    Creates an order for a guest or registered user and asserts the following:
+    This test covers multiple scenarios using parameterization:
+        - Guest user creating 1 order with 1 item.
+        - Guest user creating 1 order with multiple items.
+        - Guest user creating multiple orders with 1 item each.
+        - Registered user creating 1 order with multiple items.
+        - Registered user creating multiple orders with 1 item each.
+        - Registered user creating multiple orders with multiple items each.
+
+    For each scenario, asserts the following:
         - API response is not empty.
         - Order ID is an integer.
         - Customer ID matches expected value (0 for guest, or the correct customer ID).
@@ -74,6 +84,8 @@ def test_create_order(my_orders_smoke_setup, user_type, order_qty, product_qty):
     Args:
         my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
         user_type (str): Type of user creating the order, either "guest_user" or "registered_user".
+        order_qty (int): Quantity of orders created via API.
+        product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
     """
     product_id = my_orders_smoke_setup["product_id"]
     product_price = my_orders_smoke_setup["product_price"]

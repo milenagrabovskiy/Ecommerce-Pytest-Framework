@@ -32,6 +32,8 @@ class GenericOrdersHelper:
 
         Args:
             additional_args (dict, optional): Fields to override or add to the order payload.
+            order_qty (int): Quantity of orders.
+            product_qty (int): Quantity of products.
 
         Returns:
             dict: API response with the created order details.
