@@ -27,11 +27,13 @@ class GenericOrdersHelper:
         self.current_file_dir = os.path.dirname(os.path.realpath(__file__))
 
 
-    def create_order(self, additional_args=None):
+    def create_order(self, order_qty=1, product_qty=1, additional_args=None):
         """Create an order with optional custom arguments.
 
         Args:
             additional_args (dict, optional): Fields to override or add to the order payload.
+            order_qty (int): Quantity of orders.
+            product_qty (int): Quantity of products.
 
         Returns:
             dict: API response with the created order details.
@@ -55,16 +57,23 @@ class GenericOrdersHelper:
             if "line_items" not in payload:
                 random_product = self.products_dao.get_random_product_from_db(qty=1)
                 random_product_id = random_product[0]['ID']
-                payload["line_items"] = [{"product_id": random_product_id, "quantity": 1}]
+                payload["line_items"] = [{"product_id": random_product_id, "quantity": product_qty}]
+
+            else:
+                for i in payload["line_items"]:
+                    i["quantity"] = product_qty # if not line_items, payload will still take product_qty
 
 
         except (FileNotFoundError, IOError, PermissionError, UnicodeError) as e:
             logger.error(f"Could not read payload file: {e}")
             raise
 
-        post_response = self.orders_api_helper.call_create_order(payload=payload)
-        logger.info(f"create order helper api response: {post_response}")
-        return post_response
+        create_order_responses = []
+        for i in range(order_qty):
+            create_order_response = self.orders_api_helper.call_create_order(payload=payload)
+            create_order_responses.append(create_order_response)
+            logger.info(f"Created order: {create_order_response}")
+        return create_order_responses
 
 
     def verify_new_order_exists(self, order_id):
