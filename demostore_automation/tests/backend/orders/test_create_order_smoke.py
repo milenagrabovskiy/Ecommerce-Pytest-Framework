@@ -51,15 +51,16 @@ def my_orders_smoke_setup():
 
 
 @pytest.mark.parametrize(
-    "user_type",
+     "user_type, quantity",
     [
-        pytest.param("guest_user", marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
-        pytest.param("registered_user", marks=[pytest.mark.orders, pytest.mark.ecomorders2])
+        pytest.param("guest_user", 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
+        pytest.param("guest_user", 5, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
+        pytest.param("registered_user", 1, marks=[pytest.mark.orders, pytest.mark.ecomorders2]),
+        pytest.param("registered_user", 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2])
     ]
 )
 
-
-def test_create_order(my_orders_smoke_setup, user_type):
+def test_create_order(my_orders_smoke_setup, user_type, quantity):
     """Verify that orders can be created and retrieved via the WooCommerce API.
 
     Creates an order for a guest or registered user and asserts the following:
@@ -79,7 +80,8 @@ def test_create_order(my_orders_smoke_setup, user_type):
 
 
     #overwrite 'line_items' with custom product(s)
-    product_args = {"line_items": [{"product_id": product_id, "quantity": 1}]}
+    product_args = {"line_items": [{"product_id": product_id, "quantity": quantity}]}
+    logger.info(f"Product quantity in line_items: {quantity}")
     if user_type == "registered_user":
         customers_dao = CustomersDAO()
         random_customer = customers_dao.get_random_customer_from_db(qty=1)[0]
@@ -111,3 +113,73 @@ def test_create_order(my_orders_smoke_setup, user_type):
 
     # verify new order via GET api call and DB query
     my_orders_smoke_setup["generic_orders_helper"].verify_new_order_exists(order_id)
+
+
+@pytest.mark.ecomorders3
+def test_create_order_no_payment_info(my_orders_smoke_setup):
+    """Verify order creation with missing billing, shipping, and payment data.
+
+    Ensures the API still creates an order when critical fields are empty and
+    sets the correct flags and status.
+
+    Args:
+        my_orders_smoke_setup (dict): Fixture with product info, API helpers,
+            and order tracking.
+
+    Asserts:
+        - Response is not empty.
+        - Order ID is generated and tracked for teardown.
+        - `needs_processing` is True.
+        - `needs_payment` is True.
+        - Status equals "pending".
+    """
+    product_id = my_orders_smoke_setup["product_id"]
+    product_price = my_orders_smoke_setup["product_price"]
+    logger.info(f"Product ID: {product_id}, Product price: {product_price}")
+
+    product_args = {
+                    "line_items": [{"product_id": product_id, "quantity": 1}],
+                    "shipping": {},
+                    "billing": {},
+                    "shipping_lines": {},
+                    "set_paid": False,
+                    "payment_method": '',
+                    "payment_method_title": ''
+                    }
+
+    create_order_response = my_orders_smoke_setup["generic_orders_helper"].create_order(additional_args=product_args)
+    assert create_order_response, f"Create order as guest user API response is empty"
+    order_id = create_order_response['id']
+    my_orders_smoke_setup["order_ids"].append(order_id)
+    assert create_order_response["needs_processing"], (f"Create order without billing, shipping, and payment info returned"
+                                                     f" 'False' for 'needs_processing'")
+    assert create_order_response["needs_payment"], (f"Create order without billing, shipping, and payment info returned"
+                                                    f" 'False' for 'needs_payment'")
+    assert create_order_response["status"] == "pending", (f"Create order without billing, shipping, and payment info"
+                                                                                f"returned wrong order status: {create_order_response['status']}")
+
+@pytest.mark.ecomorders4
+def test_create_order_empty_line_items_negative(my_orders_smoke_setup):
+    """Verify that an order can be created without products (empty line_items).
+
+    WooCommerce allows order creation without mandatory product fields.
+    This test ensures:
+      - The order is created with an empty `line_items` list.
+      - The order status is returned as "completed".
+
+    Args:
+        my_orders_smoke_setup (fixture): Provides API helpers and teardown tracking.
+    """
+    product_args = {"line_items": []}
+    create_order_response = my_orders_smoke_setup["generic_orders_helper"].create_order(additional_args=product_args)
+    order_id = create_order_response['id']
+    my_orders_smoke_setup["order_ids"].append(order_id) # for teardown
+    logger.info(f"Create order api response without line_items: {create_order_response}")
+
+
+    # There are no mandatory fields for creating order via api. Woocommerce api allows order creation without products.
+    # Expected status code is 201 (verification done in 'OrdersAPIHelper().call_create_order()')
+
+    assert not create_order_response["line_items"], (f"Create order with no product(s) expected to return empty 'line_items'."
+                                                     f"Actual: {create_order_response['line_items']}")
+    assert create_order_response["status"] == "completed", f"Create order with no product(s) expected to return order status 'completed'. Actual: {create_order_response['status']}"
