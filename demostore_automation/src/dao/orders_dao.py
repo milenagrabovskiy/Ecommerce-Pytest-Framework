@@ -5,7 +5,8 @@ database using raw SQL queries. It is primarily used for test validation in auto
 """
 
 from demostore_automation.src.utilities.dbUtility import DBUtility
-
+import logging as logger
+import random
 
 class OrdersDAO:
     """Handles database queries related to WooCommerce orders.
@@ -35,3 +36,18 @@ class OrdersDAO:
         WHERE post_type = 'shop_order_placehold' AND ID = {order_id};
         """
         return self.db_helper.execute_select(sql)
+
+    def get_random_order_by_status(self, status, qty=1):
+        """Retrieve random orders filtered by status.
+        Args:
+            status (str): WooCommerce order status (e.g., 'processing', 'completed').
+            qty (int, optional): Number of random orders to fetch. Defaults to 1.
+        Returns:
+            list[dict]: Random orders matching the specified status.
+        """
+        sql = f"""SELECT * FROM
+        {self.db_helper.database}.{self.db_helper.table_prefix}wc_order_stats
+        WHERE status = 'wc-{status}';"""
+        rs_sql = self.db_helper.execute_select(sql)
+        logger.info(f"Found {len(rs_sql)} orders with status {status}")
+        return random.sample(rs_sql, int(qty))
