@@ -27,7 +27,7 @@ class GenericOrdersHelper:
         self.current_file_dir = os.path.dirname(os.path.realpath(__file__))
 
 
-    def create_order(self, qty=int, additional_args=None):
+    def create_order(self, order_qty=1, product_qty=1, additional_args=None):
         """Create an order with optional custom arguments.
 
         Args:
@@ -55,7 +55,11 @@ class GenericOrdersHelper:
             if "line_items" not in payload:
                 random_product = self.products_dao.get_random_product_from_db(qty=1)
                 random_product_id = random_product[0]['ID']
-                payload["line_items"] = [{"product_id": random_product_id, "quantity": 1}]
+                payload["line_items"] = [{"product_id": random_product_id, "quantity": product_qty}]
+
+            else:
+                for i in payload["line_items"]:
+                    i["quantity"] = product_qty # if not line_items, payload will still take product_qty
 
 
         except (FileNotFoundError, IOError, PermissionError, UnicodeError) as e:
@@ -63,7 +67,7 @@ class GenericOrdersHelper:
             raise
 
         create_order_responses = []
-        for i in range(qty):
+        for i in range(order_qty):
             create_order_response = self.orders_api_helper.call_create_order(payload=payload)
             create_order_responses.append(create_order_response)
             logger.info(f"Created order: {create_order_response}")
