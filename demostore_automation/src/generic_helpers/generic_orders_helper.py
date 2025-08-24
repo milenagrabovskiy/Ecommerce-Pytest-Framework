@@ -27,7 +27,7 @@ class GenericOrdersHelper:
         self.current_file_dir = os.path.dirname(os.path.realpath(__file__))
 
 
-    def create_order(self, additional_args=None):
+    def create_order(self, qty=int, additional_args=None):
         """Create an order with optional custom arguments.
 
         Args:
@@ -62,9 +62,12 @@ class GenericOrdersHelper:
             logger.error(f"Could not read payload file: {e}")
             raise
 
-        post_response = self.orders_api_helper.call_create_order(payload=payload)
-        logger.info(f"create order helper api response: {post_response}")
-        return post_response
+        create_order_responses = []
+        for i in range(qty):
+            create_order_response = self.orders_api_helper.call_create_order(payload=payload)
+            create_order_responses.append(create_order_response)
+            logger.info(f"Created order: {create_order_response}")
+        return create_order_responses
 
 
     def verify_new_order_exists(self, order_id):
