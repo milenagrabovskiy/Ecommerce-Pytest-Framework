@@ -23,6 +23,8 @@ def test_apply_coupon_to_existing_order():
 # hardcode correct coupon code or randomly generated coupon code for neg tests
     coupons_api_helper = CouponAPIHelper()
     coupons_dao = CouponsDAO()
-    free_coupon = coupons_dao.fetch_coupon_by_partial_string('ssqa100')
-    logger.info(f"Fetched free coupon from DB with id: {free_coupon['coupon_id']}")
+    free_coupon = coupons_dao.fetch_coupon_by_text('ssqa100')
+    free_coupon_id = free_coupon[0]['ID']
+    logger.info(f"free coupon data: {free_coupon}")
+    logger.info(f"Fetched free coupon from DB with id: {free_coupon_id}")
 # verify total price is now 0 with ssqa100

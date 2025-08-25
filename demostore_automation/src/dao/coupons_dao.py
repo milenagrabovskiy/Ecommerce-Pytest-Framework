@@ -8,18 +8,12 @@ class CouponsDAO():
 
 #fetching coupon by coupon text or partial text
 
-    def fetch_coupon_by_partial_string(self, partial_string):
+    def fetch_coupon_by_text(self, text):
         sql = f"""SELECT * FROM
-        demostore.wp_posts
+        {self.db_helper.database}.{self.db_helper.table_prefix}posts
         WHERE
         post_type = 'shop_coupon'
         AND
-        'post_name' = '{partial_string}';"""
-
-        # def fetch_coupon_by_partial_string(self, partial_string):
-        # sql = f"""SELECT * FROM
-        # demostore.wp_posts
-        # WHERE
-        # post_type = 'shop_coupon'
-        # AND
-        # 'post_name' = 'ssqa100';"""
+        post_title = '{text}';"""
+        rs_sql = self.db_helper.execute_select(sql)
+        return rs_sql
