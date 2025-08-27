@@ -136,7 +136,7 @@ class GenericOrdersHelper:
             AssertionError: If note does not exist in API or database, or IDs mismatch.
         """
         get_note_response = self.orders_api_helper.call_retrieve_order_note(order_id, note_id)
-        assert get_note_response['id'] == note_id, (f"Get order note response returned wrong note it."
+        assert get_note_response['id'] == note_id, (f"Get order note response returned wrong note id."
                                                     f"Actual: {get_note_response['id']}, Expected: {note_id}")
         logger.info(f"GET api call for order note by note id successfully found new order note")
 

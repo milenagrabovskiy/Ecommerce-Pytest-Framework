@@ -95,7 +95,7 @@ def test_create_order_note(order_notes_setup, user_type, quantity):
             assert note_id, "Create order note response did not return note_id"
             assert not create_note_response["customer_note"], "customer_note field expected to be 'False' but returned 'True'"
 
-            # verify newly create note exists via API and in DB
+            # verify newly created note exists via API and in DB
             order_notes_setup["generic_orders_helper"].verify_note_exists(order_id, note_id, note_text=order_notes_setup["note_text"])
         assert len(create_note_responses) == quantity, (f"Quantity of notes created does not match expected."
                                                         f"Expected: {quantity}, Actual: {len(create_note_responses)}")
