@@ -26,7 +26,8 @@ def test_apply_coupon_to_new_order():
     customers_dao = CustomersDAO()
     db_cust = customers_dao.get_random_customer_from_db(qty=1)
     customer_id = db_cust[0]['ID']
-    logger.info(f"DB customer id: {customer_id}")
+    customer_email = db_cust[0]['user_email'].lower()
+    logger.info(f"DB customer id: {customer_id} DB customer email: {customer_email}")
 
     # create order with custom args
     generic_orders_helper =GenericOrdersHelper()
@@ -68,10 +69,11 @@ def test_apply_coupon_to_new_order():
     # Get coupon details with GET call
     coupon_details = coupons_api_helper.call_retrieve_coupon(free_coupon_id)
     coupon_type = coupon_details['discount_type']
+    discount = coupon_details['amount']
     coupon_expiration = coupon_details['date_expires']
     assert coupon_details['status'] == 'publish', f"Error. Coupon status: {coupon_details['status']}."
     generic_coupons_helper = GenericCouponsHelper()
-    generic_coupons_helper.coupon_is_valid(free_coupon_id), "Coupon is expired"
+    assert generic_coupons_helper.coupon_is_valid(free_coupon_id), f"Coupon is expired. Coupon expiration: {coupon_expiration}"
 
 
     # make api PUT call for order and add coupon_lines
@@ -85,12 +87,8 @@ def test_apply_coupon_to_new_order():
     logger.info(f"PUT response with coupon: {update_response}")
     logger.info(f"Order total after applying coupon: {total_after}")
 
-    assert total_before != total_after, "Coupon failed to be applied"
-    assert update_response['discount_total'] == total_before, (f"Incorrect discount amount."
-                                                               f"Actual: {update_response['discount_total']}."
-                                                               f"Expected: {total_before}")
-    assert total_after == expected_total_after, (f"Order total after coupon does not match expected."
-                                                 f"Expected: {expected_total_after}, Actual: {total_after}")
+    # verify coupon applied successfully
+    generic_coupons_helper.verify_coupon_successfully_applied(order_id=order_id, total_before=total_before, expected_total_after=expected_total_after, expected_discount=discount, coupon_id=free_coupon_id)
 
-
-
+    # verify customer id in 'used_by' list of users for the coupon
+    generic_coupons_helper.verify_coupon_used_by_customer(free_coupon_id, customer_email, customer_id)
