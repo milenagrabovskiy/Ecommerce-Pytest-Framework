@@ -46,10 +46,10 @@ def order_notes_setup():
 @pytest.mark.parametrize(
     "user_type, quantity",
     [
-        pytest.param("guest_user", 1, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes1]),
-        pytest.param("guest_user", 5, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes1]),
-        pytest.param("registered_user", 1, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes2]),
-        pytest.param("registered_user", 5, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes2])
+        pytest.param("guest_user", 1, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes1], id="guestuser_1_note"),
+        pytest.param("guest_user", 5, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes1], id="guestuser_5_notes"),
+        pytest.param("registered_user", 1, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes2], id="reg_user_1_notes"),
+        pytest.param("registered_user", 5, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes2], id="reg_user_5_notes")
     ]
 )
 @pytest.mark.ordernotes
@@ -91,7 +91,7 @@ def test_create_order_note(order_notes_setup, user_type, quantity):
                                                                                 f"Actual: {create_note_response['note']}")
         note_id = create_note_response["id"]
         assert note_id, "Create order note response did not return note_id"
-        assert not create_note_response["customer_note"], "customer_note should be 'False' but returned 'True'"
+        assert not create_note_response["customer_note"], "customer_note field expected to be 'False' but returned 'True'"
 
         # verify newly create note exists via API and in DB
         order_notes_setup["generic_orders_helper"].verify_note_exists(order_id, note_id, note_text=order_notes_setup["note_text"])
