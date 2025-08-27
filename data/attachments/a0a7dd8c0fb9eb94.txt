@@ -1,0 +1,1 @@
+2025-08-27 17:50:56 INFO Running test: 'test_create_coupon_with_valid_discount_types' for 'percent'
