@@ -49,3 +49,15 @@ class OrdersAPIHelper:
             dict: The JSON response from the API after deleting the order.
         """
         return self.woo_api_utility.delete(f'orders/{order_id}', expected_status_code=200)
+
+    def call_update_order(self, order_id, payload):
+        """Updates existing order using the WooCommerce API.
+
+        Args:
+            payload (dict): The order data to send in the API request.
+            expected_status_code (int, optional): The expected HTTP status code for a successful update. Defaults to 200.
+
+        Returns:
+            dict: The JSON response from the API representing the updated order.
+        """
+        return self.woo_api_utility.put(f"orders/{order_id}", params=payload, expected_status_code=200)
