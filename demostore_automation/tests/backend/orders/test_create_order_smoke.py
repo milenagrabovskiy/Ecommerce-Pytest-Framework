@@ -54,12 +54,12 @@ def my_orders_smoke_setup():
 @pytest.mark.parametrize(
      "user_type, order_qty, product_qty",
     [
-        pytest.param("guest_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
-        pytest.param("guest_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
-        pytest.param("guest_user", 1, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1]),
-        pytest.param("registered_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2]),
-        pytest.param("registered_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders2]),
-        pytest.param("registered_user", 5, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2])
+        pytest.param("guest_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders1], id="guestuser_1_ord_5_prods"),
+        pytest.param("guest_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1], id="guestuser_5_ord_1_prod"),
+        pytest.param("guest_user", 1, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1], id="guestuser_1_ord_1_prod"),
+        pytest.param("registered_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2], id="reg_user_1_ord_5_prods"),
+        pytest.param("registered_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders2], id="reg_user_5_ord_1_prod"),
+        pytest.param("registered_user", 5, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2], id="reg_user_5_ord_5_prod")
     ]
 )
 
@@ -168,12 +168,12 @@ def test_create_order_no_payment_info(my_orders_smoke_setup):
     order_id = create_order_response['id']
     my_orders_smoke_setup["order_ids"].append(order_id)
     assert create_order_response["needs_processing"], (f"Create order without billing, shipping, and payment info returned"
-                                                         f" 'False' for 'needs_processing'")
+                                                         f" 'False' for 'needs_processing'. Expected 'True'.")
     if product_price > '0.00':
         assert create_order_response["needs_payment"], (f"Create order without billing, shipping, and payment info returned"
                                                         f" 'False' for 'needs_payment'")
     assert create_order_response["status"] == "pending", (f"Create order without billing, shipping, and payment info"
-                                                                                    f"returned wrong order status: {create_order_response['status']}")
+                                                         f"returned wrong order status: {create_order_response['status']} Expected order status is 'pending'")
 
 @pytest.mark.ecomorders4
 def test_create_order_empty_line_items_negative(my_orders_smoke_setup):
@@ -198,6 +198,7 @@ def test_create_order_empty_line_items_negative(my_orders_smoke_setup):
     # There are no mandatory fields for creating order via api. Woocommerce api allows order creation without products.
     # Expected status code is 201 (verification done in 'OrdersAPIHelper().call_create_order()')
 
-    assert not create_order_response["line_items"], (f"Create order with no product(s) expected to return empty 'line_items'."
+    assert not create_order_response["line_items"], (f"Create order with no product(s) expected to return empty 'line_items'"
+                                                     f"but response contained 'line_items'"
                                                      f"Actual: {create_order_response['line_items']}")
     assert create_order_response["status"] == "completed", f"Create order with no product(s) expected to return order status 'completed'. Actual: {create_order_response['status']}"
