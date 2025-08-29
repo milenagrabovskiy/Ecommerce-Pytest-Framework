@@ -17,3 +17,13 @@ class CouponsDAO():
         post_title = '{text}';"""
         rs_sql = self.db_helper.execute_select(sql)
         return rs_sql
+
+    def fetch_coupon_by_discount_type(self, discount_type):
+        sql = f"""SELECT * FROM demostore.wp_posts p
+        JOIN demostore.wp_postmeta pm ON p.ID = pm.post_id
+        WHERE p.post_type = 'shop_coupon'
+        AND p.post_status = 'publish'
+        AND pm.meta_key = 'discount_type'
+        AND pm.meta_value = '{discount_type}';"""
+        rs_sql = self.db_helper.execute_select(sql)
+        return rs_sql

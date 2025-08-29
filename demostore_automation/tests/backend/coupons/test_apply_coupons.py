@@ -29,7 +29,8 @@ def apply_coupon_setup():
         "random_product": random_product,
         "random_customer": random_customer,
         "coupons_dao": coupons_dao,
-        "order_ids": []
+        "order_ids": [],
+        "coupon_ids": []
     }
     yield info
 
@@ -37,12 +38,28 @@ def apply_coupon_setup():
         info["orders_api_helper"].call_delete_order(ord_id)
         logger.info(f"Successfully deleted order id: {ord_id}")
 
+    for coupon_id in info["coupon_ids"]:
+        info["coupons_api_helper"].call_delete_coupon(coupon_id)
+        logger.info(f"Successfully deleted coupon id: {coupon_id}")
+
+
+@pytest.mark.parametrize(
+    "discount_type",
+    [
+        pytest.param("percent", marks=[pytest.mark.applycoupon1]),
+        pytest.param("fixed_cart", marks=[pytest.mark.applycoupon2]),
+        pytest.param("fixed_product", marks=[pytest.mark.applycoupon3]),
+        pytest.param("free_coupon", marks=[pytest.mark.applycoupon4])
+    ]
+)
 
 @pytest.mark.applycoupon
-def test_apply_coupon_to_new_order(apply_coupon_setup):
-
+def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
+    if discount_type == "fixed_product":
+        product_id = 34 # hardcoded for V-neck shirt, a reg price variable product
     # fetch random product from DB
-    product_id = apply_coupon_setup['product_id']
+    else:
+        product_id = apply_coupon_setup['product_id']
     logger.info(f"DB product id: {product_id} DB product name: {apply_coupon_setup['random_product']['post_title']}")
 
     # fetch random customer from DB
@@ -77,36 +94,51 @@ def test_apply_coupon_to_new_order(apply_coupon_setup):
                                                            f"Create response: {order_response['total']}"
                                                            f"GET response: {get_order['total']}")
 
+    # Fetch coupon from DB or create coupon for 'fixed_product'
+    if discount_type == "free_coupon":
+        coupon = apply_coupon_setup['coupons_dao'].fetch_coupon_by_text('ssqa100')
+        coupon_id = coupon[0]['ID']
+        coupon_code = coupon[0]['post_title']
 
-    # Fetch coupon from DB
-    free_coupon = apply_coupon_setup['coupons_dao'].fetch_coupon_by_text('ssqa100')
-    assert free_coupon, "Coupon does not exist in DB"
-    free_coupon_id = free_coupon[0]['ID']
-    logger.info(f"Fetched free coupon from DB with id: {free_coupon_id}")
+    elif discount_type == 'fixed_product':
+        product_id_in_order = get_order['line_items'][0]['product_id']
+        coupon = apply_coupon_setup['generic_coupons_helper'].create_coupon_fixed_product(product_id_in_order)
+        coupon_id = coupon['id']
+        coupon_code = coupon['code']
+        apply_coupon_setup["coupon_ids"].append(coupon_id)
+
+    else:
+        coupon = apply_coupon_setup['coupons_dao'].fetch_coupon_by_discount_type(discount_type)
+        assert coupon, f"No coupons found in DB with discount type: {discount_type}"
+        coupon_id = coupon[0]['ID']
+        coupon_code = coupon[0]['post_title']
 
     # Get coupon details with GET call
-    coupon_details = apply_coupon_setup['coupons_api_helper'].call_retrieve_coupon(free_coupon_id)
+    coupon_details = apply_coupon_setup['coupons_api_helper'].call_retrieve_coupon(coupon_id)
     coupon_type = coupon_details['discount_type']
     discount = coupon_details['amount']
     coupon_expiration = coupon_details['date_expires']
     logger.info(f"Found coupon with discount amount: {discount} discount_type: {coupon_type}. Coupon expiration date: {coupon_expiration}")
     assert coupon_details['status'] == 'publish', f"Error. Coupon status: {coupon_details['status']}."
-    assert apply_coupon_setup['generic_coupons_helper'].coupon_is_valid(free_coupon_id), f"Coupon is expired. Coupon expiration: {coupon_expiration}"
+    assert apply_coupon_setup['generic_coupons_helper'].coupon_is_valid(coupon_id), f"Coupon is expired. Coupon expiration: {coupon_expiration}"
 
 
     # make api PUT call for order and add coupon_lines
-    coupon_code = "ssqa100"
     payload_update = {
         "coupon_lines": [{"code": coupon_code}]
     }
     update_response = apply_coupon_setup['orders_api_helper'].call_update_order(order_id, payload_update)
     total_after = update_response['total']
-    expected_total_after = '0.00'
     logger.info(f"PUT response with coupon: {update_response}")
     logger.info(f"Order total after applying coupon: {total_after}")
 
     # verify coupon applied successfully
-    apply_coupon_setup['generic_coupons_helper'].verify_coupon_successfully_applied(order_id=order_id, total_before=total_before, expected_total_after=expected_total_after, expected_discount=discount, coupon_id=free_coupon_id)
+    apply_coupon_setup['generic_coupons_helper'].verify_coupon_successfully_applied(
+        order_id=order_id,
+        total_before=total_before,
+        expected_discount=discount,
+        coupon_id=coupon_id
+    )
 
     # verify customer id in 'used_by' list of users for the coupon
-    apply_coupon_setup['generic_coupons_helper'].verify_coupon_used_by_customer(free_coupon_id, customer_email, customer_id)
+    apply_coupon_setup['generic_coupons_helper'].verify_coupon_used_by_customer(coupon_id, customer_email, customer_id)
