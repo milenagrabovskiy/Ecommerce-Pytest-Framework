@@ -1,3 +1,14 @@
+"""Test suite for applying coupons to new orders.
+
+This module provides fixtures and test cases to validate the correct
+application of various coupon types (percent, fixed cart, fixed product,
+and free coupon) to orders in the system. It ensures that:
+- Orders are created correctly.
+- Coupons are applied and reflected in the order totals.
+- Customers are marked as having used the coupon.
+- Only dynamically created coupons for fixed products are deleted after tests.
+"""
+
 import pytest
 import logging as logger
 
@@ -12,6 +23,13 @@ from demostore_automation.src.generic_helpers.generic_orders_helper import Gener
 
 @pytest.fixture(scope="module")
 def apply_coupon_setup():
+    """Fixture to set up a test environment for applying coupons.
+
+    Returns:
+        dict: Contains DAOs, API helpers, random product and customer,
+              and lists for tracking created orders and coupons for teardown.
+    """
+
     products_dao = ProductsDAO()
     customers_dao = CustomersDAO()
     coupons_dao = CouponsDAO()
@@ -46,15 +64,35 @@ def apply_coupon_setup():
 @pytest.mark.parametrize(
     "discount_type",
     [
-        pytest.param("percent", marks=[pytest.mark.applycoupon1]),
-        pytest.param("fixed_cart", marks=[pytest.mark.applycoupon2]),
-        pytest.param("fixed_product", marks=[pytest.mark.applycoupon3]),
-        pytest.param("free_coupon", marks=[pytest.mark.applycoupon4])
+        pytest.param("percent", marks=[pytest.mark.applycoupon1], id="apply_'percent'_coupon"),
+        pytest.param("fixed_cart", marks=[pytest.mark.applycoupon2], id="apply_'fixed_cart'_coupon"),
+        pytest.param("fixed_product", marks=[pytest.mark.applycoupon3], id="apply_'fixed_product'_coupon"),
+        pytest.param("free_coupon", marks=[pytest.mark.applycoupon4], id="apply_free_coupon")
     ]
 )
 
 @pytest.mark.applycoupon
 def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
+    """Test applying a coupon to a newly created order.
+
+    This test:
+    1. Creates a new order for a random or fixed product.
+    2. Retrieves or creates a coupon depending on the discount type.
+    3. Applies the coupon to the order via API.
+    4. Verifies that the order total and discount are correct.
+    5. Checks that the customer is listed as having used the coupon.
+
+    Args:
+        apply_coupon_setup (dict): Fixture providing setup info and helpers.
+        discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
+
+    Asserts:
+        - Order total before and after applying coupon.
+        - Discount applied matches expected.
+        - Coupon is valid and published.
+        - Customer is correctly listed as a coupon user.
+    """
+
     if discount_type == "fixed_product":
         product_id = 34 # hardcoded for V-neck shirt, a reg price variable product
     # fetch random product from DB
@@ -94,24 +132,9 @@ def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
                                                            f"Create response: {order_response['total']}"
                                                            f"GET response: {get_order['total']}")
 
-    # Fetch coupon from DB or create coupon for 'fixed_product'
-    if discount_type == "free_coupon":
-        coupon = apply_coupon_setup['coupons_dao'].fetch_coupon_by_text('ssqa100')
-        coupon_id = coupon[0]['ID']
-        coupon_code = coupon[0]['post_title']
-
-    elif discount_type == 'fixed_product':
-        product_id_in_order = get_order['line_items'][0]['product_id']
-        coupon = apply_coupon_setup['generic_coupons_helper'].create_coupon_fixed_product(product_id_in_order)
-        coupon_id = coupon['id']
-        coupon_code = coupon['code']
-        apply_coupon_setup["coupon_ids"].append(coupon_id)
-
-    else:
-        coupon = apply_coupon_setup['coupons_dao'].fetch_coupon_by_discount_type(discount_type)
-        assert coupon, f"No coupons found in DB with discount type: {discount_type}"
-        coupon_id = coupon[0]['ID']
-        coupon_code = coupon[0]['post_title']
+    # Fetch coupon from DB or create coupon for 'fixed_product' via helper method
+    coupon_id, coupon_code = apply_coupon_setup["generic_coupons_helper"].get_coupon(
+        discount_type, get_order, coupon_ids=apply_coupon_setup["coupon_ids"])
 
     # Get coupon details with GET call
     coupon_details = apply_coupon_setup['coupons_api_helper'].call_retrieve_coupon(coupon_id)
