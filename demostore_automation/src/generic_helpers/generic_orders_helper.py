@@ -1,8 +1,7 @@
-"""Helper module for creating and managing WooCommerce orders.
+"""Helper module for creating and managing WooCommerce orders and notes.
 
-Provides functions to create orders with optional custom payloads,
-automatically select random products if none are specified, and verify
-that newly created orders exist both via the API and in the database.
+Provides utilities to create orders with optional custom payloads, attach notes,
+and verify existence of orders and notes via API and database.
 """
 import logging as logger
 import json
@@ -77,6 +76,14 @@ class GenericOrdersHelper:
 
 
     def verify_new_order_exists(self, order_id):
+        """Verify that a newly created order exists in API and database.
+
+        Args:
+            order_id (int): ID of the order to verify.
+
+        Raises:
+            AssertionError: If order does not exist in API or database, or IDs mismatch.
+        """
         # API check
         get_order_response = self.orders_api_helper.call_retrieve_order(order_id)
         assert get_order_response['id'] == order_id, (f"Get order by id api response returned wrong order id."
@@ -88,3 +95,54 @@ class GenericOrdersHelper:
         assert db_order, "DB query for fetching order by id is empty"
         assert db_order[0]['ID'] == order_id, f"DB query for fetching order by id returned wrong order id. Actual: {db_order[0]['ID']}, Expected: {order_id}"
         logger.info("DB query for fetching order by id successfully found new order")
+
+
+    def create_order_note(self, order_id, qty=int, payload=None):
+        """Create one or more notes for an order.
+
+        Args:
+            order_id (int): Order ID to attach the note(s) to.
+            qty (int, optional): Number of notes to create. Defaults to 1.
+            payload (dict, optional): Note payload, e.g., {"note": "text"}. Defaults to {"note": "Automation test note"}.
+
+        Returns:
+            list[dict]: List of API responses for each created note.
+
+        Raises:
+            TypeError: If payload is not a dictionary.
+        """
+        if not payload:
+            payload = {
+                "note": "Automation test note"
+            }
+        if not isinstance(payload, dict):
+            raise TypeError(f"Payload must be of type dict. Actual: {type(payload)}")
+        responses = []
+        for i in range(qty):
+            note_api_response = self.orders_api_helper.call_create_order_note(order_id, payload=payload)
+            responses.append(note_api_response)
+            logger.info(f"Created order note: {note_api_response}")
+        return responses
+
+    def verify_note_exists(self, order_id, note_id, note_text):
+        """Verify that a specific order note exists in API and database.
+
+        Args:
+            order_id (int): Order ID the note belongs to.
+            note_id (int): ID of the note to verify.
+            note_text (str): Expected text of the note.
+
+        Raises:
+            AssertionError: If note does not exist in API or database, or IDs mismatch.
+        """
+        get_note_response = self.orders_api_helper.call_retrieve_order_note(order_id, note_id)
+        assert get_note_response['id'] == note_id, (f"Get order note response returned wrong note id."
+                                                    f"Actual: {get_note_response['id']}, Expected: {note_id}")
+        logger.info(f"GET api call for order note by note id successfully found new order note")
+
+        db_orders_with_note_text = self.orders_dao.get_orders_by_note_text(note_text)
+        for i in db_orders_with_note_text:
+            if i['comment_ID'] == note_id:
+                break
+        else:
+            raise AssertionError(f"Note id {note_id} for created note is not found in the DB")
