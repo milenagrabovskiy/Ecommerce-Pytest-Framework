@@ -69,11 +69,12 @@ def test_create_order_note(order_notes_setup, user_type, quantity):
         customer_id = 0
 
     # create order with product and quantity
+    generic_orders_helper = order_notes_setup["generic_orders_helper"]
     order_payload = {
         "customer_id": customer_id,
         "line_items": [{"product_id": order_notes_setup["product_id"], "quantity": quantity}]
     }
-    order_list = order_notes_setup["generic_orders_helper"].create_order(additional_args=order_payload)
+    order_list = generic_orders_helper.create_order(additional_args=order_payload)
 
     for order in order_list: # helper method returns a list
         order_id = order["id"]
@@ -83,7 +84,7 @@ def test_create_order_note(order_notes_setup, user_type, quantity):
         # add order note
         note_payload = {"note": order_notes_setup["note_text"]}
 
-        create_note_responses = order_notes_setup["generic_orders_helper"].create_order_note(
+        create_note_responses = generic_orders_helper.create_order_note(
             order_id, qty=quantity, payload=note_payload)
 
         for create_note_response in create_note_responses:
@@ -96,7 +97,7 @@ def test_create_order_note(order_notes_setup, user_type, quantity):
             assert not create_note_response["customer_note"], "customer_note field expected to be 'False' but returned 'True'"
 
             # verify newly created note exists via API and in DB
-            order_notes_setup["generic_orders_helper"].verify_note_exists(order_id, note_id, note_text=order_notes_setup["note_text"])
+            generic_orders_helper.verify_note_exists(order_id, note_id, note_text=order_notes_setup["note_text"])
         assert len(create_note_responses) == quantity, (f"Quantity of notes created does not match expected."
                                                         f"Expected: {quantity}, Actual: {len(create_note_responses)}")
         logger.info(f"Created {len(create_note_responses)} notes")

@@ -142,7 +142,7 @@ class GenericOrdersHelper:
 
         db_orders_with_note_text = self.orders_dao.get_orders_by_note_text(note_text)
         for i in db_orders_with_note_text:
-                if i['comment_ID'] == note_id:
-                    break
+            if i['comment_ID'] == note_id:
+                break
         else:
             raise AssertionError(f"Note id {note_id} for created note is not found in the DB")
