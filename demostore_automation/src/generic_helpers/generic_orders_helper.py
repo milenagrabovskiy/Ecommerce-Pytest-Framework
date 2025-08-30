@@ -68,6 +68,14 @@ class GenericOrdersHelper:
 
 
     def verify_new_order_exists(self, order_id):
+        """Verify that a newly created order exists in both API and DB.
+
+        Args:
+            order_id (int): ID of the order to verify.
+
+        Raises:
+            AssertionError: If order is missing or ID mismatches in API or DB.
+        """
         # API check
         get_order_response = self.orders_api_helper.call_retrieve_order(order_id)
         assert get_order_response['id'] == order_id, (f"Get order by id api response returned wrong order id."
@@ -79,3 +87,27 @@ class GenericOrdersHelper:
         assert db_order, "DB query for fetching order by id is empty"
         assert db_order[0]['ID'] == order_id, f"DB query for fetching order by id returned wrong order id. Actual: {db_order[0]['ID']}, Expected: {order_id}"
         logger.info("DB query for fetching order by id successfully found new order")
+
+
+    def create_order_for_customer(self, customer_id, product_id):
+        """Create an order for a specific customer and product with free shipping.
+
+        Args:
+            customer_id (int): ID of the customer.
+            product_id (int): ID of the product.
+
+        Returns:
+            dict: API response for the created order.
+        """
+        product_args = {"line_items": [{"product_id": product_id, "quantity": 1}]}
+        product_args.update({"customer_id": customer_id})
+        product_args.update({
+            "shipping_lines": [
+                {
+                    "method_id": "free_shipping",  # overwrite 'shipping_lines' for free shipping
+                    "method_title": "Free Shipping",
+                    "total": "0.00"
+                }
+            ]
+        })
+        return self.create_order(product_args)

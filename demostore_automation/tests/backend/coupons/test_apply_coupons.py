@@ -7,6 +7,7 @@ and free coupon) to orders in the system. It ensures that:
 - Coupons are applied and reflected in the order totals.
 - Customers are marked as having used the coupon.
 - Only dynamically created coupons for fixed products are deleted after tests.
+- Expired coupons do not apply to an order
 """
 import pytest
 import logging as logger
@@ -103,18 +104,7 @@ def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
     logger.info(f"DB customer id: {customer_id} DB customer email: {customer_email}")
 
     # create order with custom args
-    product_args = {"line_items": [{"product_id": product_id, "quantity": 1}]}
-    product_args.update({"customer_id": customer_id})
-    product_args.update({
-        "shipping_lines": [
-            {
-                "method_id": "free_shipping",  # overwrite 'shipping_lines' for free shipping
-                "method_title": "Free Shipping",
-                "total": "0.00"
-            }
-        ]
-    })
-    order_response = apply_coupon_setup['generic_orders_helper'].create_order(product_args)
+    order_response = apply_coupon_setup['generic_orders_helper'].create_order_for_customer(customer_id, product_id)
     order_id = order_response['id']
     apply_coupon_setup['order_ids'].append(order_id) # for teardown
     logger.info(f"Successfully created order with id: {order_id}")
@@ -144,10 +134,7 @@ def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
 
 
     # make api PUT call for order and add coupon_lines
-    payload_update = {
-        "coupon_lines": [{"code": coupon_code}]
-    }
-    update_response = apply_coupon_setup['orders_api_helper'].call_update_order(order_id, payload_update)
+    update_response = apply_coupon_setup['generic_coupons_helper'].apply_coupon_to_order(coupon_code, order_id)
     total_after = update_response['total']
     logger.info(f"PUT response with coupon: {update_response}")
     logger.info(f"Order total after applying coupon: {total_after}")
@@ -162,3 +149,38 @@ def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
 
     # verify customer id in 'used_by' list of users for the coupon
     apply_coupon_setup['generic_coupons_helper'].verify_coupon_used_by_customer(coupon_id, customer_email, customer_id)
+
+@pytest.mark.apply_expired_coupon
+def test_apply_expired_coupon_neg(apply_coupon_setup):
+    """Verify that applying an expired coupon to an order fails.
+
+    Creates an expired coupon, attempts to apply it to a new order,
+    and checks that the API returns the correct error and that the coupon
+    is recognized as invalid.
+
+    Args:
+        apply_coupon_setup (dict): Fixture with DAOs, API helpers, and test data.
+
+    Asserts:
+        - Coupon is expired.
+        - API response matches expected error for expired coupons.
+    """
+    customer_id = apply_coupon_setup['customer_id']
+    product_id = apply_coupon_setup['product_id']
+
+    # create expired coupon
+    expired_coupon = apply_coupon_setup["generic_coupons_helper"].create_expired_coupon()
+    coupon_id = expired_coupon['id']
+    apply_coupon_setup["coupon_ids"].append(coupon_id) # for teardown
+    coupon_code = expired_coupon['code']
+
+    # create order with expired coupon
+    create_order = apply_coupon_setup["generic_orders_helper"].create_order_for_customer(customer_id, product_id)
+    order_id = create_order['id']
+
+    # try applying expired coupon
+    update_response = apply_coupon_setup['generic_coupons_helper'].apply_coupon_to_order(coupon_code, order_id, expected_status_code=400)
+    logger.info(f"update response for expired coupon: {update_response}")
+    # verify coupon not valid
+    assert not apply_coupon_setup["generic_coupons_helper"].coupon_is_valid(coupon_id), f"Error. Coupon expected to be expired."
+    assert update_response ==  {'code': 'woocommerce_rest_invalid_coupon', 'message': 'This coupon has expired.', 'data': {'status': 400}}

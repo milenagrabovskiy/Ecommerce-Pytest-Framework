@@ -167,3 +167,34 @@ class GenericCouponsHelper:
             "product_ids": [product_id]
         }
         return self.coupons_api_helper.call_create_coupon(payload, expected_status_code=201)
+
+
+    def create_expired_coupon(self):
+        """Create a coupon that is already expired.
+
+        Returns:
+            dict: API response for the expired coupon.
+        """
+
+        payload = {
+            "code": generate_random_string(),
+            "discount_type": "percent",
+            "amount": "10",
+            "date_expires": "2024-10-31T21:19:16"
+        }
+        return self.coupons_api_helper.call_create_coupon(payload, expected_status_code=201)
+
+
+    def apply_coupon_to_order(self, coupon_code, order_id, expected_status_code=200):
+        """Apply a coupon to an existing order via API.
+
+        Args:
+            coupon_code (str): Coupon code.
+            order_id (int): Order ID.
+            expected_status_code (int, optional): Expected API response code (default 200).
+
+        Returns:
+            dict: API response for the order update.
+        """
+        payload_update = {"coupon_lines": [{"code": coupon_code}]}
+        return self.orders_api_helper.call_update_order(order_id, payload_update, expected_status_code=expected_status_code)
