@@ -184,3 +184,45 @@ def test_apply_expired_coupon_neg(apply_coupon_setup):
     # verify coupon not valid
     assert not apply_coupon_setup["generic_coupons_helper"].coupon_is_valid(coupon_id), f"Error. Coupon expected to be expired."
     assert update_response ==  {'code': 'woocommerce_rest_invalid_coupon', 'message': 'This coupon has expired.', 'data': {'status': 400}}
+
+@pytest.mark.apply_coupon_twice
+def test_apply_coupon_twice_neg(apply_coupon_setup):
+    """Verify that applying the same coupon twice to one order does not change the discount or order total.
+
+    Args:
+        apply_coupon_setup (dict): Fixture with DAOs, API helpers, and test data.
+
+    Asserts:
+        - Order ID remains the same.
+        - Discount and total do not change after second application.
+        - Coupon code is identical for both applications.
+    """
+    customer_id = apply_coupon_setup['customer_id']
+    product_id = apply_coupon_setup['product_id']
+
+    order_response = apply_coupon_setup['generic_orders_helper'].create_order_for_customer(customer_id, product_id)
+    order_id = order_response['id']
+
+    coupon_id, coupon_code = apply_coupon_setup['generic_coupons_helper'].get_coupon(
+        'percent', get_order=order_response, coupon_ids=apply_coupon_setup["coupon_ids"]
+    )
+
+    # apply coupon once
+    apply_coupon = apply_coupon_setup['generic_coupons_helper'].apply_coupon_to_order(coupon_code, order_id)
+    first_discount = float(apply_coupon['discount_total'])
+    logger.info(f"first apply: {apply_coupon}")
+
+    # apply coupon twice
+    apply_coupon_twice = apply_coupon_setup['generic_coupons_helper'].apply_coupon_to_order(coupon_code, order_id)
+    second_discount = float(apply_coupon_twice['discount_total'])
+    logger.info(f"second apply response: {apply_coupon_twice}")
+
+    # verify same coupon applied to same order and total did not change after second coupon
+    assert apply_coupon['id'] == apply_coupon_twice['id'], f"Coupon applied to 2 different orders instead of same order."
+    assert first_discount == second_discount, (f"Discount changed after applying the same coupon twice"
+        f"First: {first_discount}, Second: {second_discount}")
+    assert apply_coupon['total'] == apply_coupon_twice['total'], f"Order total changed after applying coupon second time."
+
+    assert apply_coupon['coupon_lines'][0]['code'] == apply_coupon_twice['coupon_lines'][0]['code'], ("Different coupon codes used instead of applying same coupon twice."
+                                                                                                      f"first coupon: {apply_coupon['coupon_lines'][0]['code']}"
+                                                                                                      f"second coupon: {apply_coupon_twice['coupon_lines'][0]['code']}")
