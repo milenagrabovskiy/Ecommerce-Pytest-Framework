@@ -1,1 +1,0 @@
-2025-08-29 07:24:23 INFO Starting test: 'test_verify_alternate_images_variable_prod'

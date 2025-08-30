@@ -1,3 +1,0 @@
-2025-08-29 07:23:58 INFO Running test: 'test_create_a_simple_product'
-2025-08-29 07:23:59 INFO Connecting to database: dev.bootcamp.store.supersqa.com
-2025-08-29 07:24:00 INFO Successfully deleted products with ids: [33246]
