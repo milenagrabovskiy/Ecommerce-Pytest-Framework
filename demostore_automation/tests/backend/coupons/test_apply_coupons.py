@@ -8,15 +8,12 @@ and free coupon) to orders in the system. It ensures that:
 - Customers are marked as having used the coupon.
 - Only dynamically created coupons for fixed products are deleted after tests.
 """
-
 import pytest
 import logging as logger
-
 from demostore_automation.src.api_helpers.CouponAPIHelper import CouponAPIHelper
 from demostore_automation.src.api_helpers.OrdersAPIHelper import OrdersAPIHelper
 from demostore_automation.src.dao.coupons_dao import CouponsDAO
 from demostore_automation.src.dao.customers_dao import CustomersDAO
-from demostore_automation.src.dao.orders_dao import OrdersDAO
 from demostore_automation.src.generic_helpers.generic_coupons_helper import GenericCouponsHelper
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
