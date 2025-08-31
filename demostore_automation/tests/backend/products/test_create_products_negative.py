@@ -23,7 +23,7 @@ from demostore_automation.tests.backend.products.test_create_products_smoke impo
         ),
         pytest.param(
             "regular_price", "abc",
-            marks=pytest.mark.xfail(reason="woocommerce bug: accepts letters in string, but 'stock_quantity' throws an error. Returns 'False' for 'purchaseable'"),
+            marks=pytest.mark.xfail(reason="woocommerce bug: accepts letters in string, but 'stock_quantity' throws an error. Returns 'False' for 'purchasable'"),
             id="invalid regular_price: random string"
         ),
         pytest.param("stock_quantity", "abc", marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg2], id="invalid stock_quantity: rand str"),
