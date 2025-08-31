@@ -54,9 +54,12 @@ class GenericProductsHelper:
         if product_type == "variable" and additional_args is None:
             additional_args = {
                 "attributes": [
-                    {
-                        "option": "variation"
-                    }
+                  {
+                    "name": "Size",
+                    "visible": True,
+                    "variation": True,
+                    "options": ["option1", "option2"]
+                  }
                 ]
             }
 
@@ -119,7 +122,21 @@ class GenericProductsHelper:
                                                        f"returned wrong product name"
                                                        f"Expected: {product_name}, Actual: {get_response['name']}")
         if get_response['virtual'] or get_response['downloadable']:
-            assert product_type == "simple"
+            assert product_type == "simple", f"Virtual or Downloadable products must be of type 'simple'. Actual: {product_type}"
+
+        if product_type == "external":
+            assert get_response["button_text"] == post_response["button_text"]
+            assert get_response["external_url"] == post_response["external_url"]
+
+        if product_type == "grouped":
+            assert get_response['grouped_products'] and len(get_response['grouped_products']) > 1, (f"Grouped products must be present and have more than one ids."
+                                                   f"Actual number of product ids: {len(get_response['ids'])}")
+
+        if product_type == "variable":
+            assert get_response["attributes"], f"Error. Get variable product response returned empty list for 'attributes'."
+            assert get_response["attributes"] == get_response["attributes"], (f"Create variable product post and get call 'attributes' field are not the same."
+                                                                              f"POST: {post_response['attributes']}, GET: {get_response['attributes']} ")
+
 
         logger.info(f"Successfully found product with id: {product_id} via api GET call")
 
