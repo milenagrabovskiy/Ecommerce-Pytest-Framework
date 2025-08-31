@@ -74,11 +74,11 @@ def setup_teardown():
 def test_create_product(setup_teardown, product_type, additional_args):
     # create product via api
     post_response = setup_teardown['generic_products_helper'].create_product_by_type(product_type)
+
     logger.info(f"product: {post_response}")
 
     product_id = post_response['id']
     setup_teardown['product_ids'].append(product_id) # for teardown
 
     # verify product exists in api and db
-    setup_teardown['generic_products_helper'].verify_product_is_created(post_response)
-
+    assert setup_teardown['generic_products_helper'].verify_product_is_created(post_response)

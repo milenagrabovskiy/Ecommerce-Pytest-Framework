@@ -1,15 +1,18 @@
 """GenericProductsHelper module.
 
-Provides a helper class to create WooCommerce products via API and verify their existence
-in both the API and the database.
+Provides a helper class to create WooCommerce products via API, test invalid parameters,
+and verify their existence in both the API and the database.
 
-Class:
-    GenericProductsHelper: Contains methods to create products of various types
-    and verify them in API and database.
+Classes:
+    GenericProductsHelper: Contains methods to create products of various types, test invalid
+                           product creation scenarios, and verify products in API and database.
 
 Methods:
-    GenericProductsHelper.create_product_by_type: Create a product with optional attributes.
+    GenericProductsHelper.__init__: Initializes API and database access helpers.
+    GenericProductsHelper.create_product_by_type: Create a product of a given type with optional attributes.
     GenericProductsHelper.verify_product_is_created: Verify that a product exists in API and database.
+    GenericProductsHelper.create_product_invalid_param: Attempt to create a product with an invalid parameter.
+    GenericProductsHelper.verify_error_message: Verify that the API response contains expected error information.
 """
 import logging as logger
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
@@ -82,7 +85,7 @@ class GenericProductsHelper:
                 logger.error(f"additional_args must be of type dict, Actual: {type(additional_args)}")
                 raise TypeError
             payload.update(additional_args)
-        post_response = self.products_api_helper.call_create_product(payload=payload)
+        post_response = self.products_api_helper.call_create_product(payload=payload, expected_status_code=201)
         return post_response
 
 
@@ -108,7 +111,7 @@ class GenericProductsHelper:
         product_name = post_response['name']
         get_response = self.products_api_helper.call_get_product_by_id(product_id)
 
-        # GET api call assertions
+        # GET api call assertion
         assert get_response, f"Create a {product_type} product GET api call is empty."
 
         assert get_response['id'] == product_id, (f"Create a {product_type} product GET api call response"
@@ -121,18 +124,22 @@ class GenericProductsHelper:
         assert get_response['name'] == product_name, (f"Create a {product_type} product GET api call response"
                                                        f"returned wrong product name"
                                                        f"Expected: {product_name}, Actual: {get_response['name']}")
+        assert get_response['status'] == 'publish', (f"Create a {product_type} product GET api call response"
+                                                       f"returned unexpected 'status'"
+                                                       f"Expected: 'publish', Actual: {get_response['status']}")
+
         if get_response['virtual'] or get_response['downloadable']:
             assert product_type == "simple", f"Virtual or Downloadable products must be of type 'simple'. Actual: {product_type}"
 
-        if product_type == "external":
+        elif product_type == "external":
             assert get_response["button_text"] == post_response["button_text"]
             assert get_response["external_url"] == post_response["external_url"]
 
-        if product_type == "grouped":
+        elif product_type == "grouped":
             assert get_response['grouped_products'] and len(get_response['grouped_products']) > 1, (f"Grouped products must be present and have more than one ids."
                                                    f"Actual number of product ids: {len(get_response['ids'])}")
 
-        if product_type == "variable":
+        elif product_type == "variable":
             assert get_response["attributes"], f"Error. Get variable product response returned empty list for 'attributes'."
             assert get_response["attributes"] == get_response["attributes"], (f"Create variable product post and get call 'attributes' field are not the same."
                                                                               f"POST: {post_response['attributes']}, GET: {get_response['attributes']} ")
@@ -145,6 +152,46 @@ class GenericProductsHelper:
 
         # DB assertions
         assert db_product, f"Create a {product_type} product POST api call not recorded in database."
-        assert db_product[0]['post_name'] == product_name, (f"Create a {product_type} product has unexpected name in database."
+        assert db_product[0]['post_name'] == product_name.lower(), (f"Create a {product_type} product has unexpected name in database."
                                                             f"Expected: {product_name}, Actual: {db_product[0]['post_name']}")
         logger.info(f"Successfully found product with id: {product_id} in DB")
+        return True
+
+
+    def create_product_invalid_param(self, param, value):
+        """Attempt to create a product with an invalid parameter.
+
+        Sends a product creation request to the WooCommerce API with a single
+        invalid parameter to test API validation and error handling.
+
+        Args:
+            param (str): The name of the product field to test (e.g., 'sku', 'regular_price').
+            value (Any): The invalid value to use for the parameter.
+
+        Returns:
+            dict: API response from WooCommerce, typically containing an error code and message.
+        """
+        payload = {param: value}
+        post_response = self.products_api_helper.call_create_product(payload=payload, expected_status_code=400)
+
+        return post_response
+
+
+    @staticmethod
+    def verify_error_message(post_response, param):
+        """Verify that the API response contains the expected error information.
+
+        Checks that the response code indicates an invalid parameter or a product not created,
+        and that the error message references the parameter under test.
+
+        Args:
+            post_response (dict): The API response returned by `create_product_invalid_param`.
+            param (str): The name of the invalid parameter being tested.
+
+        Raises:
+            AssertionError: If the response does not contain expected error code or message.
+        """
+        assert 'invalid' in post_response['code'] or 'product_not_created' in post_response['code'], (f"Expected to contain substring 'invalid' or 'product_not_created' in api response code."
+                                                    f"Actual: {post_response['code']}")
+
+        assert param in post_response['message'], f"Expected message in api response should contain the parameter."
