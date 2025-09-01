@@ -7,28 +7,31 @@ import pytest
 import logging as logger
 from demostore_automation.tests.backend.products.test_create_products_smoke import setup_teardown
 
+@pytest.mark.create_product_neg
 @pytest.mark.parametrize(
     "param, value",
     [
-        pytest.param("type", "invalid_type", marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg1], id="invalid product type:str"),
-        pytest.param("type", 123, marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg2], id="invalid product type:int"),
-        pytest.param("sku", "invalid_sku", marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg2], id="invalid product sku:str"),
-        pytest.param("sku", 123, marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg2], id="invalid product sku:int"),
-        pytest.param("regular_price", 10.00, marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg2], id="invalid regular_price:float"),
-        pytest.param("regular_price", 10, marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg2], id="invalid regular_price:int"),
+        pytest.param("type", "invalid_type", marks=[pytest.mark.create_products_neg1], id="invalid product type:str"),
+        pytest.param("type", 123, marks=[pytest.mark.create_products_neg2], id="invalid product type:int"),
+        pytest.param("sku", "invalid_sku", marks=[pytest.mark.create_products_neg3], id="invalid product sku:str"),
+        pytest.param("sku", 123, marks=[pytest.mark.create_products_neg4], id="invalid product sku:int"),
+        pytest.param("regular_price", 10.00, marks=[pytest.mark.create_products_neg5], id="invalid regular_price:float"),
+        pytest.param("regular_price", 10, marks=[pytest.mark.create_products_neg6], id="invalid regular_price:int"),
+        pytest.param("stock_quantity", "abc", marks=[pytest.mark.create_products_neg2], id="invalid stock_quantity: rand str"),
         pytest.param(
             "regular_price", "-10.00",
-            marks=pytest.mark.xfail(reason="woocommerce bug: accepts negative regular_price as valid. negative float in DB, but FE shows '0.00'"),
-            id="invalid regular_price:negative"
+                    marks=pytest.mark.xfail
+                    (reason="woocommerce bug: accepts negative regular_price as valid. negative float in DB, but FE shows '0.00'"),
+                    id="invalid regular_price:negative"
         ),
         pytest.param(
             "regular_price", "abc",
-            marks=pytest.mark.xfail(reason="woocommerce bug: accepts letters in string, but 'stock_quantity' throws an error. Returns 'False' for 'purchasable'"),
-            id="invalid regular_price: random string"
-        ),
-        pytest.param("stock_quantity", "abc", marks=[pytest.mark.create_product_neg, pytest.mark.create_products_neg2], id="invalid stock_quantity: rand str"),
+                    marks=pytest.mark.xfail
+                    (reason="woocommerce bug: accepts letters in string, but 'stock_quantity' throws an error. Returns 'False' for 'purchasable'"),
+                    id="invalid regular_price: random string"
+                    )
     ]
-)
+    )
 def test_create_product_invalid_param(setup_teardown, param, value):
     """Test product creation with invalid parameters.
 
@@ -70,4 +73,3 @@ def test_create_empty_product_neg(setup_teardown):
 
     # verify product exists via api and in db
     assert setup_teardown['generic_products_helper'].verify_product_is_created(response)
-

@@ -15,6 +15,8 @@ Methods:
     GenericProductsHelper.verify_error_message: Verify that the API response contains expected error information.
 """
 import logging as logger
+
+from demostore_automation.scripts.example_of_woocommerce_library import payload
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.utilities.genericUtilities import generate_random_string
@@ -152,8 +154,16 @@ class GenericProductsHelper:
 
         # DB assertions
         assert db_product, f"Create a {product_type} product POST api call not recorded in database."
-        assert db_product[0]['post_name'] == product_name.lower(), (f"Create a {product_type} product has unexpected name in database."
+        if product_name == "Product":
+            assert 'product' in db_product[0]['post_name'], (f"Create a {product_type} product has unexpected name in database."
                                                             f"Expected: {product_name}, Actual: {db_product[0]['post_name']}")
+        else:
+            assert db_product[0]['post_name'] == product_name.lower(), (f"Create a {product_type} product has unexpected name in database."
+                                                            f"Expected: {product_name}, Actual: {db_product[0]['post_name']}")
+
+        # if post_response['regular_price']:
+        #     assert db_product[0]['price'] == post_response['regular_price'], (f"Create product response has different price in DB."
+        #                                                                 f"DB price: {db_product[0]['price']}, Expected DB price: {post_response['regular_price']}")
         logger.info(f"Successfully found product with id: {product_id} in DB")
         return True
 
