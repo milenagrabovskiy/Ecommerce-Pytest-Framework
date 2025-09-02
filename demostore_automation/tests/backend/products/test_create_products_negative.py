@@ -72,4 +72,4 @@ def test_create_empty_product_neg(setup_teardown):
                                           f"Default product name: 'Product'. Actual: {response['name']} ")
 
     # verify product exists via api and in db
-    assert setup_teardown['generic_products_helper'].verify_product_is_created(response)
+    setup_teardown['generic_products_helper'].verify_product_is_created(response)

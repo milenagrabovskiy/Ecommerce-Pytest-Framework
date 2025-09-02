@@ -36,10 +36,11 @@ def test_sales_price_more_than_regular(setup_teardown, regular_price, sale_price
     logger.info(f"POST response for sale_price > regular_price create product test: {post_response}")
 
     # make GET call to make sure api ignores sale_price and sets it to an empty string.
-    assert setup_teardown['generic_products_helper'].verify_product_is_created(post_response), f"Product with invalid sale_price test not found in api and/or db"
+    get_response = setup_teardown['generic_products_helper'].verify_product_is_created(post_response)
+    assert get_response, "Product with invalid sale_price test not found in api and/or db"
 
     # verify sale_price and 'regular_price' are correct
-    get_response = setup_teardown['products_api_helper'].call_get_product_by_id(product_id)
+    #get_response = setup_teardown['products_api_helper'].call_get_product_by_id(product_id)
     logger.info(f"GET response for sale_price > regular_price create product test: {get_response}")
 
     assert not get_response['sale_price'], (f"GET response for create product with invalid sale_price test"

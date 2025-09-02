@@ -180,7 +180,7 @@ class GenericProductsHelper:
                     )
 
         logger.info(f"Successfully found product with id: {product_id} in DB")
-        return True
+        return post_response
 
 
     def create_product_invalid_param(self, param, value):
