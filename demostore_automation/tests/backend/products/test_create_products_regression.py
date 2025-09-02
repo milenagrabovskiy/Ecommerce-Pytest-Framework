@@ -13,7 +13,18 @@ from demostore_automation.tests.backend.products.test_create_products_smoke impo
 
 
 def test_sales_price_more_than_regular(setup_teardown, regular_price, sale_price):
-    # create payload with sale_price < regular_price
+    """Test that creating a product with sale_price greater than or equal to regular_price
+    results in the API ignoring the sale_price and setting it to an empty string.
+
+    Args:
+        setup_teardown (fixture): Fixture providing API helpers.
+        regular_price (str): Regular price of the product.
+        sale_price (str): Sale price of the product.
+
+    Raises:
+        AssertionError: If the API or DB does not handle invalid sale_price correctly.
+    """
+    # create payload with sale_price and regular_price
     payload = {
         "regular_price" : regular_price,
         "sale_price": sale_price
@@ -27,6 +38,7 @@ def test_sales_price_more_than_regular(setup_teardown, regular_price, sale_price
     # make GET call to make sure api ignores sale_price and sets it to an empty string.
     assert setup_teardown['generic_products_helper'].verify_product_is_created(post_response), f"Product with invalid sale_price test not found in api and/or db"
 
+    # verify sale_price and 'regular_price' are correct
     get_response = setup_teardown['products_api_helper'].call_get_product_by_id(product_id)
     logger.info(f"GET response for sale_price > regular_price create product test: {get_response}")
 

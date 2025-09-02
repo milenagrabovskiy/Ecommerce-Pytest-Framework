@@ -15,8 +15,6 @@ Methods:
     GenericProductsHelper.verify_error_message: Verify that the API response contains expected error information.
 """
 import logging as logger
-
-from demostore_automation.scripts.example_of_woocommerce_library import payload
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.utilities.genericUtilities import generate_random_string
@@ -161,9 +159,26 @@ class GenericProductsHelper:
             assert db_product[0]['post_name'] == product_name.lower(), (f"Create a {product_type} product has unexpected name in database."
                                                             f"Expected: {product_name}, Actual: {db_product[0]['post_name']}")
 
-        # if post_response['regular_price']:
-        #     assert db_product[0]['price'] == post_response['regular_price'], (f"Create product response has different price in DB."
-        #                                                                 f"DB price: {db_product[0]['price']}, Expected DB price: {post_response['regular_price']}")
+        if post_response['regular_price']:
+            db_prices = self.products_dao.get_product_price(product_id)
+
+            for row in db_prices: # iterate through list as dao method returns rows
+                if row['meta_key'] == '_regular_price':
+                    assert row['meta_value'] == post_response['regular_price'], (
+                        f"Wrong product 'regular_price' in DB. "
+                        f"Actual: {row['meta_value']}, Expected: {post_response['regular_price']}"
+                    )
+                elif row['meta_key'] == '_sale_price':
+                    assert row['meta_value'] == post_response['sale_price'], (
+                        f"Wrong product 'sale_price' in db. "
+                        f"Actual: {row['meta_value']}, Expected: {post_response['sale_price']}"
+                    )
+                elif row['meta_key'] == '_price':
+                    assert row['meta_value'] == post_response['price'], (
+                        f"Wrong product 'price' in db. "
+                        f"Actual: {row['meta_value']}, Expected: {post_response['price']}"
+                    )
+
         logger.info(f"Successfully found product with id: {product_id} in DB")
         return True
 
