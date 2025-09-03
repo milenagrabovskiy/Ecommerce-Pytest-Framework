@@ -1,159 +1,5 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Tue Sep 02 17:37:28 UTC 2025","Tue Sep 02 17:37:29 UTC 2025","699","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Tue Sep 02 17:38:00 UTC 2025","Tue Sep 02 17:38:01 UTC 2025","962","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_product]",""
-"passed","Tue Sep 02 17:37:58 UTC 2025","Tue Sep 02 17:37:58 UTC 2025","524","tests.backend.products","test_create_products_negative","","","","test_create_empty_product_neg","Test creating a product with an empty payload.
-
-Verifies that WooCommerce creates a product with default values when
-no fields are provided. Also checks that the product exists in the API
-and the database.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-"
-"passed","Tue Sep 02 17:37:18 UTC 2025","Tue Sep 02 17:37:18 UTC 2025","139","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_invalid_discount_type","Negative test: Verify invalid discount type returns an error.
-
-Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance.
-
-Raises:
-    AssertionError: If the API response does not match the expected error response.
-"
-"passed","Tue Sep 02 17:37:20 UTC 2025","Tue Sep 02 17:37:20 UTC 2025","144","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_when_no_password_is_provided","Test API fails when no password is provided.
-
-Verifies:
-    - API returns 400
-    - Error message specifies missing password
-
-Raises:
-    AssertionError: If missing param error is not correctly returned.
-"
-"passed","Tue Sep 02 17:37:17 UTC 2025","Tue Sep 02 17:37:18 UTC 2025","393","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[None]","Test creating a coupon with various valid discount types.
-
-Verifies that the POST API creates the coupon correctly and the GET API
-retrieves the coupon with the expected values.
-
-Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
-    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
-
-Raises:
-    AssertionError: If the POST or GET API responses do not match expected values.
-"
-"passed","Tue Sep 02 17:37:56 UTC 2025","Tue Sep 02 17:37:56 UTC 2025","132","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product type:str]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:37:59 UTC 2025","Tue Sep 02 17:37:59 UTC 2025","874","tests.backend.products","test_create_products_regression","","","","test_sales_price_more_than_regular[sale_price > regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
-results in the API ignoring the sale_price and setting it to an empty string.
-
-Args:
-    setup_teardown (fixture): Fixture providing API helpers.
-    regular_price (str): Regular price of the product.
-    sale_price (str): Sale price of the product.
-
-Raises:
-    AssertionError: If the API or DB does not handle invalid sale_price correctly.
-"
-"passed","Tue Sep 02 17:37:48 UTC 2025","Tue Sep 02 17:37:48 UTC 2025","435","tests.backend.orders","test_create_order_smoke","","","","test_create_order_empty_line_items_negative","Verify that an order can be created without products (empty line_items).
-
-WooCommerce allows order creation without mandatory product fields.
-This test ensures:
-  - The order is created with an empty `line_items` list.
-  - The order status is returned as ""completed"".
-
-Args:
-    my_orders_smoke_setup (fixture): Provides API helpers and teardown tracking.
-"
-"passed","Tue Sep 02 17:37:24 UTC 2025","Tue Sep 02 17:37:25 UTC 2025","1122","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_1_notes]","Test creating one or multiple order notes for a given user type.
-
-Args:
-    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
-    user_type (str): 'guest_user' or 'registered_user'.
-    quantity (int): Number of notes to create.
-"
-"skipped","Tue Sep 02 17:37:57 UTC 2025","Tue Sep 02 17:37:58 UTC 2025","374","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price: random string]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:37:57 UTC 2025","Tue Sep 02 17:37:57 UTC 2025","142","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid stock_quantity: rand str]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:38:05 UTC 2025","Tue Sep 02 17:38:06 UTC 2025","1158","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_external_product]",""
-"passed","Tue Sep 02 17:37:56 UTC 2025","Tue Sep 02 17:37:56 UTC 2025","132","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product type:int]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:37:34 UTC 2025","Tue Sep 02 17:37:35 UTC 2025","883","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Tue Sep 02 17:37:19 UTC 2025","Tue Sep 02 17:37:19 UTC 2025","566","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_only_email_password","Test customer creation using only email and password.
+"passed","Wed Sep 03 07:22:38 UTC 2025","Wed Sep 03 07:22:38 UTC 2025","783","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_only_email_password","Test customer creation using only email and password.
 
 Verifies:
     - HTTP 201 response from API
@@ -163,41 +9,8 @@ Verifies:
 Raises:
     AssertionError: If any of the API or DB validations fail.
 "
-"passed","Tue Sep 02 17:37:29 UTC 2025","Tue Sep 02 17:37:33 UTC 2025","3986","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Tue Sep 02 17:37:59 UTC 2025","Tue Sep 02 17:38:00 UTC 2025","760","tests.backend.products","test_create_products_regression","","","","test_sales_price_more_than_regular[sale_price == regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
-results in the API ignoring the sale_price and setting it to an empty string.
-
-Args:
-    setup_teardown (fixture): Fixture providing API helpers.
-    regular_price (str): Regular price of the product.
-    sale_price (str): Sale price of the product.
-
-Raises:
-    AssertionError: If the API or DB does not handle invalid sale_price correctly.
-"
-"passed","Tue Sep 02 17:37:16 UTC 2025","Tue Sep 02 17:37:17 UTC 2025","899","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[percent]","Test creating a coupon with various valid discount types.
+"passed","Wed Sep 03 07:23:28 UTC 2025","Wed Sep 03 07:23:29 UTC 2025","927","tests.backend.products","test_get_products_smoke","","","","test_get_all_products_returns_not_empty",""
+"passed","Wed Sep 03 07:22:36 UTC 2025","Wed Sep 03 07:22:36 UTC 2025","565","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[None]","Test creating a coupon with various valid discount types.
 
 Verifies that the POST API creates the coupon correctly and the GET API
 retrieves the coupon with the expected values.
@@ -209,49 +22,33 @@ Args:
 Raises:
     AssertionError: If the POST or GET API responses do not match expected values.
 "
-"passed","Tue Sep 02 17:37:21 UTC 2025","Tue Sep 02 17:37:24 UTC 2025","2453","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_5_notes]","Test creating one or multiple order notes for a given user type.
+"passed","Wed Sep 03 07:22:34 UTC 2025","Wed Sep 03 07:22:35 UTC 2025","866","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[percent]","Test creating a coupon with various valid discount types.
+
+Verifies that the POST API creates the coupon correctly and the GET API
+retrieves the coupon with the expected values.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
+    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+
+Raises:
+    AssertionError: If the POST or GET API responses do not match expected values.
+"
+"passed","Wed Sep 03 07:22:48 UTC 2025","Wed Sep 03 07:22:53 UTC 2025","4728","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_5_notes]","Test creating one or multiple order notes for a given user type.
 
 Args:
     order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
     user_type (str): 'guest_user' or 'registered_user'.
     quantity (int): Number of notes to create.
 "
-"passed","Tue Sep 02 17:37:17 UTC 2025","Tue Sep 02 17:37:17 UTC 2025","375","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_product]","Test creating a coupon with various valid discount types.
-
-Verifies that the POST API creates the coupon correctly and the GET API
-retrieves the coupon with the expected values.
+"passed","Wed Sep 03 07:22:40 UTC 2025","Wed Sep 03 07:22:42 UTC 2025","1546","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_1_note]","Test creating one or multiple order notes for a given user type.
 
 Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
-    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
-
-Raises:
-    AssertionError: If the POST or GET API responses do not match expected values.
+    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
+    user_type (str): 'guest_user' or 'registered_user'.
+    quantity (int): Number of notes to create.
 "
-"passed","Tue Sep 02 17:37:17 UTC 2025","Tue Sep 02 17:37:17 UTC 2025","484","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_cart]","Test creating a coupon with various valid discount types.
-
-Verifies that the POST API creates the coupon correctly and the GET API
-retrieves the coupon with the expected values.
-
-Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
-    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
-
-Raises:
-    AssertionError: If the POST or GET API responses do not match expected values.
-"
-"passed","Tue Sep 02 17:38:03 UTC 2025","Tue Sep 02 17:38:04 UTC 2025","1048","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product2]",""
-"passed","Tue Sep 02 17:37:56 UTC 2025","Tue Sep 02 17:37:56 UTC 2025","151","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:float]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:37:47 UTC 2025","Tue Sep 02 17:37:48 UTC 2025","303","tests.backend.orders","test_create_order_smoke","","","","test_create_order_no_payment_info","Verify order creation with missing billing, shipping, and payment data.
+"passed","Wed Sep 03 07:23:19 UTC 2025","Wed Sep 03 07:23:19 UTC 2025","339","tests.backend.orders","test_create_order_smoke","","","","test_create_order_no_payment_info","Verify order creation with missing billing, shipping, and payment data.
 
 Ensures the API still creates an order when critical fields are empty and
 sets the correct flags and status.
@@ -267,21 +64,99 @@ Asserts:
     - `needs_payment` is True.
     - Status equals ""pending"".
 "
-"passed","Tue Sep 02 17:37:20 UTC 2025","Tue Sep 02 17:37:21 UTC 2025","1173","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_1_note]","Test creating one or multiple order notes for a given user type.
+"passed","Wed Sep 03 07:23:27 UTC 2025","Wed Sep 03 07:23:28 UTC 2025","885","tests.backend.products","test_create_products_smoke","","","","test_create_a_simple_product","Test creating a simple product via the WooCommerce API.
+
+Steps:
+    - Create a product with 'simple' type and a random name.
+    - Assert the POST response contains correct data.
+    - Assert the product is retrievable via GET.
+    - Assert the product exists in the database.
+    - Track the product ID for teardown cleanup.
+
+Args:
+    setup_teardown (dict): Fixture providing API helper, DAO helper, and product ID list.
+
+Raises:
+    AssertionError: If any validation (API or DB) fails.
+"
+"passed","Wed Sep 03 07:22:55 UTC 2025","Wed Sep 03 07:22:56 UTC 2025","967","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Wed Sep 03 07:22:35 UTC 2025","Wed Sep 03 07:22:36 UTC 2025","537","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_product]","Test creating a coupon with various valid discount types.
+
+Verifies that the POST API creates the coupon correctly and the GET API
+retrieves the coupon with the expected values.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
+    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+
+Raises:
+    AssertionError: If the POST or GET API responses do not match expected values.
+"
+"passed","Wed Sep 03 07:23:12 UTC 2025","Wed Sep 03 07:23:19 UTC 2025","6237","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_5_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Wed Sep 03 07:22:35 UTC 2025","Wed Sep 03 07:22:35 UTC 2025","544","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_cart]","Test creating a coupon with various valid discount types.
+
+Verifies that the POST API creates the coupon correctly and the GET API
+retrieves the coupon with the expected values.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
+    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+
+Raises:
+    AssertionError: If the POST or GET API responses do not match expected values.
+"
+"passed","Wed Sep 03 07:22:46 UTC 2025","Wed Sep 03 07:22:48 UTC 2025","1732","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_1_notes]","Test creating one or multiple order notes for a given user type.
 
 Args:
     order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
     user_type (str): 'guest_user' or 'registered_user'.
     quantity (int): Number of notes to create.
 "
-"passed","Tue Sep 02 17:37:25 UTC 2025","Tue Sep 02 17:37:27 UTC 2025","2304","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_5_notes]","Test creating one or multiple order notes for a given user type.
-
-Args:
-    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
-    user_type (str): 'guest_user' or 'registered_user'.
-    quantity (int): Number of notes to create.
-"
-"passed","Tue Sep 02 17:37:20 UTC 2025","Tue Sep 02 17:37:20 UTC 2025","177","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_for_existing_email","Test API fails when trying to create a customer with an existing email.
+"passed","Wed Sep 03 07:22:39 UTC 2025","Wed Sep 03 07:22:39 UTC 2025","267","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_for_existing_email","Test API fails when trying to create a customer with an existing email.
 
 Verifies:
     - API returns 400
@@ -290,40 +165,7 @@ Verifies:
 Raises:
     AssertionError: If API response doesn't contain expected error code/message.
 "
-"passed","Tue Sep 02 17:38:01 UTC 2025","Tue Sep 02 17:38:02 UTC 2025","751","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product0]",""
-"passed","Tue Sep 02 17:38:11 UTC 2025","Tue Sep 02 17:38:11 UTC 2025","347","tests.backend.products","test_get_products_smoke","","","","test_get_product_by_id",""
-"skipped","Tue Sep 02 17:37:57 UTC 2025","Tue Sep 02 17:37:57 UTC 2025","571","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:negative]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:37:56 UTC 2025","Tue Sep 02 17:37:57 UTC 2025","155","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:int]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:38:10 UTC 2025","Tue Sep 02 17:38:11 UTC 2025","496","tests.backend.products","test_get_products_smoke","","","","test_get_all_products_returns_not_empty",""
-"passed","Tue Sep 02 17:37:56 UTC 2025","Tue Sep 02 17:37:56 UTC 2025","208","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product sku:int]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Tue Sep 02 17:37:41 UTC 2025","Tue Sep 02 17:37:47 UTC 2025","5803","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_5_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+"passed","Wed Sep 03 07:22:56 UTC 2025","Wed Sep 03 07:23:03 UTC 2025","7462","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
 
 This test covers multiple scenarios using parameterization:
     - Guest user creating 1 order with 1 item.
@@ -346,10 +188,16 @@ Args:
     order_qty (int): Quantity of orders created via API.
     product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
 "
-"passed","Tue Sep 02 17:38:06 UTC 2025","Tue Sep 02 17:38:08 UTC 2025","1221","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_variable_product]",""
-"passed","Tue Sep 02 17:38:02 UTC 2025","Tue Sep 02 17:38:03 UTC 2025","1124","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product1]",""
-"passed","Tue Sep 02 17:38:04 UTC 2025","Tue Sep 02 17:38:05 UTC 2025","1147","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_grouped_product]",""
-"passed","Tue Sep 02 17:37:33 UTC 2025","Tue Sep 02 17:37:34 UTC 2025","733","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+"passed","Wed Sep 03 07:22:36 UTC 2025","Wed Sep 03 07:22:36 UTC 2025","193","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_invalid_discount_type","Negative test: Verify invalid discount type returns an error.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance.
+
+Raises:
+    AssertionError: If the API response does not match the expected error response.
+"
+"passed","Wed Sep 03 07:23:29 UTC 2025","Wed Sep 03 07:23:30 UTC 2025","572","tests.backend.products","test_get_products_smoke","","","","test_get_product_by_id",""
+"passed","Wed Sep 03 07:23:06 UTC 2025","Wed Sep 03 07:23:12 UTC 2025","6418","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
 
 This test covers multiple scenarios using parameterization:
     - Guest user creating 1 order with 1 item.
@@ -372,7 +220,17 @@ Args:
     order_qty (int): Quantity of orders created via API.
     product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
 "
-"passed","Tue Sep 02 17:37:35 UTC 2025","Tue Sep 02 17:37:41 UTC 2025","6818","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+"passed","Wed Sep 03 07:23:19 UTC 2025","Wed Sep 03 07:23:19 UTC 2025","543","tests.backend.orders","test_create_order_smoke","","","","test_create_order_empty_line_items_negative","Verify that an order can be created without products (empty line_items).
+
+WooCommerce allows order creation without mandatory product fields.
+This test ensures:
+  - The order is created with an empty `line_items` list.
+  - The order status is returned as ""completed"".
+
+Args:
+    my_orders_smoke_setup (fixture): Provides API helpers and teardown tracking.
+"
+"passed","Wed Sep 03 07:23:04 UTC 2025","Wed Sep 03 07:23:06 UTC 2025","1543","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
 
 This test covers multiple scenarios using parameterization:
     - Guest user creating 1 order with 1 item.
@@ -395,26 +253,65 @@ Args:
     order_qty (int): Quantity of orders created via API.
     product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
 "
-"passed","Tue Sep 02 17:37:56 UTC 2025","Tue Sep 02 17:37:56 UTC 2025","192","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product sku:str]","Test product creation with invalid parameters.
+"passed","Wed Sep 03 07:22:40 UTC 2025","Wed Sep 03 07:22:40 UTC 2025","217","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_when_no_password_is_provided","Test API fails when no password is provided.
 
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
+Verifies:
+    - API returns 400
+    - Error message specifies missing password
+
+Raises:
+    AssertionError: If missing param error is not correctly returned.
+"
+"passed","Wed Sep 03 07:23:03 UTC 2025","Wed Sep 03 07:23:04 UTC 2025","1162","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
 
 Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
 "
-"passed","Tue Sep 02 17:37:44 UTC 2025","Tue Sep 02 17:37:48 UTC 2025","4011","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_not_displayed_in_my_account_page",""
-"passed","Tue Sep 02 17:37:35 UTC 2025","Tue Sep 02 17:37:37 UTC 2025","1567","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_home_page",""
-"passed","Tue Sep 02 17:37:37 UTC 2025","Tue Sep 02 17:37:40 UTC 2025","2675","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_cart_page",""
-"passed","Tue Sep 02 17:38:18 UTC 2025","Tue Sep 02 17:38:21 UTC 2025","2823","tests.frontend.my_account","test_register_new_user","TestRegisterNewUser","","","test_register_valid_new_user","
-Test to verify a valid user can register to the site.
-It generates a random email and password, then registers the user.
-:return:
+"passed","Wed Sep 03 07:22:42 UTC 2025","Wed Sep 03 07:22:46 UTC 2025","4552","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_5_notes]","Test creating one or multiple order notes for a given user type.
+
+Args:
+    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
+    user_type (str): 'guest_user' or 'registered_user'.
+    quantity (int): Number of notes to create.
 "
-"passed","Tue Sep 02 17:37:40 UTC 2025","Tue Sep 02 17:37:44 UTC 2025","4251","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_checkout_page",""
-"passed","Tue Sep 02 17:38:25 UTC 2025","Tue Sep 02 17:38:25 UTC 2025","21","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_main_image_variable_prod","Verify that the main product image on the frontend matches the one returned by the API.
+"passed","Wed Sep 03 07:23:10 UTC 2025","Wed Sep 03 07:23:26 UTC 2025","15567","tests.frontend.end_to_end","test_end_to_end_checkout_guest_user","TestEndToEndCheckoutGuestUser","","","test_end_to_end_checkout_guest_user",""
+"passed","Wed Sep 03 07:23:32 UTC 2025","Wed Sep 03 07:23:34 UTC 2025","2274","tests.frontend.my_account","test_login_negative","TestLoginNegative","","","test_login_none_existing_user",""
+"failed","Wed Sep 03 07:23:30 UTC 2025","Wed Sep 03 07:23:30 UTC 2025","212","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_number_of_products_displayed",""
+"passed","Wed Sep 03 07:23:02 UTC 2025","Wed Sep 03 07:23:05 UTC 2025","3005","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_checkout_page",""
+"passed","Wed Sep 03 07:23:00 UTC 2025","Wed Sep 03 07:23:02 UTC 2025","1887","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_cart_page",""
+"passed","Wed Sep 03 07:23:30 UTC 2025","Wed Sep 03 07:23:30 UTC 2025","22","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_heading_is_displayed",""
+"passed","Wed Sep 03 07:23:30 UTC 2025","Wed Sep 03 07:23:30 UTC 2025","86","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_header_menu_is_displayed",""
+"passed","Wed Sep 03 07:23:05 UTC 2025","Wed Sep 03 07:23:08 UTC 2025","3482","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_not_displayed_in_my_account_page",""
+"passed","Wed Sep 03 07:23:43 UTC 2025","Wed Sep 03 07:23:43 UTC 2025","59","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_product_name_displayed_variable_product","Verify that the product name (h1 header) is correctly displayed for a variable product.
+
+This test checks that the displayed product name on the frontend matches the expected value
+for a known variable product. The product is hardcoded to keep the test frontend-only.
+
+Args:
+    setup: A pytest fixture that sets up the test environment and necessary page objects.
+
+Raises:
+    AssertionError: If the displayed product name does not match the expected name.
+"
+"passed","Wed Sep 03 07:23:43 UTC 2025","Wed Sep 03 07:23:43 UTC 2025","21","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_main_image_variable_prod","Verify that the main product image on the frontend matches the one returned by the API.
 
 This test fetches the displayed product image URL from the frontend and compares it
 against a list of image URLs retrieved from the API. It also checks that the displayed
@@ -426,7 +323,7 @@ Args:
 Raises:
     AssertionError: If the image URL is invalid or does not match any from the API.
 "
-"passed","Tue Sep 02 17:38:25 UTC 2025","Tue Sep 02 17:38:25 UTC 2025","58","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_alternate_images_variable_prod","Verify that all alternate product images on the frontend match the API response.
+"passed","Wed Sep 03 07:23:43 UTC 2025","Wed Sep 03 07:23:43 UTC 2025","71","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_alternate_images_variable_prod","Verify that all alternate product images on the frontend match the API response.
 
 This test retrieves all alternate product image URLs displayed on the frontend
 and compares them to the image URLs returned by the WooCommerce API.
@@ -439,19 +336,9 @@ Args:
 Raises:
     AssertionError: If the displayed alternate image URLs do not match the API URLs.
 "
-"passed","Tue Sep 02 17:38:14 UTC 2025","Tue Sep 02 17:38:16 UTC 2025","2315","tests.frontend.my_account","test_login_negative","TestLoginNegative","","","test_login_none_existing_user",""
-"passed","Tue Sep 02 17:38:25 UTC 2025","Tue Sep 02 17:38:25 UTC 2025","54","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_product_name_displayed_variable_product","Verify that the product name (h1 header) is correctly displayed for a variable product.
-
-This test checks that the displayed product name on the frontend matches the expected value
-for a known variable product. The product is hardcoded to keep the test frontend-only.
-
-Args:
-    setup: A pytest fixture that sets up the test environment and necessary page objects.
-
-Raises:
-    AssertionError: If the displayed product name does not match the expected name.
+"passed","Wed Sep 03 07:23:36 UTC 2025","Wed Sep 03 07:23:39 UTC 2025","2717","tests.frontend.my_account","test_register_new_user","TestRegisterNewUser","","","test_register_valid_new_user","
+Test to verify a valid user can register to the site.
+It generates a random email and password, then registers the user.
+:return:
 "
-"passed","Tue Sep 02 17:38:12 UTC 2025","Tue Sep 02 17:38:12 UTC 2025","77","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_header_menu_is_displayed",""
-"failed","Tue Sep 02 17:38:11 UTC 2025","Tue Sep 02 17:38:12 UTC 2025","177","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_number_of_products_displayed",""
-"passed","Tue Sep 02 17:37:50 UTC 2025","Tue Sep 02 17:38:08 UTC 2025","18089","tests.frontend.end_to_end","test_end_to_end_checkout_guest_user","TestEndToEndCheckoutGuestUser","","","test_end_to_end_checkout_guest_user",""
-"passed","Tue Sep 02 17:38:12 UTC 2025","Tue Sep 02 17:38:12 UTC 2025","20","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_heading_is_displayed",""
+"passed","Wed Sep 03 07:22:59 UTC 2025","Wed Sep 03 07:23:00 UTC 2025","1082","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_home_page",""
