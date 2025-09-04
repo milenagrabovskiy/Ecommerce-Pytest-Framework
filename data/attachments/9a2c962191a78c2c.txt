@@ -1,0 +1,5 @@
+2025-09-04 23:29:06 INFO Connecting to database: dev.bootcamp.store.supersqa.com
+2025-09-04 23:29:07 INFO Found 387 random users from db.
+2025-09-04 23:29:07 INFO Connecting to database: dev.bootcamp.store.supersqa.com
+2025-09-04 23:29:08 INFO Deleted customer: 5293
+2025-09-04 23:29:08 INFO Deleted 1 customers
