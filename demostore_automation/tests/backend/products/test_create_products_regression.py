@@ -10,16 +10,17 @@ import pytest
 import logging as logger
 from demostore_automation.tests.backend.products.test_create_products_smoke import setup_teardown
 
+pytestmark = [pytest.mark.products, pytest.mark.create_product]
 
 @pytest.mark.invalid_sale_price
 @pytest.mark.parametrize(
     "regular_price, sale_price",
     [
-        pytest.param("5.00", "10.00", marks=[pytest.mark.invalid_sale_price1], id="sale_price > regular_price"),
-        pytest.param("10.00", "10.00", marks=[pytest.mark.invalid_sale_price2], id="sale_price == regular_price"),
-        pytest.param("9999999.99", "9999999.99", marks=[pytest.mark.invalid_sale_price3], id=" very large sale_price == regular_price"),
-        pytest.param("0.00", "9999999.99", marks=[pytest.mark.invalid_sale_price4], id="very large sale_price > regular_price"),
-        pytest.param("10.00", "abc", marks=[pytest.mark.invalid_sale_price5], id="letter string sale_price"),
+        pytest.param("5.00", "10.00", marks=[pytest.mark.ebe28], id="sale_price > regular_price"),
+        pytest.param("10.00", "10.00", marks=[pytest.mark.ebe29], id="sale_price == regular_price"),
+        pytest.param("9999999.99", "9999999.99", marks=[pytest.mark.ebe30], id="very large sale_price == regular_price"),
+        pytest.param("0.00", "9999999.99", marks=[pytest.mark.ebe31], id="very large sale_price > regular_price"),
+        pytest.param("10.00", "abc", marks=[pytest.mark.ebe32], id="letter string sale_price"),
     ]
 )
 
@@ -63,14 +64,14 @@ def test_invalid_sales_price(setup_teardown, regular_price, sale_price):
 
 
 
-@pytest.mark.price_boundaries
+@pytest.mark.sale_price_edge
 @pytest.mark.parametrize(
     "regular_price, sale_price",
     [
-        pytest.param("10.00", "9.99", marks=[pytest.mark.valid_sale_price1], id="sale price one cent off of regular"),
-        pytest.param("9999999.99", "9999999.90", marks=[pytest.mark.valid_sale_price2], id=" very large price and sale price"),
-        pytest.param("10.00", "0.01", marks=[pytest.mark.valid_sale_price3], id="sale price=0.01"),
-        pytest.param("10.00", "0.00000001", marks=[pytest.mark.valid_sale_price4], id="very small sale price"),
+        pytest.param("10.00", "9.99", marks=[pytest.mark.ebe33], id="sale price one cent off of regular"),
+        pytest.param("9999999.99", "9999999.90", marks=[pytest.mark.ebe34], id="very large price and sale price"),
+        pytest.param("10.00", "0.01", marks=[pytest.mark.ebe35], id="sale price=0.01"),
+        pytest.param("10.00", "0.00000001", marks=[pytest.mark.ebe36], id="very small sale price"),
     ]
 )
 

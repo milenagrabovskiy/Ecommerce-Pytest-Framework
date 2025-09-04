@@ -10,12 +10,13 @@ Fixtures:
 Tests:
     test_create_a_simple_product: Validates product creation and persistence.
 """
-
 import pytest
 import logging as logger
 from demostore_automation.src.generic_helpers.generic_products_helper import GenericProductsHelper
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
 from demostore_automation.src.dao.products_dao import ProductsDAO
+
+pytestmark = [pytest.mark.products, pytest.mark.create_products]
 
 @pytest.fixture(scope="module")
 def setup_teardown():
@@ -58,17 +59,17 @@ def setup_teardown():
 
     logger.info(f"Successfully deleted products with ids: {deleted}")
 
-
+@pytest.mark.ecom188
 @pytest.mark.parametrize(
     "product_type, additional_args",
     [
-        pytest.param("simple", None, marks=[pytest.mark.ecom188, pytest.mark.create_products1], id="create_simple_product"),
-        pytest.param("simple", {"virtual": True}, marks=[pytest.mark.ecom188, pytest.mark.create_products1], id="create_simple_virtual_product"),
-        pytest.param("simple", {"downloadable": True}, marks=[pytest.mark.ecom188, pytest.mark.create_products1], id="create_simple_virtual_product"),
-        pytest.param("simple", {"virtual": True,"downloadable": True}, marks=[pytest.mark.ecom188, pytest.mark.create_products1], id="create_simple_virtual_product"),
-        pytest.param("grouped", None, marks=[pytest.mark.ecom188, pytest.mark.create_products2], id="create_grouped_product"),
-        pytest.param("external", None, marks=[pytest.mark.ecom188, pytest.mark.create_products3], id="create_external_product"),
-        pytest.param("variable", None, marks=[pytest.mark.ecom188, pytest.mark.create_products4], id="create_variable_product")
+        pytest.param("simple", None, marks=[pytest.mark.ebe19, pytest.mark.smoke], id="create_simple_product"),
+        pytest.param("simple", {"virtual": True}, marks=[pytest.mark.ebe20], id="create_simple_virtual_product"),
+        pytest.param("simple", {"downloadable": True}, marks=[pytest.mark.ebe21], id="create_simple_virtual_product"),
+        pytest.param("simple", {"virtual": True,"downloadable": True}, marks=[pytest.mark.ebe22], id="create_simple_virtual_product"),
+        pytest.param("grouped", None, marks=[pytest.mark.ebe23], id="create_grouped_product"),
+        pytest.param("external", None, marks=[pytest.mark.ebe24], id="create_external_product"),
+        pytest.param("variable", None, marks=[pytest.mark.ebe25], id="create_variable_product")
     ]
 )
 def test_create_product(setup_teardown, product_type, additional_args):

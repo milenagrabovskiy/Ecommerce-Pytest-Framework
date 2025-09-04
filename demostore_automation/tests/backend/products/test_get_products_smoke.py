@@ -5,9 +5,10 @@ from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHe
 from demostore_automation.src.utilities.wooAPIUtility import WooAPIUtility
 import logging as logger
 
-pytestmark = [pytest.mark.beregression, pytest.mark.besmoke, pytest.mark.products_api]
+pytestmark = [pytest.mark.beregression, pytest.mark.besmoke, pytest.mark.products_api,
+             pytest.mark.products, pytest.mark.smoke]
 
-
+@pytest.mark.ebe26
 @pytest.mark.tcid24
 @pytest.mark.pioneertcid15
 def test_get_all_products_returns_not_empty():
@@ -15,6 +16,8 @@ def test_get_all_products_returns_not_empty():
     rs_api = woo_api_helper.get("products", expected_status_code=200)
     assert rs_api, "Get all products endpoint returned nothing."
 
+
+@pytest.mark.ebe27
 @pytest.mark.tcid25
 @pytest.mark.pioneertcid14
 def test_get_product_by_id():
