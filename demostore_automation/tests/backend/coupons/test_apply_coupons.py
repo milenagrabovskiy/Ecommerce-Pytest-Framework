@@ -58,7 +58,7 @@ def apply_coupon_setup():
         info["coupons_api_helper"].call_delete_coupon(coupon_id)
         logger.info(f"Successfully deleted coupon id: {coupon_id}")
 
-
+@pytest.mark.applycoupon
 @pytest.mark.parametrize(
     "discount_type",
     [
@@ -69,7 +69,6 @@ def apply_coupon_setup():
     ]
 )
 
-@pytest.mark.applycoupon
 def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
     """Test applying a coupon to a newly created order.
 
@@ -130,7 +129,7 @@ def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
     coupon_expiration = coupon_details['date_expires']
     logger.info(f"Found coupon with discount amount: {discount} discount_type: {coupon_type}. Coupon expiration date: {coupon_expiration}")
     assert coupon_details['status'] == 'publish', f"Error. Coupon status: {coupon_details['status']}."
-    assert apply_coupon_setup['generic_coupons_helper'].coupon_is_valid(coupon_id), f"Coupon is expired. Coupon expiration: {coupon_expiration}"
+    assert apply_coupon_setup['generic_coupons_helper'].is_coupon_valid(coupon_id), f"Coupon is expired. Coupon expiration: {coupon_expiration}"
 
 
     # make api PUT call for order and add coupon_lines
@@ -182,7 +181,7 @@ def test_apply_expired_coupon_neg(apply_coupon_setup):
     update_response = apply_coupon_setup['generic_coupons_helper'].apply_coupon_to_order(coupon_code, order_id, expected_status_code=400)
     logger.info(f"update response for expired coupon: {update_response}")
     # verify coupon not valid
-    assert not apply_coupon_setup["generic_coupons_helper"].coupon_is_valid(coupon_id), f"Error. Coupon expected to be expired."
+    assert not apply_coupon_setup["generic_coupons_helper"].is_coupon_valid(coupon_id), f"Error. Coupon expected to be expired."
     assert update_response ==  {'code': 'woocommerce_rest_invalid_coupon', 'message': 'This coupon has expired.', 'data': {'status': 400}}
 
 @pytest.mark.apply_coupon_twice

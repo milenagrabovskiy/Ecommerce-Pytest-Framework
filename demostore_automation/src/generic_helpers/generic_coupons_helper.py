@@ -53,6 +53,8 @@ class GenericCouponsHelper:
             coupon_code = coupon[0]['post_title']
 
         elif discount_type == 'fixed_product':
+            if get_order is None:
+                raise ValueError("'get_order' parameter is required if 'discount_type' is 'fixed_product'")
             product_id_in_order = get_order['line_items'][0]['product_id']
             coupon = self.create_coupon_fixed_product(product_id_in_order)
             coupon_id = coupon['id']
@@ -67,7 +69,7 @@ class GenericCouponsHelper:
             coupon_code = coupon[0]['post_title']
         return coupon_id, coupon_code
 
-    def coupon_is_valid(self, coupon_id):
+    def is_coupon_valid(self, coupon_id):
         """Check if a coupon is still valid (not expired).
 
         Args:
@@ -77,9 +79,13 @@ class GenericCouponsHelper:
             bool: True if valid, False if expired.
         """
         get_coupon = self.coupons_api_helper.call_retrieve_coupon(coupon_id)
+        status = get_coupon['status']
         expiration = get_coupon['date_expires']
+        if status != 'publish': # first check if status is valid
+           return False
+
         if not expiration:
-           return True
+            return True
 
         # convert to datetime object
         expiration_dt = datetime.fromisoformat(expiration).replace(tzinfo=timezone.utc)
