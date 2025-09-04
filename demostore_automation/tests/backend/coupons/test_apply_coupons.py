@@ -18,6 +18,7 @@ from demostore_automation.src.dao.customers_dao import CustomersDAO
 from demostore_automation.src.generic_helpers.generic_coupons_helper import GenericCouponsHelper
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
+pytestmark = [pytest.mark.applycoupon]
 
 @pytest.fixture(scope="module")
 def apply_coupon_setup():
@@ -58,7 +59,7 @@ def apply_coupon_setup():
         info["coupons_api_helper"].call_delete_coupon(coupon_id)
         logger.info(f"Successfully deleted coupon id: {coupon_id}")
 
-@pytest.mark.applycoupon
+@pytest.mark.smoke
 @pytest.mark.parametrize(
     "discount_type",
     [

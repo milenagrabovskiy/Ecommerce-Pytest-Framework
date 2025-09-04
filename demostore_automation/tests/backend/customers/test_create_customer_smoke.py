@@ -49,6 +49,7 @@ class TestCreateCustomer:
     @pytest.mark.ebe5
     @pytest.mark.tcid29
     @pytest.mark.pioneertcid11
+    @pytest.mark.smoke
     def test_create_customer_only_email_password(self):
         """Test customer creation using only email and password.
 

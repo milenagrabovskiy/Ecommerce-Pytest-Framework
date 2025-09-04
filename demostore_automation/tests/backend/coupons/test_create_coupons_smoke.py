@@ -13,7 +13,7 @@ import logging as logger
 from demostore_automation.src.utilities.genericUtilities import generate_random_string
 from demostore_automation.src.api_helpers.CouponAPIHelper import CouponAPIHelper
 
-pytestmark = [pytest.mark.coupon_api]
+pytestmark = [pytest.mark.create_coupons]
 
 @pytest.fixture(scope="module")
 def setup_teardown():
@@ -53,10 +53,10 @@ def setup_teardown():
 @pytest.mark.parametrize(
     "discount_type",
     [
-        pytest.param("percent", marks=[pytest.mark.ecom260]),
-        pytest.param("fixed_cart", marks=[pytest.mark.ecom261]),
-        pytest.param("fixed_product", marks=[pytest.mark.ecom262]),
-        pytest.param(None, marks=[pytest.mark.ecom263])
+        pytest.param("percent", marks=[pytest.mark.ecom260, pytest.mark.ebe14, pytest.mark.smoke]),
+        pytest.param("fixed_cart", marks=[pytest.mark.ecom261, pytest.mark.ebe16]),
+        pytest.param("fixed_product", marks=[pytest.mark.ecom262, pytest.mark.ebe15]),
+        pytest.param(None, marks=[pytest.mark.ecom263, pytest.mark.ebe17])
     ]
 )
 def test_create_coupon_with_discount_type(setup_teardown, discount_type):
@@ -119,7 +119,7 @@ def test_create_coupon_with_discount_type(setup_teardown, discount_type):
                                                                       f"Expected: {expected_discount_type}, Actual: {get_response['discount_type']}")
     setup_teardown["coupon_ids"].append(coupon_id)
 
-
+@pytest.mark.ebe18
 @pytest.mark.ecom264
 def test_create_coupon_invalid_discount_type(setup_teardown):
     """Negative test: Verify invalid discount type returns an error.
