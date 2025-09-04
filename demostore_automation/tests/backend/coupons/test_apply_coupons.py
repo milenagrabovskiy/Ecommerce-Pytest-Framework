@@ -62,10 +62,10 @@ def apply_coupon_setup():
 @pytest.mark.parametrize(
     "discount_type",
     [
-        pytest.param("percent", marks=[pytest.mark.applycoupon1], id="apply_'percent'_coupon"),
-        pytest.param("fixed_cart", marks=[pytest.mark.applycoupon2], id="apply_'fixed_cart'_coupon"),
-        pytest.param("fixed_product", marks=[pytest.mark.applycoupon3], id="apply_'fixed_product'_coupon"),
-        pytest.param("free_coupon", marks=[pytest.mark.applycoupon4], id="apply_free_coupon")
+        pytest.param("percent", marks=pytest.mark.ebe8, id="apply_'percent'_coupon"),
+        pytest.param("fixed_cart", marks=pytest.mark.ebe9, id="apply_'fixed_cart'_coupon"),
+        pytest.param("fixed_product", marks=pytest.mark.ebe10, id="apply_'fixed_product'_coupon"),
+        pytest.param("free_coupon", marks=pytest.mark.ebe11, id="apply_free_coupon")
     ]
 )
 
@@ -149,7 +149,7 @@ def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
     # verify customer id in 'used_by' list of users for the coupon
     apply_coupon_setup['generic_coupons_helper'].verify_coupon_used_by_customer(coupon_id, customer_email, customer_id)
 
-@pytest.mark.apply_expired_coupon
+@pytest.mark.ebe12
 def test_apply_expired_coupon_neg(apply_coupon_setup):
     """Verify that applying an expired coupon to an order fails.
 
@@ -184,7 +184,7 @@ def test_apply_expired_coupon_neg(apply_coupon_setup):
     assert not apply_coupon_setup["generic_coupons_helper"].is_coupon_valid(coupon_id), f"Error. Coupon expected to be expired."
     assert update_response ==  {'code': 'woocommerce_rest_invalid_coupon', 'message': 'This coupon has expired.', 'data': {'status': 400}}
 
-@pytest.mark.apply_coupon_twice
+@pytest.mark.ebe13
 def test_apply_coupon_twice_neg(apply_coupon_setup):
     """Verify that applying the same coupon twice to one order does not change the discount or order total.
 
