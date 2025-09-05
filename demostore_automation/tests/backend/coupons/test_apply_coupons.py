@@ -104,7 +104,7 @@ def test_apply_coupon_to_new_order(apply_coupon_setup, discount_type):
     logger.info(f"DB customer id: {customer_id} DB customer email: {customer_email}")
 
     # create order with custom args
-    order_response = apply_coupon_setup['generic_orders_helper'].create_order_for_customer(customer_id, product_id)
+    order_response = apply_coupon_setup['generic_orders_helper'].create_order_for_customer(customer_id, product_id)[0]
     order_id = order_response['id']
     apply_coupon_setup['order_ids'].append(order_id) # for teardown
     logger.info(f"Successfully created order with id: {order_id}")
@@ -175,7 +175,7 @@ def test_apply_expired_coupon_neg(apply_coupon_setup):
     coupon_code = expired_coupon['code']
 
     # create order with expired coupon
-    create_order = apply_coupon_setup["generic_orders_helper"].create_order_for_customer(customer_id, product_id)
+    create_order = apply_coupon_setup["generic_orders_helper"].create_order_for_customer(customer_id, product_id)[0]
     order_id = create_order['id']
 
     # try applying expired coupon
@@ -200,7 +200,7 @@ def test_apply_coupon_twice_neg(apply_coupon_setup):
     customer_id = apply_coupon_setup['customer_id']
     product_id = apply_coupon_setup['product_id']
 
-    order_response = apply_coupon_setup['generic_orders_helper'].create_order_for_customer(customer_id, product_id)
+    order_response = apply_coupon_setup['generic_orders_helper'].create_order_for_customer(customer_id, product_id)[0]
     order_id = order_response['id']
 
     coupon_id, coupon_code = apply_coupon_setup['generic_coupons_helper'].get_coupon(

@@ -73,8 +73,6 @@ class GenericOrdersHelper:
             create_order_responses.append(create_order_response)
             logger.info(f"Created order: {create_order_response}")
 
-        if order_qty == 1:
-            return create_order_responses[0]
         return create_order_responses
 
 
