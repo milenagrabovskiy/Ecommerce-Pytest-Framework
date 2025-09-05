@@ -58,3 +58,19 @@ class ProductsDAO:
         WHERE post_type = 'product' AND ID = {product_id};"""
 
         return self.db_helper.execute_select(sql)
+
+
+    def get_product_price(self, product_id):
+        """Fetch the price-related meta fields of a product from the database.
+
+        Args:
+            product_id (int): ID of the product.
+
+        Returns:
+            list[dict]: List of dictionaries with 'meta_key' and 'meta_value'
+                        for '_regular_price', '_sale_price', and '_price'.
+        """
+        sql = f""" SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}postmeta
+        WHERE post_id = {product_id} AND meta_key IN ('_regular_price', '_sale_price', '_price');
+        """
+        return self.db_helper.execute_select(sql)

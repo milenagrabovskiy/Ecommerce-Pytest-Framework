@@ -10,12 +10,13 @@ Fixtures:
 Tests:
     test_create_a_simple_product: Validates product creation and persistence.
 """
-
 import pytest
 import logging as logger
-from demostore_automation.src.utilities.genericUtilities import generate_random_string
+from demostore_automation.src.generic_helpers.generic_products_helper import GenericProductsHelper
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
 from demostore_automation.src.dao.products_dao import ProductsDAO
+
+pytestmark = [pytest.mark.products, pytest.mark.create_products]
 
 @pytest.fixture(scope="module")
 def setup_teardown():
@@ -35,12 +36,14 @@ def setup_teardown():
     """
     products_api_helper = ProductsAPIHelper()
     products_dao = ProductsDAO()
+    generic_products_helper = GenericProductsHelper()
     product_ids = [] # collects product ids for teardown
 
     info = {
         "products_api_helper": products_api_helper,
         "products_dao": products_dao,
-        "product_ids": product_ids
+        "product_ids": product_ids,
+        "generic_products_helper": generic_products_helper
     }
 
     yield info
@@ -56,76 +59,27 @@ def setup_teardown():
 
     logger.info(f"Successfully deleted products with ids: {deleted}")
 
-
 @pytest.mark.ecom188
-def test_create_a_simple_product(setup_teardown):
-    """Test creating a simple product via the WooCommerce API.
+@pytest.mark.parametrize(
+    "product_type, additional_args",
+    [
+        pytest.param("simple", None, marks=[pytest.mark.ebe19, pytest.mark.smoke], id="create_simple_product"),
+        pytest.param("simple", {"virtual": True}, marks=[pytest.mark.ebe20], id="create_simple_virtual_product"),
+        pytest.param("simple", {"downloadable": True}, marks=[pytest.mark.ebe21], id="create_simple_virtual_product"),
+        pytest.param("simple", {"virtual": True,"downloadable": True}, marks=[pytest.mark.ebe22], id="create_simple_virtual_product"),
+        pytest.param("grouped", None, marks=[pytest.mark.ebe23], id="create_grouped_product"),
+        pytest.param("external", None, marks=[pytest.mark.ebe24], id="create_external_product"),
+        pytest.param("variable", None, marks=[pytest.mark.ebe25], id="create_variable_product")
+    ]
+)
+def test_create_product(setup_teardown, product_type, additional_args):
+    # create product via api
+    post_response = setup_teardown['generic_products_helper'].create_product_by_type(product_type)
 
-    Steps:
-        - Create a product with 'simple' type and a random name.
-        - Assert the POST response contains correct data.
-        - Assert the product is retrievable via GET.
-        - Assert the product exists in the database.
-        - Track the product ID for teardown cleanup.
+    logger.info(f"product: {post_response}")
 
-    Args:
-        setup_teardown (dict): Fixture providing API helper, DAO helper, and product ID list.
-
-    Raises:
-        AssertionError: If any validation (API or DB) fails.
-    """
-    products_api_helper = setup_teardown['products_api_helper']
-    logger.info("Running test: 'test_create_a_simple_product'")
-
-    # create payload
-    product_name = generate_random_string()
-    product_type = "simple"
-    regular_price = "21.99"
-    payload = {
-        "name": product_name,
-        "type": product_type,
-        "regular_price": regular_price
-    }
-    # make POST api call
-    post_response = products_api_helper.call_create_product(payload=payload)
     product_id = post_response['id']
-    # POST api call assertions
-    assert post_response, "Create a simple product POST api call is empty."
+    setup_teardown['product_ids'].append(product_id) # for teardown
 
-    assert post_response['name'] == product_name, (f"Create a simple product POST api call response"
-                                                   f"returned unexpected 'name'"
-                                                   f"Expected: {product_name}, Actual: {post_response['name']}")
-
-    assert post_response['type'] == product_type, (f"Create a simple product POST api call response"
-                                                   f"returned unexpected 'product_type'"
-                                                   f"Expected: {product_type}, Actual: {post_response['product_type']}")
-
-    assert post_response['status'] == 'publish', (f"Create a simple product POST api call response"
-                                                   f"returned unexpected 'status'"
-                                                   f"Expected: 'publish', Actual: {post_response['status']}")
-
-    # make GET api call to verify product exists
-    get_response = products_api_helper.call_get_product_by_id(product_id)
-
-    # POST api call assertions
-    assert get_response, "Create a simple product GET api call is empty."
-
-    assert get_response['name'] == product_name, (f"Create a simple product GET api call response"
-                                                   f"returned unexpected 'name'"
-                                                   f"Expected: {product_name}, Actual: {get_response['name']}")
-
-    assert get_response['type'] == product_type, (f"Create a simple product GET api call response"
-                                                   f"returned unexpected 'product_type'"
-                                                   f"Expected: {product_type}, Actual: {get_response['product_type']}")
-
-    # verify product is in the database
-    products_dao = setup_teardown['products_dao']
-    db_product = products_dao.get_product_by_id(product_id)
-
-    # DB assertions
-    assert db_product, "Create a simple product POST api call not recorded in database."
-    assert db_product[0]['post_name'] == product_name, (f"Create a simple product has unexpected name in database."
-                                                        f"Expected: {product_name}, Actual: {db_product[0]['post_name']}")
-
-    # keep track of successfully created product ids by adding to list in fixture function
-    setup_teardown['product_ids'].append(product_id)
+    # verify product exists in api and db
+    assert setup_teardown['generic_products_helper'].verify_product_is_created(post_response)
