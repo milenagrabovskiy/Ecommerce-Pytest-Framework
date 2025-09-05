@@ -1,0 +1,6 @@
+2025-09-05 17:37:39 INFO Getting random products from db. qty= 1
+2025-09-05 17:37:39 INFO Connecting to database: dev.bootcamp.store.supersqa.com
+2025-09-05 17:37:40 INFO Connecting to database: dev.bootcamp.store.supersqa.com
+2025-09-05 17:37:40 INFO Found 387 random users from db.
+2025-09-05 17:37:40 INFO DB product id: 20 DB product name: Hoodie
+2025-09-05 17:37:40 INFO DB customer id: 2710 DB customer email: betest_bwvamilkxgpyadq@supersqa.com
