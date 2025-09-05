@@ -40,7 +40,7 @@ class GenericOrdersHelper:
             TypeError: If `additional_args` is not a dict.
             FileNotFoundError, IOError, PermissionError, UnicodeError: File read errors.
         """
-        # create full path regardless of os
+        # Create full path regardless of os
         payload_json_file = os.path.join(self.current_file_dir, '..', 'data', 'create_order_payload.json')
 
         try:
