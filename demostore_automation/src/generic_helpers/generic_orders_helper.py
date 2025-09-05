@@ -41,7 +41,7 @@ class GenericOrdersHelper:
             TypeError: If `additional_args` is not a dict.
             FileNotFoundError, IOError, PermissionError, UnicodeError: File read errors.
         """
-        # create full path regardless of os
+        # Create full path regardless of os
         payload_json_file = os.path.join(self.current_file_dir, '..', 'data', 'create_order_payload.json')
 
         try:
@@ -72,6 +72,7 @@ class GenericOrdersHelper:
             create_order_response = self.orders_api_helper.call_create_order(payload=payload)
             create_order_responses.append(create_order_response)
             logger.info(f"Created order: {create_order_response}")
+
         return create_order_responses
 
 
@@ -82,7 +83,7 @@ class GenericOrdersHelper:
             order_id (int): ID of the order to verify.
 
         Raises:
-            AssertionError: If order does not exist in API or database, or IDs mismatch.
+            AssertionError: If order is missing or ID mismatches in API or DB.
         """
         # API check
         get_order_response = self.orders_api_helper.call_retrieve_order(order_id)
@@ -97,7 +98,30 @@ class GenericOrdersHelper:
         logger.info("DB query for fetching order by id successfully found new order")
 
 
-    def create_order_note(self, order_id, qty=int, payload=None):
+    def create_order_for_customer(self, customer_id, product_id):
+        """Create an order for a specific customer and product with free shipping.
+
+        Args:
+            customer_id (int): ID of the customer.
+            product_id (int): ID of the product.
+
+        Returns:
+            dict: API response for the created order.
+        """
+        product_args = {"line_items": [{"product_id": product_id, "quantity": 1}]}
+        product_args.update({"customer_id": customer_id})
+        product_args.update({
+            "shipping_lines": [
+                {
+                    "method_id": "free_shipping",  # overwrite 'shipping_lines' for free shipping
+                    "method_title": "Free Shipping",
+                    "total": "0.00"
+                }
+            ]
+        })
+        return self.create_order(additional_args=product_args)
+
+    def create_order_note(self, order_id, qty=1, payload=None):
         """Create one or more notes for an order.
 
         Args:
