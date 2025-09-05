@@ -37,11 +37,30 @@ class OrdersDAO:
         """
         return self.db_helper.execute_select(sql)
 
+
+    def get_random_existing_order_from_db(self, qty=1):
+        """Retrieve a random selection of existing orders from the database.
+
+        Args:
+            qty (int, optional): Number of random orders to fetch. Defaults to 1.
+
+        Returns:
+            list[dict]: List of randomly selected order records.
+        """
+        sql =f"""
+        SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}posts
+        WHERE post_type = 'shop_order_placehold' order by id desc LIMIT 1000;"""
+        rs_sql = self.db_helper.execute_select(sql)
+        logger.info(f"Found {len(rs_sql)} random order(s) from db.")
+        return random.sample(rs_sql, int(qty))
+
     def get_random_order_by_status(self, status, qty=1):
         """Retrieve random orders filtered by status.
+
         Args:
             status (str): WooCommerce order status (e.g., 'processing', 'completed').
             qty (int, optional): Number of random orders to fetch. Defaults to 1.
+
         Returns:
             list[dict]: Random orders matching the specified status.
         """
@@ -51,3 +70,19 @@ class OrdersDAO:
         rs_sql = self.db_helper.execute_select(sql)
         logger.info(f"Found {len(rs_sql)} orders with status {status}")
         return random.sample(rs_sql, int(qty))
+
+    def get_orders_by_note_text(self, note_text):
+        """Fetch orders containing a specific note text.
+
+        Args:
+            note_text (str): The note content to search for.
+
+        Returns:
+            list[dict]: Orders that have the specified note text.
+        """
+        sql = f"""SELECT * FROM
+        {self.db_helper.database}.{self.db_helper.table_prefix}comments
+        WHERE comment_content = '{note_text}';"""
+        rs_sql = self.db_helper.execute_select(sql)
+        logger.info(f"Found {len(rs_sql)} orders with note '{note_text}'")
+        return rs_sql
