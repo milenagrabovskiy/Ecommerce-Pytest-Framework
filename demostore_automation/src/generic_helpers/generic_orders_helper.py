@@ -72,6 +72,9 @@ class GenericOrdersHelper:
             create_order_response = self.orders_api_helper.call_create_order(payload=payload)
             create_order_responses.append(create_order_response)
             logger.info(f"Created order: {create_order_response}")
+
+        if order_qty == 1:
+            return create_order_responses[0]
         return create_order_responses
 
 
@@ -118,9 +121,9 @@ class GenericOrdersHelper:
                 }
             ]
         })
-        return self.create_order(product_args)
+        return self.create_order(additional_args=product_args)
 
-    def create_order_note(self, order_id, qty=int, payload=None):
+    def create_order_note(self, order_id, qty=1, payload=None):
         """Create one or more notes for an order.
 
         Args:
