@@ -84,6 +84,9 @@ class GenericOrdersHelper:
 
         Raises:
             AssertionError: If order is missing or ID mismatches in API or DB.
+
+        Returns:
+            GET api response
         """
         # API check
         get_order_response = self.orders_api_helper.call_retrieve_order(order_id)
@@ -97,6 +100,7 @@ class GenericOrdersHelper:
         assert db_order[0]['ID'] == order_id, f"DB query for fetching order by id returned wrong order id. Actual: {db_order[0]['ID']}, Expected: {order_id}"
         logger.info("DB query for fetching order by id successfully found new order")
 
+        return get_order_response
 
     def create_order_for_customer(self, customer_id, product_id):
         """Create an order for a specific customer and product with free shipping.
@@ -120,6 +124,7 @@ class GenericOrdersHelper:
             ]
         })
         return self.create_order(additional_args=product_args)
+
 
     def create_order_note(self, order_id, qty=1, payload=None):
         """Create one or more notes for an order.
@@ -170,3 +175,40 @@ class GenericOrdersHelper:
                 break
         else:
             raise AssertionError(f"Note id {note_id} for created note is not found in the DB")
+
+    def verify_order_status(self, get_response, order_status):
+        """Verify that the order status is correct in both API response and database.
+
+        Also checks additional fields for specific statuses:
+          - 'completed': ensures 'date_completed' is set.
+          - 'cancelled' or 'refunded': ensures 'needs_payment' is False.
+          - 'refunded': validates refund details ('reason' and 'total').
+
+        Args:
+            get_response (dict): API response for the order.
+            order_status (str): Expected order status (e.g., 'completed', 'refunded').
+
+        Raises:
+            AssertionError: If any check fails.
+        """
+        order_id = get_response['id']
+        assert get_response['status'] == order_status
+        db_details = self.orders_dao.get_order_status_by_id(order_id)
+        assert db_details[0]['status'].endswith(order_status), (f"Wrong status in DB. Actual: {db_details[0]['status']}"
+                                                                f"Expected: {order_status}")
+        if order_status in ["completed", "cancelled", "refunded"]:
+            assert not get_response['needs_payment'], (f"Error. 'needs_payment' expected to be 'False'"
+                                                       f"for order status:{order_status} but returned 'True'")
+
+        if order_status == 'completed':
+            assert get_response['date_completed'], ("GET api response returned empty for"
+                                                    "'date_completed' field for order_status: completed")
+
+        if order_status == 'refunded':
+            assert get_response['refunds'], (f"Error. 'refunds' field is empty after refunding order."
+                                             f"Should contain order id: {order_id}")
+            assert get_response['refunds'][0]['reason'], 'Missing refund message in "refunds" field'
+            assert get_response['refunds'][0]['total'] == f"-{get_response['total']}", (f"Refund total does not match order total."
+                                                                                     f"Actual: {get_response['refunds']['total']}"
+                                                                                     f"Expected: -{get_response['total']}")
+
