@@ -13,7 +13,8 @@ pytestmark = [pytest.mark.orders, pytest.mark.order_status]
         pytest.param("completed", marks=[pytest.mark.ebe48, pytest.mark.smoke], id="update to completed"),
         pytest.param("cancelled", marks=[pytest.mark.ebe49], id="update to cancelled"),
         pytest.param("refunded",  marks=[pytest.mark.ebe51], id="update to refunded"),
-        pytest.param("failed", marks=[pytest.mark.ebe50], id="update to failed")
+        pytest.param("failed", marks=[pytest.mark.ebe50], id="update to failed"),
+        pytest.param("processing", marks=[pytest.mark.ebe50], id="update to same status")
     ]
 )
 
@@ -26,7 +27,7 @@ def test_change_order_status(my_orders_smoke_setup, order_status):
 
 
     #create payload 'line_items' with custom product
-    create_payload = {"line_items": [{"product_id": product_id}]}
+    create_payload = {"status": "processing","line_items": [{"product_id": product_id}]}
 
     # make api call to create order
     create_order_responses = my_orders_smoke_setup["generic_orders_helper"].create_order(additional_args=create_payload)
