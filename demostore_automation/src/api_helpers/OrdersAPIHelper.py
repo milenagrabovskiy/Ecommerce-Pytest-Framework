@@ -100,4 +100,5 @@ class OrdersAPIHelper:
         """
         return self.woo_api_utility.delete(f'orders/{order_id}/notes/{note_id}', params=params)
 
-
+    def call_create_refund(self, order_id, payload):
+        return self.woo_api_utility.post(f'orders/{order_id}/refunds/', params=payload)

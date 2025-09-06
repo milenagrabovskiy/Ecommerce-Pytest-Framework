@@ -212,3 +212,31 @@ class GenericOrdersHelper:
                                                                                      f"Actual: {get_response['refunds']['total']}"
                                                                                      f"Expected: -{get_response['total']}")
 
+
+    def create_order_refund(self, order_response, refund_type, additional_args=None):
+        order_id = order_response['id']
+        order_total = float(order_response['total'])
+        if refund_type == 'full':
+            refund_amount = order_response['total']
+        elif refund_type == 'partial': # half refund
+            refund_amount = round(order_total / 2, 2)
+        elif refund_type == 'refund_1_product':
+            refund_amount = float(order_response['line_items'][0]['price'])
+
+        refund_payload = {
+            "amount": str(refund_amount),  # total refund amount
+            "line_items": [
+                {
+                    "id": order_response['line_items'][0]['id'],
+                    "quantity": 1  # instead of refund_total
+                }
+            ],
+            "refund_payment": False
+        }
+        response = self.orders_api_helper.call_create_refund(
+            order_id=order_id,
+            payload=refund_payload
+        )
+        return response
+
+
