@@ -37,3 +37,11 @@ class ProductsAPIHelper:
 
     def call_delete_product(self, product_id):
         return self.woo_api_utility.delete(f"products/{product_id}")
+
+
+    def call_create_review(self, payload, expected_status_code=201):
+        return self.woo_api_utility.post("products/reviews", params=payload, expected_status_code=expected_status_code)
+
+
+    def call_retrieve_reviews(self, product_id):
+        return self.woo_api_utility.get("products/reviews", params={"product": product_id})
