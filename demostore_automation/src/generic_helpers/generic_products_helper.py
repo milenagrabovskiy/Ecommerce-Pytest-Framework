@@ -220,3 +220,22 @@ class GenericProductsHelper:
                                                     f"Actual: {post_response['code']}")
 
         assert param in post_response['message'], f"Expected message in api response should contain the parameter."
+
+
+    def create_product_review(self, product_id, rating, reviewer=None, email=None):
+        if reviewer is None:
+            reviewer = "Guest User"
+        if email is None:
+            email = "guest@example.com"
+
+        payload = {
+            "product_id": product_id,
+            "review": 'test review',
+            "reviewer": reviewer,
+            "reviewer_email": email,
+            "rating": rating,
+        }
+        create_review = self.products_api_helper.call_create_review(payload)
+        return create_review
+
+
