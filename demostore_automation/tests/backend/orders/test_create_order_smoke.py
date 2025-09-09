@@ -14,6 +14,8 @@ from demostore_automation.src.dao.customers_dao import CustomersDAO
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
 
+pytestmark = [pytest.mark.orders, pytest.mark.smoke]
+
 @pytest.fixture(scope="module")
 def my_orders_smoke_setup():
     """Setup fixture for creating and cleaning up test orders.
@@ -54,12 +56,12 @@ def my_orders_smoke_setup():
 @pytest.mark.parametrize(
      "user_type, order_qty, product_qty",
     [
-        pytest.param("guest_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders1], id="guestuser_1_ord_5_prods"),
-        pytest.param("guest_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1], id="guestuser_5_ord_1_prod"),
-        pytest.param("guest_user", 1, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders1], id="guestuser_1_ord_1_prod"),
-        pytest.param("registered_user", 1, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2], id="reg_user_1_ord_5_prods"),
-        pytest.param("registered_user", 5, 1, marks=[pytest.mark.orders, pytest.mark.ecomorders2], id="reg_user_5_ord_1_prod"),
-        pytest.param("registered_user", 5, 5, marks=[pytest.mark.orders, pytest.mark.ecomorders2], id="reg_user_5_ord_5_prod")
+        pytest.param("guest_user", 1, 5, marks=[pytest.mark.ebe52], id="guestuser_1_ord_5_prods"),
+        pytest.param("guest_user", 5, 1, marks=[pytest.mark.ebe53], id="guestuser_5_ord_1_prod"),
+        pytest.param("guest_user", 1, 1, marks=[pytest.mark.ebe54], id="guestuser_1_ord_1_prod"),
+        pytest.param("registered_user", 1, 5, marks=[pytest.mark.ebe55], id="reg_user_1_ord_5_prods"),
+        pytest.param("registered_user", 5, 1, marks=[pytest.mark.ebe56], id="reg_user_5_ord_1_prod"),
+        pytest.param("registered_user", 5, 5, marks=[pytest.mark.ebe57], id="reg_user_5_ord_5_prod")
     ]
 )
 

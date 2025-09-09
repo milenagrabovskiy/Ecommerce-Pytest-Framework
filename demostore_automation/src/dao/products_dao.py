@@ -74,3 +74,17 @@ class ProductsDAO:
         WHERE post_id = {product_id} AND meta_key IN ('_regular_price', '_sale_price', '_price');
         """
         return self.db_helper.execute_select(sql)
+
+    def get_product_review_info(self, product_id):
+        """Fetch the review-related fields of a product from the database.
+
+        Args:
+            product_id (int): ID of the product.
+
+        Returns:
+            list[dict]: A list containing a single dictionary with the product's database fields.
+        """
+        sql = f""" SELECT * FROM {self.db_helper.database}.{self.db_helper.table_prefix}comments
+        WHERE comment_type = 'comment' and comment_post_ID = {product_id};
+        """
+        return self.db_helper.execute_select(sql)
