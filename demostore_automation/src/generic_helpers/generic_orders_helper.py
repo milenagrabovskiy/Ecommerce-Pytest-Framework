@@ -214,6 +214,25 @@ class GenericOrdersHelper:
 
 
     def create_order_refund(self, order_response, refund_type, additional_args=None):
+        """Create a refund for a WooCommerce order.
+
+        Supports full order refunds, partial (half) refunds, and single-product refunds.
+
+        Args:
+            order_response (dict): API response dict of the order to refund, must include 'id', 'total', and 'line_items'.
+            refund_type (str): Type of refund to apply. One of:
+                - "full": refund the entire order total.
+                - "partial": refund half of the order total.
+                - "refund_1_product": refund only the first product in the order.
+            additional_args (dict, optional): Extra payload parameters for the refund API call. Defaults to None.
+
+        Returns:
+            dict: API response of the created refund.
+
+        Raises:
+            KeyError: If expected keys ('id', 'total', 'line_items') are missing from order_response.
+            ValueError: If refund_type is not one of the allowed types.
+        """
         order_id = order_response['id']
         order_total = float(order_response['total'])
         if refund_type == 'full':
