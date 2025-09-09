@@ -1,3 +1,12 @@
+"""Test module for WooCommerce order refunds.
+
+Covers full, partial, and single-product refunds via the API. Includes:
+- Verification of refund amounts.
+- Edge case testing for refund types.
+- Marking tests as xfail for unsupported automatic refunds.
+
+Uses pytest for parametrization and fixtures.
+"""
 import pytest
 import logging as logger
 from demostore_automation.tests.backend.orders.test_create_order_smoke import my_orders_smoke_setup
@@ -17,15 +26,31 @@ pytestmark = [pytest.mark.orders, pytest.mark.order_refund]
 )
 
 def test_order_refund(my_orders_smoke_setup, refund_type):
+    """Test WooCommerce order refunds via API.
+
+    Steps:
+    1. Create a new order with a product.
+    2. Apply refund based on `refund_type`:
+       - full: refund entire order
+       - partial: refund half the order
+       - refund_1_product: refund a single product
+    3. Verify that the refund amount returned by the API matches expected value.
+
+    Args:
+        my_orders_smoke_setup (fixture): Fixture providing product, order, and helper setup.
+        refund_type (str): Type of refund to apply. One of "full", "partial", "refund_1_product".
+
+    Assertions:
+        - Order creation API returns valid responses.
+        - Refund API returns the correct refund amount.
+    """
     # fetch product and customer
     # create order
     product_id = my_orders_smoke_setup["product_id"]
     product_price = my_orders_smoke_setup["product_price"]
     logger.info(f"Product ID: {product_id}, Product price: {product_price}")
 
-
     #create payload 'line_items' with custom product
-    # create_payload = {"status": "processing","line_items": [{"product_id": product_id}]}
     create_payload = {
         "status": "processing",
         "payment_method": "bacs",
