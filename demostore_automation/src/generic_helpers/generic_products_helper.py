@@ -223,14 +223,27 @@ class GenericProductsHelper:
 
 
     def create_product_review(self, product_id, rating, reviewer=None, email=None):
+        """Create a product review via the API.
+
+        Args:
+            product_id (int): ID of the product to review.
+            rating (int): Rating value (0-5 recommended).
+            reviewer (str, optional): Name of the reviewer. Defaults to "Guest User".
+            email (str, optional): Email of the reviewer. Defaults to "guest@example.com".
+
+        Returns:
+            dict: API response for the created review, including review ID and status.
+        """
         if reviewer is None:
             reviewer = "Guest User"
         if email is None:
             email = "guest@example.com"
 
+        review_text = generate_random_string()
+
         payload = {
             "product_id": product_id,
-            "review": 'test review',
+            "review": review_text,
             "reviewer": reviewer,
             "reviewer_email": email,
             "rating": rating,
@@ -238,4 +251,50 @@ class GenericProductsHelper:
         create_review = self.products_api_helper.call_create_review(payload)
         return create_review
 
+    def verify_product_review_exists(self, product_id, rating, customer_bought, customer_id=None, reviewer_email=None):
+        """Verify that a product review exists and matches expectations in both API and database.
 
+        Args:
+            product_id (int): ID of the product to check reviews for.
+            rating (int): Expected rating of the review.
+            customer_bought (bool): Whether the reviewer is a registered customer.
+            customer_id (int, optional): Expected customer ID if reviewer is registered.
+            reviewer_email (str, optional): Expected reviewer email if reviewer is registered.
+
+        Raises:
+            AssertionError: If any of the review checks fail (API or DB mismatch, missing fields, incorrect status).
+        """
+        # verify product review persisted via api check
+        reviews = self.products_api_helper.call_retrieve_reviews(product_id)
+        if rating > 5:
+            assert reviews[0]['rating'] == 5, f"Error. The maximum rating is 5. Rating in api: {reviews[0]['rating']}"
+        assert reviews, f"Get reviews response is empty after review for product id: {product_id}"
+
+        if customer_bought:
+            assert reviews[0]['verified']
+            assert reviews[0]['reviewer_email'] == reviewer_email, (
+                f"Get review for a registered user returned wrong email."
+                f"Expected: {reviewer_email}, Actual: {reviews[0]['reviewer_email']}")
+
+        else:
+            assert not reviews[0]['verified'], ("Error. Get review for guest user returned 'True' for 'verified'."
+                                                "Expected: 'False'")
+
+        assert reviews[0]['rating'] == rating, (f"Get review returned wrong rating. Expected: {rating},"
+                                                f"Actual: {reviews[0]['rating']}")
+        assert reviews[0]['status'] == 'approved', (f"Get review returned wrong review status. Expected: 'approved'."
+                                                    f"Actual: {reviews[0]['status']}")
+        assert reviews[0]['review'], "Get review returned empty for 'review' field."
+
+        # DB check
+        db_response = self.products_dao.get_product_review_info(product_id)
+        for review in db_response:
+            assert review, f"No product reviews found for product id: {product_id} in DB"
+            assert review['comment_approved'], (f"Wrong review status in DB. Expected: '1' (approved),"
+                                                        f"Actual: {db_response['comment_approved']}")
+            if customer_bought:
+                assert review['user_id'] == customer_id, (f"Wrong customer id attached to product review for product: {product_id}."
+                                                                  f"Actual: {db_response[0]['user_id']}, Expected: {customer_id}")
+                assert review['comment_author_email'] == reviewer_email, (f"Wrong customer email attached to product review for"
+                                                                                  f"product: {product_id}. Actual: {db_response[0]['comment_author_email']}"
+                                                                                  f"Expected: {reviewer_email}")
