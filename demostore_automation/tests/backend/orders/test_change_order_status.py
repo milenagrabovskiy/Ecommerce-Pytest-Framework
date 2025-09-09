@@ -1,4 +1,15 @@
+"""Test module for verifying WooCommerce order status updates.
 
+This module covers creating orders via API, updating their status, and verifying the updates
+through both API responses and database queries.
+
+Test cases include:
+- Updating to standard statuses: on-hold, completed, cancelled, refunded, failed, processing
+- Verification of order integrity (ID and relevant fields) after status change
+- Ensuring API and DB consistency for updated orders
+
+Tests are parametrized using pytest.
+"""
 import pytest
 import logging as logger
 from demostore_automation.tests.backend.orders.test_create_order_smoke import my_orders_smoke_setup
@@ -19,6 +30,26 @@ pytestmark = [pytest.mark.orders, pytest.mark.order_status]
 )
 
 def test_change_order_status(my_orders_smoke_setup, order_status):
+    """Test changing WooCommerce order status and verifying API and DB consistency.
+
+    Steps:
+    1. Create an order with default status 'processing'.
+    2. Update the order to the specified `order_status`.
+    3. Verify the update via the API response.
+    4. Verify the order exists in the database with the correct updated status.
+    5. For certain statuses (completed, cancelled, refunded), validate specific fields like
+       'needs_payment', 'date_completed', and 'refunds'.
+
+    Args:
+        my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
+        order_status (str): The target status to update the order to (e.g., "completed", "refunded").
+
+    Assertions:
+        - The order status is correctly updated in the API response.
+        - The order ID remains unchanged after update.
+        - API and DB responses match for the updated order.
+        - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
+    """
     # fetch product and customer
     # create order
     product_id = my_orders_smoke_setup["product_id"]
