@@ -7,12 +7,18 @@ from demostore_automation.src.utilities.genericUtilities import generate_random_
 from demostore_automation.src.utilities.genericUtilities import generate_random_email_and_password
 
 
-pytestmark = [pytest.mark.feregression, pytest.mark.my_account]
+pytestmark = [pytest.mark.feregression, pytest.mark.my_account, pytest.mark.my_acc_neg]
 
-@pytest.mark.parametrize('email', 'password', 'expected_error',
-    pytest.param('abc', generate_random_email_and_password()['password'], 'Error: Please provide a valid email address.')
+@pytest.mark.parametrize(
+    "email,password,expected_error",
+    [
+        pytest.param(
+            "abc@gmail",  # invalid email
+            generate_random_email_and_password()["password"],  # valid random password
+            "Please provide a valid email address."
+        )
+    ]
 )
-
 
 @pytest.mark.usefixtures("init_driver")
 class TestRegisterUserNeg:
@@ -20,28 +26,29 @@ class TestRegisterUserNeg:
 
     @pytest.mark.tcid13
     @pytest.mark.pioneertcid2
-    def test_register_user_invalid(self):
+    def test_register_user_invalid(self, email, password, expected_error):
         """
         Test to verify a valid user can register to the site.
         It generates a random email and password, then registers the user.
         :return:
         """
         # create objects
-        myacct = MyAccountSignedOutPage(self.driver)
-        myacct_sin = MyAccountSignedInPage(self.driver)
+        myacct = MyAccountSignedInPage(self.driver)
+        myacct_so = MyAccountSignedOutPage(self.driver)
 
         # go to my account page
-        myacct.go_to_my_account()
+        myacct_so.go_to_my_account()
 
-        random_info = generate_random_email_and_password()
-        # fill in the username for registration
-        myacct.input_register_email(random_info['email'])
+        myacct_so.input_register_email(email)
 
         # fill in the password for registration
-        myacct.input_register_password(random_info['password'])
+        myacct_so.input_register_password(password)
 
         # click on 'register'
-        myacct.click_register_button()
+        myacct_so.click_register_button()
 
-        # verify user is registered
-        myacct_sin.verify_user_is_signed_in()
+        # verify error message
+        myacct_so.wait_until_error_is_displayed(expected_error)
+
+        # verify still on my account signed out page
+        assert not myacct.is_user_signed_in()
