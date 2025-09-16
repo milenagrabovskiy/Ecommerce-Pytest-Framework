@@ -1,0 +1,1 @@
+2025-09-16 07:23:34 INFO Running test: 'test_create_coupon_with_valid_discount_types' for 'None'
