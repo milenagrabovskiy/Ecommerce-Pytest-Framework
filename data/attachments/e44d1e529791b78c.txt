@@ -1,3 +1,0 @@
-2025-09-16 07:24:23 INFO Starting remote Chrome
-2025-09-16 07:24:25 INFO Starting test: 'test_verify_product_name_displayed_variable_product'
-2025-09-16 07:24:25 INFO Test 'test_verify_product_name_displayed_variable_product' successfully passed
