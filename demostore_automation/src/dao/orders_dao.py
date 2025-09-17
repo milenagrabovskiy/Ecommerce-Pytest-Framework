@@ -86,3 +86,23 @@ class OrdersDAO:
         rs_sql = self.db_helper.execute_select(sql)
         logger.info(f"Found {len(rs_sql)} orders with note '{note_text}'")
         return rs_sql
+
+
+    def get_order_status_by_id(self, order_id):
+        """Fetch order status from the database using its ID.
+
+        Args:
+            order_id (int): The ID of the order to retrieve.
+
+        Returns:
+            list[dict]: A list containing a single dictionary with the order's database fields.
+
+        Raises:
+            Exception: If the database query fails or no matching order is found.
+        """
+        sql = f"""
+        SELECT status FROM {self.db_helper.database}.{self.db_helper.table_prefix}wc_orders
+        WHERE id = {order_id};
+        """
+        return self.db_helper.execute_select(sql)
+

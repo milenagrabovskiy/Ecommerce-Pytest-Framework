@@ -11,7 +11,7 @@ from demostore_automation.src.api_helpers.OrdersAPIHelper import OrdersAPIHelper
 from demostore_automation.src.dao.customers_dao import CustomersDAO
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
-
+pytestmark = [pytest.mark.orders, pytest.mark.order_notes]
 @pytest.fixture(scope="module")
 def order_notes_setup():
     """Set up DAOs, helpers, a random product, default note text, and track created orders."""
@@ -46,10 +46,10 @@ def order_notes_setup():
 @pytest.mark.parametrize(
     "user_type, quantity",
     [
-        pytest.param("guest_user", 1, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes1], id="guestuser_1_note"),
-        pytest.param("guest_user", 5, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes1], id="guestuser_5_notes"),
-        pytest.param("registered_user", 1, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes2], id="reg_user_1_notes"),
-        pytest.param("registered_user", 5, marks=[pytest.mark.ecomnotes, pytest.mark.ecomnotes2], id="reg_user_5_notes")
+        pytest.param("guest_user", 1, marks=[pytest.mark.ebe58, pytest.mark.smoke], id="guestuser_1_note"),
+        pytest.param("guest_user", 5, marks=[pytest.mark.ebe59], id="guestuser_5_notes"),
+        pytest.param("registered_user", 1, marks=[pytest.mark.ebe60], id="reg_user_1_notes"),
+        pytest.param("registered_user", 5, marks=[pytest.mark.ebe61], id="reg_user_5_notes")
     ]
 )
 @pytest.mark.ordernotes
