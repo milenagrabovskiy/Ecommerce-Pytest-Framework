@@ -15,3 +15,11 @@ class MyAccountSignedInPage(MyAccountSignedInPageLocators):
         :return:
         """
         self.sl.wait_until_element_is_visible(self.LEFT_NAV_LOGOUT_BTN)
+
+
+    def is_user_signed_in(self):
+        """Return True if logout link is visible, otherwise False."""
+        try:
+            return self.driver.find_element(*self.LEFT_NAV_LOGOUT_BTN).is_displayed()
+        except:
+            return False

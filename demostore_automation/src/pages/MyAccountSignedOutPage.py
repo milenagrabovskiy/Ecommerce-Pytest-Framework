@@ -39,3 +39,6 @@ class MyAccountSignedOutPage(MyAccountSignedOutPageLocators):
 
     def click_register_button(self):
         self.sl.wait_and_click(self.REGISTER_BTN)
+
+    def is_register_btn_enabled(self):
+        return self.sl.wait_until_element_is_visible(self.REGISTER_BTN).is_enabled()
