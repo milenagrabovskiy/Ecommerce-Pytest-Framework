@@ -7,7 +7,6 @@ guest and registered users, verifying the API response and database consistency.
 import pytest
 import re
 import logging as logger
-
 from demostore_automation.src.api_helpers.OrdersAPIHelper import OrdersAPIHelper
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
 from demostore_automation.src.dao.customers_dao import CustomersDAO
@@ -15,42 +14,6 @@ from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
 
 pytestmark = [pytest.mark.orders, pytest.mark.smoke]
-
-@pytest.fixture(scope="module")
-def my_orders_smoke_setup():
-    """Setup fixture for creating and cleaning up test orders.
-
-    Fetches a random product from the database and prepares API helpers.
-    Tracks created orders for teardown after tests complete.
-
-    Yields:
-        dict: {
-            "product_id" (int): Random product ID from DB,
-            "product_price" (float): Product price,
-            "orders_api_helper" (OrdersAPIHelper): Helper for order API calls,
-            "order_ids" (list[int]): Tracks created order IDs for teardown
-        }
-    """
-    products_dao = ProductsDAO()
-    product_api_helper = ProductsAPIHelper()
-    random_product = products_dao.get_random_product_from_db(qty=1)[0]
-    product_id = random_product['ID']
-    logger.info(f"Fetched random product from DB: {random_product}")
-    product_details = product_api_helper.call_get_product_by_id(product_id)
-    product_price = product_details['price']
-    info = {
-        "product_id": random_product['ID'],
-        "product_price": product_price,
-        "orders_api_helper": OrdersAPIHelper(),
-        "generic_orders_helper": GenericOrdersHelper(),
-        "order_ids": []
-    }
-    yield info
-
-    for ord_id in info["order_ids"]:
-        info["orders_api_helper"].call_delete_order(ord_id)
-        logger.info(f"Successfully deleted order id: {ord_id}")
-    logger.info(f"Successfully deleted {len(info['order_ids'])} orders")
 
 
 @pytest.mark.parametrize(
