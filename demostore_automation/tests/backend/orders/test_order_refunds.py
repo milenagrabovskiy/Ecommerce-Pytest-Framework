@@ -9,7 +9,6 @@ Uses pytest for parametrization and fixtures.
 """
 import pytest
 import logging as logger
-from demostore_automation.tests.backend.orders.test_create_order_smoke import my_orders_smoke_setup
 
 pytestmark = [pytest.mark.orders, pytest.mark.order_refund]
 
