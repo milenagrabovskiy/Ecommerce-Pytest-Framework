@@ -1,0 +1,4 @@
+2025-09-17 23:04:17 INFO Successfully found product with id: 37601 via api GET call
+2025-09-17 23:04:17 INFO Connecting to database: dev.bootcamp.store.supersqa.com
+2025-09-17 23:04:17 INFO Successfully found product with id: 37601 in DB
+2025-09-17 23:04:17 INFO Successfully deleted products with ids: [37601]
