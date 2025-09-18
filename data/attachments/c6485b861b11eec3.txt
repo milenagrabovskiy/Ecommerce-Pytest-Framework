@@ -1,3 +1,0 @@
-2025-09-18 22:44:37 INFO Starting remote Chrome
-2025-09-18 22:44:49 INFO Created order with order number: 37866
-2025-09-18 22:44:49 INFO Successfully deleted order with order_id: 37866
