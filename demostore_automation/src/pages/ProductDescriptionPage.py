@@ -77,3 +77,11 @@ class ProductDescriptionPage(ProductDescriptionPageLocators):
         return cleaned_urls
 
 
+    def type_product_qty(self, qty):
+        qty_field = self.sl.wait_until_element_is_visible(self.PRODUCT_QTY_FIELD)
+        qty_field.clear()
+        self.sl.wait_and_input_text(self.PRODUCT_QTY_FIELD, text=qty)
+
+    def click_add_to_cart(self):
+        self.sl.wait_and_click(self.ADD_TO_CART)
+

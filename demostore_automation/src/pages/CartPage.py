@@ -59,3 +59,15 @@ class CartPage(CartPageLocators):
 
     def remove_product(self):
         self.sl.wait_and_click(self.REMOVE_PRODUCT_BTN)
+
+    # def get_qty_of_product(self, expected_qty):
+    #     expected_qty_str = str(expected_qty)
+    #     self.sl.wait_until_element_contains_text(self.PRODUCT_QTY, expected_qty_str)
+    #
+    #     qty_text = self.sl.wait_and_get_text(self.PRODUCT_QTY)
+    #     return int(qty_text)
+
+    def get_qty_of_product(self):
+        qty_field = self.sl.wait_until_element_is_visible(self.PRODUCT_QTY)
+        actual_qty = int(qty_field.get_attribute("value"))
+        return actual_qty
