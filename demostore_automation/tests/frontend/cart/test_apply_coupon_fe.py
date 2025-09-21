@@ -12,17 +12,18 @@ from demostore_automation.src.pages.CartPage import CartPage
 from demostore_automation.src.pages.Header import Header
 from demostore_automation.src.configs.MainConfigs import MainConfigs
 
-pytestmark = [pytest.mark.feregression, pytest.mark.fesmoke, pytest.mark.cart]
+pytestmark = [pytest.mark.feregression, pytest.mark.fesmoke, pytest.mark.smoke, pytest.mark.cart, pytest.mark.coupon]
 
 
 @pytest.mark.usefixtures("init_driver")
-class TestApplyCouponNegFE:
+class TestApplyCouponFE:
     """Tests for applying coupons in the front-end cart with negative scenarios.
 
     This test class focuses on validating the behavior of the cart when applying
     coupons.
     """
-    def test_apply_coupon_neg_fe(self):
+    @pytest.mark.efe36
+    def test_apply_coupon_fe(self):
         """Test applying a 50% off coupon to a single cart item.
 
         Assertions:

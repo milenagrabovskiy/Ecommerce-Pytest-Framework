@@ -85,3 +85,11 @@ class ProductDescriptionPage(ProductDescriptionPageLocators):
     def click_add_to_cart(self):
         self.sl.wait_and_click(self.ADD_TO_CART)
 
+    def verify_qty_error_msg(self):
+        qty_field = self.sl.wait_until_element_is_visible(self.PRODUCT_QTY_FIELD)
+        # there is no selector (not a web element) for invalid quantity alert, so must use get_attribute
+        # 'min' qty given in 'input' tag in the product qty field
+        message = qty_field.get_attribute("validationMessage") # part of HTML5 API, not in browser
+        assert message == 'Value must be greater than or equal to 1.',\
+                                                        (f"Wrong product qty in cart. Actual: '{message}',"
+                                                         f"Expected: 'Value must be greater than or equal to 1.'")

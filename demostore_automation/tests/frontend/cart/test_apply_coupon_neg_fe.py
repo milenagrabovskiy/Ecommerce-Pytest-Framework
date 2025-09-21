@@ -11,13 +11,13 @@ from demostore_automation.src.pages.CartPage import CartPage
 from demostore_automation.src.pages.Header import Header
 from demostore_automation.src.configs.MainConfigs import MainConfigs
 
-pytestmark = [pytest.mark.feregression, pytest.mark.cart]
+pytestmark = [pytest.mark.feregression, pytest.mark.cart, pytest.mark.coupon]
 
 @pytest.mark.parametrize(
     "coupon_type",
     [
-    pytest.param("ZERO_OFF"),
-    pytest.param("EXPIRED_COUPON")
+    pytest.param("ZERO_OFF", marks=pytest.mark.efe37, id='add 0% off coupon'),
+    pytest.param("EXPIRED_COUPON", marks=pytest.mark.efe38, id='add expired coupon')
     ]
 )
 
@@ -65,3 +65,7 @@ class TestApplyCouponNegFE:
         # assert total is equal to expected
         assert total_actual == expected_total, f"Expected total {expected_total}, Actual: {total_actual}"
         cart_page.verify_order_total(f"{expected_total:.2f}")
+
+        # clean up cart
+        cart_page.remove_product()
+        cart_page.verify_empty_cart()
