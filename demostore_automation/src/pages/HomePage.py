@@ -35,4 +35,8 @@ class HomePage(HomePageLocators):
 
     def get_all_product_names(self):
         products = self.sl.wait_and_get_elements(self.PRODUCT_NAMES)
-        return [element.text for element in products]
+        return [product.text for product in products]
+
+    def verify_no_products_found_msg(self):
+        error = 'No products were found matching your selection.'
+        self.sl.wait_until_element_contains_text(self.NO_PRODUCTS_MSG_LOCATOR, error)
