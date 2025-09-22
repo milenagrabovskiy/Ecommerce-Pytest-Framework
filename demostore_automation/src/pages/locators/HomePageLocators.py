@@ -6,3 +6,5 @@ class HomePageLocators:
     PRODUCT = (By.CSS_SELECTOR, 'ul.products li.product')
 
     PAGE_HEADING = (By.CSS_SELECTOR, 'header.woocommerce-products-header h1.page-title')
+
+    FIRST_PRODUCT = (By.XPATH, '//*[@id="main"]/ul/li[1]/a[1]/h2')
