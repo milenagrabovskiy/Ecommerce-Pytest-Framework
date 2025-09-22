@@ -68,5 +68,5 @@ class TestChangeProductQuantity:
 
         # remove product
         cart_page.remove_product()
-        # verify empty cart message. remove product does not change side header cart item count
+        # verify empty cart message. removing product does not change side header cart item count
         cart_page.verify_empty_cart()

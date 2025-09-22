@@ -90,6 +90,7 @@ class ProductDescriptionPage(ProductDescriptionPageLocators):
         # there is no selector (not a web element) for invalid quantity alert, so must use get_attribute
         # 'min' qty given in 'input' tag in the product qty field
         message = qty_field.get_attribute("validationMessage") # part of HTML5 API, not in browser
-        assert message == 'Value must be greater than or equal to 1.',\
-                                                        (f"Wrong product qty in cart. Actual: '{message}',"
-                                                         f"Expected: 'Value must be greater than or equal to 1.'")
+
+        expected_messages = ['Value must be greater than or equal to 1.', 'Please select a value that is no less than 1.']
+        assert message in expected_messages, (f"Wrong product qty in cart. Actual: '{message}',"
+                                              f"Expected one of: {expected_messages}")
