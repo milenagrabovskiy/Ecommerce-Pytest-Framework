@@ -1,3 +1,4 @@
+"""Tests for submitting product reviews as guest and registered users. """
 import pytest
 from demostore_automation.src.pages.HomePage import HomePage
 from demostore_automation.src.pages.MyAccountSignedOutPage import MyAccountSignedOutPage
@@ -11,16 +12,18 @@ pytestmark = [pytest.mark.reviews]
 @pytest.mark.parametrize(
     "user_type",
     [
-        pytest.param('guest_user'),
-        pytest.param('registered_user')
+        pytest.param('guest_user', marks=pytest.mark.efe42, id='create review as guest user'),
+        pytest.param('registered_user', marks=pytest.mark.efe43, id='create review as registered user')
     ]
 )
 
 @pytest.mark.usefixtures("init_driver", "setup")
 class TestWriteProductReview:
+    """Tests for writing product reviews."""
 
     @pytest.fixture(scope="class")
     def setup(self, request):
+        """Set up page objects and open the home page."""
         request.cls.home_page = HomePage(self.driver)
         request.cls.pdp = ProductDescriptionPage(self.driver)
         request.cls.my_acc_so = MyAccountSignedOutPage(self.driver)
@@ -30,6 +33,19 @@ class TestWriteProductReview:
 
     @pytest.mark.efe123
     def test_write_product_review(self, user_type):
+        """Submit a product review.
+
+        Args:
+            user_type (str): Either 'guest_user' or 'registered_user'.
+
+        Flow:
+            - Register a new account if testing as registered user.
+            - Navigate to a product page.
+            - Open the reviews tab.
+            - Select a star rating and write a review.
+            - If guest user, provide name and email.
+            - Submit and verify success message.
+        """
         # create registered user
         if user_type == 'registered_user':  # create a registered user
             self.my_acc_so.go_to_my_account()
@@ -51,13 +67,12 @@ class TestWriteProductReview:
         self.pdp.click_on_stars_rating()
 
         # write review
-        self.pdp.write_product_review(review_text='this is a review')
+        self.pdp.write_product_review(review_text='automation review')
 
         if user_type == 'guest_user':
             # fill in reviewer name and email fields
             self.pdp.write_reviewer_name(name=generate_random_string())
             self.pdp.write_reviewer_email(email=generate_random_email_and_password()['email'])
 
-
-        # submit and verify success
+        # submit and verify pending message
         self.pdp.click_submit_and_verify_success()
