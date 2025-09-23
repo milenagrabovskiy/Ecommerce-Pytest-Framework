@@ -31,7 +31,6 @@ class TestWriteProductReview:
         self.home_page.go_to_home_page()
 
 
-    @pytest.mark.efe123
     def test_write_product_review(self, user_type):
         """Submit a product review.
 
