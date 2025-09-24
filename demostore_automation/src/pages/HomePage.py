@@ -1,3 +1,4 @@
+from selenium.webdriver import Keys
 
 from demostore_automation.src.selenium_extended.SeleniumExtended import SeleniumExtended
 from demostore_automation.src.configs.MainConfigs import MainConfigs
@@ -29,3 +30,16 @@ class HomePage(HomePageLocators):
 
     def get_displayed_heading(self):
         return self.sl.wait_and_get_text(self.PAGE_HEADING)
+
+    def search_for_product_by_name(self, product_name):
+        search_field = self.sl.wait_until_element_is_visible(self.SEARCH_BAR_FIELD)
+        search_field.clear()
+        search_field.send_keys(product_name + Keys.ENTER)
+
+    def get_all_product_names(self):
+        products = self.sl.wait_and_get_elements(self.PRODUCT_NAMES)
+        return [product.text for product in products]
+
+    def verify_no_products_found_msg(self):
+        error = 'No products were found matching your selection.'
+        self.sl.wait_until_element_contains_text(self.NO_PRODUCTS_MSG_LOCATOR, error)
