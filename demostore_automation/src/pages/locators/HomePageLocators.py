@@ -7,4 +7,10 @@ class HomePageLocators:
 
     PAGE_HEADING = (By.CSS_SELECTOR, 'header.woocommerce-products-header h1.page-title')
 
-    FIRST_PRODUCT = (By.XPATH, '//*[@id="main"]/ul/li[1]/a[1]/img')
+    SEARCH_BAR_FIELD = (By.ID, 'woocommerce-product-search-field-0')
+
+    PRODUCT_NAMES = (By.CSS_SELECTOR, 'h2.woocommerce-loop-product__title')
+
+    NO_PRODUCTS_MSG_LOCATOR = (By.CSS_SELECTOR, 'div.woocommerce-info')
+
+    FIRST_PRODUCT = (By.XPATH, '//*[@id="main"]/ul/li[1]/a[1]/h2' )

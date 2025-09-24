@@ -1,12 +1,16 @@
 
 import pytest
 import os
-import logging as logger
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChOptions
 from selenium.webdriver.firefox.options import Options as FFOptions
 from selenium.webdriver.firefox.service import Service as FFService
 import tempfile
+import logging as logger
+from demostore_automation.src.api_helpers.OrdersAPIHelper import OrdersAPIHelper
+from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
+from demostore_automation.src.dao.products_dao import ProductsDAO
+from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
 
 
 
@@ -90,14 +94,6 @@ def init_driver(request):
 
     driver.quit()
 
-
-
-import pytest
-import logging as logger
-from demostore_automation.src.api_helpers.OrdersAPIHelper import OrdersAPIHelper
-from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
-from demostore_automation.src.dao.products_dao import ProductsDAO
-from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
 
 @pytest.fixture(scope="module")
 def my_orders_smoke_setup():
