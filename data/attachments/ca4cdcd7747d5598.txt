@@ -1,0 +1,4 @@
+2025-09-24 22:17:48 INFO Successfully found product with id: 39406 via api GET call
+2025-09-24 22:17:48 INFO Connecting to database: dev.bootcamp.store.supersqa.com
+2025-09-24 22:17:49 INFO Successfully found product with id: 39406 in DB
+2025-09-24 22:17:49 INFO Successfully deleted products with ids: [39406]
