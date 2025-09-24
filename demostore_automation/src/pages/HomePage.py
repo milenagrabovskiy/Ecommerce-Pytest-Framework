@@ -17,6 +17,9 @@ class HomePage(HomePageLocators):
     def click_first_add_to_cart_button(self):
         self.sl.wait_and_click(self.ADD_TO_CART_BTN)
 
+    def click_first_product(self):
+        self.sl.wait_and_click(self.FIRST_PRODUCT)
+
     def get_all_product_elements(self):
         error_msg = "Can not get product elements from home page."
 

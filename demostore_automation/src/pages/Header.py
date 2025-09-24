@@ -15,7 +15,10 @@ class Header(HeaderLocators):
 
     def wait_until_cart_item_count(self, count):
         # expected_text = str(count) + ' item'
-        expected_text = f'{str(count)} item'
+        if count == 1:
+            expected_text = f'{str(count)} item'
+        else:
+            expected_text = f'{str(count)} items'
         self.sl.wait_until_element_contains_text(self.CART_ITEM_COUNT, expected_text)
 
     def get_all_menu_item_text(self):
