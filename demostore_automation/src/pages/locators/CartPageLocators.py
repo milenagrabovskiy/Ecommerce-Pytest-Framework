@@ -10,3 +10,5 @@ class CartPageLocators:
     CART_TOTAL = (By.CSS_SELECTOR, 'div.wc-block-components-totals-item__value')
     #PROCEED_TO_CHECKOUT_BTN = (By.CSS_SELECTOR, 'a.wc-block-components-button.wp-element-button.wc-block-cart__submit-button')
     PROCEED_TO_CHECKOUT_BTN = (By.CSS_SELECTOR, "a[href*='/checkout/']")
+    # SAVE_BADGE = (By.CSS_SELECTOR, 'wc-block-components-product-badge wc-block-components-sale-badge')
+    SAVE_BADGE = (By.CSS_SELECTOR, 'div.wc-block-components-sale-badge')

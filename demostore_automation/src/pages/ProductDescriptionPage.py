@@ -77,3 +77,8 @@ class ProductDescriptionPage(ProductDescriptionPageLocators):
         return cleaned_urls
 
 
+    def verify_on_sale_sign_displayed(self):
+        self.sl.wait_until_element_contains_text(self.ON_SALE, 'SALE!')
+
+    def verify_orig_price_crossed_out(self):
+        self.sl.wait_until_element_is_visible(self.CROSSED_OUT_ORIG_PRICE)

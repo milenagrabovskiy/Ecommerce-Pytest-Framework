@@ -45,3 +45,6 @@ class CartPage(CartPageLocators):
 
     def click_on_proceed_to_checkout(self):
         self.sl.wait_and_click(self.PROCEED_TO_CHECKOUT_BTN)
+
+    def verify_sale_badge_displayed(self):
+        self.sl.wait_until_element_contains_text(self.SAVE_BADGE, 'SAVE')

@@ -26,3 +26,6 @@ class HomePage(HomePageLocators):
 
     def get_displayed_heading(self):
         return self.sl.wait_and_get_text(self.PAGE_HEADING)
+
+    def click_on_first_product(self):
+        self.sl.wait_and_click(self.FIRST_PRODUCT)
