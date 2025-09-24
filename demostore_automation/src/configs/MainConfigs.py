@@ -17,7 +17,11 @@ class MainConfigs:
         if filter.upper() == 'FREE_COUPON':
             return "ssqa100"
         elif filter.upper() == '50_OFF':
-            return "JFOADIUFHADF"
+            return "50off"
+        elif filter.upper() == 'EXPIRED_COUPON':
+            return "expired"
+        elif filter.upper() == 'ZERO_OFF':
+            return "zero"
         else:
             raise Exception(f"Unknown value for parameter 'filter'. filter={filter}")
 
