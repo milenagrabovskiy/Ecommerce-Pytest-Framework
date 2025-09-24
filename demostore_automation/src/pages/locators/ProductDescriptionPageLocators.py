@@ -13,3 +13,8 @@ class ProductDescriptionPageLocators:
     REVIEW_EMAIL_FIELD = (By.ID, 'email')
     SUBMIT_BTN = (By.ID, 'submit')
     SUCCESS_MSG = (By.CSS_SELECTOR, 'em.woocommerce-review__awaiting-approval')
+    #DECREASE_PRODUCT_BTN = (By.CSS_SELECTOR, 'button.wc-block-components-quantity-selector__button.wc-block-components-quantity-selector__button--minus')
+    #PRODUCT_QTY_FIELD = (By.ID, 'quantity_68cf0851d146d')
+    #PRODUCT_QTY_FIELD = (By.XPATH, '//*[@id="quantity_68cf0f836b4c1"]')
+    PRODUCT_QTY_FIELD = (By.CLASS_NAME, 'input-text')
+    ADD_TO_CART = (By.CSS_SELECTOR, 'button.single_add_to_cart_button.button.alt')

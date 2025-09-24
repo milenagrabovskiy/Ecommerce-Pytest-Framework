@@ -185,5 +185,3 @@ class SeleniumExtended:
         element_text = elm.text
 
         return element_text
-
-

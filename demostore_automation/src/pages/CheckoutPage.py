@@ -43,10 +43,17 @@ class CheckoutPage(CheckoutPageLocators):
         self.sl.wait_and_input_text(self.BILLING_PHONE_FIELD, phone)
 
     def input_billing_email(self, email=None):
+        email_field = self.driver.find_element(*self.BILLING_EMAIL_FIELD)
+        email_value = email_field.get_attribute("value")
+
+        if email_value:
+            return  # so it doesnt type email twice
+
         if not email:
-            rand_email = generate_random_email_and_password()
-            email = rand_email['email']
-        self.sl.wait_and_input_text(self.BILLING_EMAIL_FIELD, email)
+            email = generate_random_email_and_password()['email']
+
+        email_field.clear()
+        email_field.send_keys(email)
 
     def select_billing_country(self, country=None):
         country = 'United States (US)' if not country else country
