@@ -1,2 +1,0 @@
-2025-09-24 21:36:19 INFO Created order with order number: 39133
-2025-09-24 21:36:21 INFO Successfully deleted order with order_id: 39133
