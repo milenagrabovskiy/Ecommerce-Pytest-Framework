@@ -35,7 +35,7 @@ class TestOnSaleProduct:
         request.cls.header = Header(self.driver)
         request.cls.cart_page = CartPage(self.driver)
         request.cls.home_page.go_to_home_page()
-        request.cls.home_page.click_on_first_product()
+        request.cls.home_page.click_first_product()
 
     @pytest.mark.efe44
     def test_verify_sale_sign_displayed(self):
