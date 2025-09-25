@@ -76,6 +76,26 @@ class ProductDescriptionPage(ProductDescriptionPageLocators):
 
         return cleaned_urls
 
+    def click_on_reviews_link(self):
+        self.sl.wait_and_click(self.REVIEWS_LINK)
+
+
+    def click_on_stars_rating(self):
+        # self.sl.wait_until_element_is_visible(self.PRODUCT_REVIEW_STARS)
+        self.sl.wait_and_click(self.PRODUCT_REVIEW_STARS)
+
+    def write_product_review(self, review_text):
+        self.sl.wait_and_input_text(self.REVIEW_FIELD, review_text)
+
+    def write_reviewer_name(self, name):
+        self.sl.wait_and_input_text(self.REVIEW_NAME_FIELD, name)
+
+    def write_reviewer_email(self, email):
+        self.sl.wait_and_input_text(self.REVIEW_EMAIL_FIELD, email)
+
+    def click_submit_and_verify_success(self):
+        self.sl.wait_and_click(self.SUBMIT_BTN)
+        self.sl.wait_until_element_contains_text(self.SUCCESS_MSG, 'Your review is awaiting approval')
 
     def verify_on_sale_sign_displayed(self):
         self.sl.wait_until_element_contains_text(self.ON_SALE, 'SALE!')
