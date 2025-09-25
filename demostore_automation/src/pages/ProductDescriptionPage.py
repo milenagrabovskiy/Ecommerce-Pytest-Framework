@@ -97,6 +97,12 @@ class ProductDescriptionPage(ProductDescriptionPageLocators):
         self.sl.wait_and_click(self.SUBMIT_BTN)
         self.sl.wait_until_element_contains_text(self.SUCCESS_MSG, 'Your review is awaiting approval')
 
+    def verify_on_sale_sign_displayed(self):
+        self.sl.wait_until_element_contains_text(self.ON_SALE, 'SALE!')
+
+    def verify_orig_price_crossed_out(self):
+        self.sl.wait_until_element_is_visible(self.CROSSED_OUT_ORIG_PRICE)
+
     def type_product_qty(self, qty):
         qty_field = self.sl.wait_until_element_is_visible(self.PRODUCT_QTY_FIELD)
         qty_field.clear()
