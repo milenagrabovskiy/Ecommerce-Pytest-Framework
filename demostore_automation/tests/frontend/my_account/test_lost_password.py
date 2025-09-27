@@ -31,7 +31,7 @@ class TestForgotPassword:
         request.cls.my_acct_page = MyAccountSignedOutPage(self.driver)
         request.cls.my_acct_page.go_to_my_account()
 
-    @pytest.mark.ty
+    @pytest.mark.efe46
     def test_lost_password_link_invalid_email(self, go_to_my_acct):
         """Verify 'Lost your password?' link for invalid email.
 
@@ -52,7 +52,7 @@ class TestForgotPassword:
 
         self.my_acct_page.verify_wrong_email_alert_displayed() # invalid user gets alert
 
-    @pytest.mark.qwe
+    @pytest.mark.efe47
     def test_lost_password_link_registered_email(self, create_registered_user, go_to_my_acct):
         """Verify 'Lost your password?' link for registered email.
 
