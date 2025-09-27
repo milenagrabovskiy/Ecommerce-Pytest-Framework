@@ -19,3 +19,6 @@ class MyAccountSignedOutPageLocators:
     LOST_PASSWORD_HEADER = (By.CSS_SELECTOR, 'h1.entry-title')
     INVALID_EMAIL_ALERT = (By.CSS_SELECTOR, 'ul.woocommerce-error')
     PASSWORD_RESET_SENT_MSG = (By.CSS_SELECTOR, 'div.woocommerce-message')
+
+    PRIVACY_POLICY = (By.CSS_SELECTOR, 'div.woocommerce-privacy-policy-text a.woocommerce-privacy-policy-link')
+    BREADCRUMBS = (By.CSS_SELECTOR, 'div.storefront-breadcrumb nav.woocommerce-breadcrumb')

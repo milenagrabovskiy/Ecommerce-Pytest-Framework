@@ -60,3 +60,10 @@ class MyAccountSignedOutPage(MyAccountSignedOutPageLocators):
 
     def verify_password_reset_sent(self):
         self.sl.wait_until_element_contains_text(self.PASSWORD_RESET_SENT_MSG, 'Password reset email has been sent.')
+
+    def click_on_privacy_link(self):
+        self.sl.wait_and_click(self.PRIVACY_POLICY)
+
+    def get_bread_crumbs_text(self):
+        breadcrumbs = self.sl.wait_and_get_text(self.BREADCRUMBS)
+        return breadcrumbs
