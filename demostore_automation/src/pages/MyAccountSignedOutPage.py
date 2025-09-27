@@ -42,3 +42,21 @@ class MyAccountSignedOutPage(MyAccountSignedOutPageLocators):
 
     def is_register_btn_enabled(self):
         return self.sl.wait_until_element_is_visible(self.REGISTER_BTN).is_enabled()
+
+    def click_on_lost_password_link(self):
+        self.sl.wait_and_click(self.LOST_PASSWORD_LINK)
+
+    def verify_on_password_reset_page(self):
+        self.sl.wait_until_element_contains_text(self.LOST_PASSWORD_HEADER, 'Lost password')
+        self.sl.wait_until_element_is_visible(self.LOST_PASSWORD_EMAIL)
+        self.sl.wait_until_element_is_visible(self.RESET_PASSWORD_BTN)
+
+    def input_email_to_reset_password(self, email):
+        self.sl.wait_and_input_text(self.LOST_PASSWORD_EMAIL, email)
+        self.sl.wait_and_click(self.RESET_PASSWORD_BTN)
+
+    def verify_wrong_email_alert_displayed(self):
+        self.sl.wait_until_element_contains_text(self.INVALID_EMAIL_ALERT, 'Invalid username or email.')
+
+    def verify_password_reset_sent(self):
+        self.sl.wait_until_element_contains_text(self.PASSWORD_RESET_SENT_MSG, 'Password reset email has been sent.')

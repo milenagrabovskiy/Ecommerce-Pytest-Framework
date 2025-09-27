@@ -11,7 +11,9 @@ from demostore_automation.src.api_helpers.OrdersAPIHelper import OrdersAPIHelper
 from demostore_automation.src.api_helpers.ProductsAPIHelper import ProductsAPIHelper
 from demostore_automation.src.dao.products_dao import ProductsDAO
 from demostore_automation.src.generic_helpers.generic_orders_helper import GenericOrdersHelper
-
+from demostore_automation.src.pages.MyAccountSignedOutPage import MyAccountSignedOutPage
+from demostore_automation.src.pages.MyAccountSignedInPage import MyAccountSignedInPage
+from demostore_automation.src.utilities.genericUtilities import generate_random_email_and_password
 
 
 @pytest.fixture(scope="class")
@@ -130,3 +132,22 @@ def my_orders_smoke_setup():
         info["orders_api_helper"].call_delete_order(ord_id)
         logger.info(f"Successfully deleted order id: {ord_id}")
     logger.info(f"Successfully deleted {len(info['order_ids'])} orders")
+
+@pytest.fixture(scope='class')
+def create_registered_user(request):
+    driver = request.cls.driver
+    my_acct_page = MyAccountSignedOutPage(driver)
+    my_acct_page.go_to_my_account()
+
+    email_password = generate_random_email_and_password()
+    email = email_password['email']
+    password = email_password['password']
+
+    my_acct_page.input_register_email(email)
+    my_acct_page.input_register_password(password)
+    my_acct_page.click_register_button()
+
+    my_acct_si = MyAccountSignedInPage(driver)
+    my_acct_si.verify_user_is_signed_in()
+
+    return {'email': email, 'password': password}
