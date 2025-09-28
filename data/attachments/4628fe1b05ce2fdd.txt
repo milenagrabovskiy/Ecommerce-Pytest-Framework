@@ -1,2 +1,0 @@
-2025-09-27 07:20:14 INFO Created order with order number: 39992
-2025-09-27 07:20:16 INFO Successfully deleted order with order_id: 39992
