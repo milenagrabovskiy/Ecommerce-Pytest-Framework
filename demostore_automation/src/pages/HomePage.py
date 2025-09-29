@@ -1,5 +1,5 @@
 from selenium.webdriver import Keys
-
+from selenium.webdriver.support.ui import Select
 from demostore_automation.src.selenium_extended.SeleniumExtended import SeleniumExtended
 from demostore_automation.src.configs.MainConfigs import MainConfigs
 from demostore_automation.src.pages.locators.HomePageLocators import HomePageLocators
@@ -43,3 +43,24 @@ class HomePage(HomePageLocators):
     def verify_no_products_found_msg(self):
         error = 'No products were found matching your selection.'
         self.sl.wait_until_element_contains_text(self.NO_PRODUCTS_MSG_LOCATOR, error)
+
+    def verify_sorting_menu_displayed(self):
+        dropdown_menu = self.sl.wait_until_element_is_visible(self.SORTING_MENU)
+        select = Select(dropdown_menu) #using select class because element is a select element (with select tag).
+        options = select.options
+        assert len(options) > 1
+
+    def verify_product_images_displayed(self):
+        images = self.sl.wait_and_get_elements(self.PRODUCT_IMAGES)
+        for image in images:
+            assert image.is_displayed(), "Error. Product images are not displayed in UI"
+
+    def verify_product_prices_displayed(self):
+        prices = self.sl.wait_and_get_elements(self.PRICES)
+        for price in prices:
+            assert price.is_displayed(), "Error. Product prices are not displayed in UI"
+
+    def verify_product_names_displayed(self):
+        names = self.sl.wait_and_get_elements(self.PRODUCT_NAMES)
+        for name in names:
+            assert name.is_displayed(), "Error. Product prices are not displayed in UI."

@@ -1,4 +1,5 @@
 
+
 import pytest
 from demostore_automation.src.pages.HomePage import HomePage
 from demostore_automation.src.pages.Header import Header
@@ -42,3 +43,18 @@ class TestHomePageSmoke:
     def test_verify_header_menu_is_displayed(self, setup):
         self.header.assert_all_menu_items_displayed()
 
+    @pytest.mark.efe49
+    def test_verify_sorting_menu_present(self, setup):
+        self.homepage.verify_sorting_menu_displayed()
+
+    @pytest.mark.efe50
+    def test_verify_product_names_displayed(self, setup):
+        self.homepage.verify_product_names_displayed()
+
+    @pytest.mark.efe51
+    def test_verify_product_images_displayed(self, setup):
+        self.homepage.verify_product_images_displayed()
+
+    @pytest.mark.efe52
+    def test_verify_product_prices_displayed(self, setup):
+        self.homepage.verify_product_prices_displayed()

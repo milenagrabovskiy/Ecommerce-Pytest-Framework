@@ -14,3 +14,9 @@ class HomePageLocators:
     NO_PRODUCTS_MSG_LOCATOR = (By.CSS_SELECTOR, 'div.woocommerce-info')
 
     FIRST_PRODUCT = (By.XPATH, '//*[@id="main"]/ul/li[1]/a[1]/h2' )
+
+    SORTING_MENU = (By.CSS_SELECTOR, 'select.orderby, select.orderby')
+
+    PRICES = (By.CSS_SELECTOR, 'span.woocommerce-Price-amount.amount')
+
+    PRODUCT_IMAGES = (By.CSS_SELECTOR, 'li.product img.attachment-woocommerce_thumbnail.size-woocommerce_thumbnail')
