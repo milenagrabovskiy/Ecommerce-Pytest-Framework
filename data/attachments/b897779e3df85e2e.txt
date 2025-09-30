@@ -1,0 +1,1 @@
+2025-09-30 16:49:39 INFO Running test: 'test_create_coupon_with_valid_discount_types' for 'fixed_cart'
