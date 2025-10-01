@@ -36,3 +36,9 @@ class Header(HeaderLocators):
             assert menu in displayed_menu_items, \
                 f"Menu item '{menu}' is not displayed in the header."
 
+
+    def get_store_header_text(self):
+        return self.sl.wait_and_get_text(self.DEMO_ECOM_STORE_HEADER)
+
+    def click_on_store_header(self):
+        self.sl.wait_and_click(self.DEMO_ECOM_STORE_HEADER_LINK)
