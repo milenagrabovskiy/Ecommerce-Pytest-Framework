@@ -120,3 +120,24 @@ class ProductDescriptionPage(ProductDescriptionPageLocators):
         expected_messages = ['Value must be greater than or equal to 1.', 'Please select a value that is no less than 1.']
         assert message in expected_messages, (f"Wrong product qty in cart. Actual: '{message}',"
                                               f"Expected one of: {expected_messages}")
+
+
+    def get_variable_product_dropdown(self):
+        self.sl.wait_until_element_is_visible(self.LOGO_DROPDOWN)
+        self.sl.wait_until_element_is_visible(self.COLOR_DROPDOWN)
+
+
+    def select_variable_product_options(self, color=None, logo=None):
+        color = color or 'Blue'
+        self.sl.wait_and_select_dropdown(self.COLOR_DROPDOWN, to_select=color, select_by="visible_text")
+
+        logo = logo or 'Yes'
+        self.sl.wait_and_select_dropdown(self.LOGO_DROPDOWN, to_select=logo, select_by="visible_text")
+
+
+    def get_product_sku(self):
+        return self.sl.wait_and_get_text(self.PRODUCT_SKU)
+
+
+    def clear_options(self):
+        self.sl.wait_and_click(self.CLEAR_OPTIONS)

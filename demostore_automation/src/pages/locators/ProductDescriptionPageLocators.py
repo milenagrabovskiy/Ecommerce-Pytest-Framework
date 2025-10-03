@@ -20,3 +20,8 @@ class ProductDescriptionPageLocators:
     #PRODUCT_QTY_FIELD = (By.XPATH, '//*[@id="quantity_68cf0f836b4c1"]')
     PRODUCT_QTY_FIELD = (By.CLASS_NAME, 'input-text')
     ADD_TO_CART = (By.CSS_SELECTOR, 'button.single_add_to_cart_button.button.alt')
+
+    COLOR_DROPDOWN = (By.ID, 'pa_color')
+    LOGO_DROPDOWN = (By.ID, 'logo')
+    PRODUCT_SKU = (By.CSS_SELECTOR, 'div.product_meta span.sku_wrapper span.sku')
+    CLEAR_OPTIONS = (By.CSS_SELECTOR, 'a.reset_variations')

@@ -105,4 +105,43 @@ class TestProductDescriptionPageVariableProduct:
 
         assert sorted(displayed_image_urls) == sorted(self.api_image_urls), "Displayed image urls do not match api image urls."
 
+    @pytest.mark.efe56
+    def test_verify_changing_options_changes_product(self, setup):
+        """Verify that selecting variable product options updates the SKU correctly
+        and clearing the options resets the SKU to the default product.
 
+        Steps:
+        1. Wait for the color and logo dropdowns to be visible.
+        2. Select a color ('Blue') and logo ('Yes') from the dropdowns.
+        3. Verify that the product SKU matches the expected variant SKU.
+        4. Clear the selected options.
+        5. Verify that the SKU returns to the default product SKU.
+
+        Assertions:
+            - The SKU after selecting options matches the expected variant SKU.
+            - The SKU after clearing options matches the default product SKU.
+
+        Raises:
+            AssertionError: If the SKU does not match expected values at any step.
+        """
+        pdp = ProductDescriptionPage(self.driver)
+        # wait until dropdowns are visible
+        pdp.get_variable_product_dropdown()
+
+        # select color and logo from dropdowns
+        pdp.select_variable_product_options(color='Blue', logo='Yes') # using method's default options.
+
+        # verify correct product selected by getting sku
+        expected_product_sku = 'woo-hoodie-blue-logo'
+        product_sku = pdp.get_product_sku()
+        assert product_sku == expected_product_sku, (f"ERROR. Wrong product sku after selecting options"
+                                                     f"for variable product."
+                                                     f"Expected: {expected_product_sku}, Actual: {product_sku}")
+
+        # clear the chosen option and assert default sku
+        pdp.clear_options()
+        expected_default = 'woo-hoodie'
+        default_sku = pdp.get_product_sku()
+        assert default_sku == expected_default, (f"ERROR. Wrong product sku after clearing options"
+                                                     f"for variable product."
+                                                     f"Expected: {expected_default}, Actual: {default_sku}")
