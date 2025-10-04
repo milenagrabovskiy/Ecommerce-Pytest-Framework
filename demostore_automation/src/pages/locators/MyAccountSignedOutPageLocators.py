@@ -12,3 +12,13 @@ class MyAccountSignedOutPageLocators:
     REGISTER_EMAIL = (By.ID, 'reg_email')
     REGISTER_PASSWORD = (By.ID, 'reg_password')
     REGISTER_BTN = (By.CSS_SELECTOR, 'button[name="register"][value="Register"]')
+
+    LOST_PASSWORD_LINK = (By.CSS_SELECTOR, 'a[href="http://dev.bootcamp.store.supersqa.com/my-account/lost-password/"]')
+    LOST_PASSWORD_EMAIL = (By.CSS_SELECTOR, 'input.woocommerce-Input.woocommerce-Input--text.input-text')
+    RESET_PASSWORD_BTN = (By.CSS_SELECTOR, 'button.woocommerce-Button.button')
+    LOST_PASSWORD_HEADER = (By.CSS_SELECTOR, 'h1.entry-title')
+    INVALID_EMAIL_ALERT = (By.CSS_SELECTOR, 'ul.woocommerce-error')
+    PASSWORD_RESET_SENT_MSG = (By.CSS_SELECTOR, 'div.woocommerce-message')
+
+    PRIVACY_POLICY = (By.CSS_SELECTOR, 'div.woocommerce-privacy-policy-text a.woocommerce-privacy-policy-link')
+    BREADCRUMBS = (By.CSS_SELECTOR, 'div.storefront-breadcrumb nav.woocommerce-breadcrumb')

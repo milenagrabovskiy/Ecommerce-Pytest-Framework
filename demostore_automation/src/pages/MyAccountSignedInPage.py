@@ -33,3 +33,6 @@ class MyAccountSignedInPage(MyAccountSignedInPageLocators):
 
         order_locator = (By.CSS_SELECTOR, f'a[href="http://dev.bootcamp.store.supersqa.com/my-account/view-order/{expected_order_number}/"]')
         self.sl.wait_until_element_is_visible(order_locator)
+
+    def click_logout(self):
+        self.sl.wait_and_click(self.LOGOUT_LINK)
