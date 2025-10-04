@@ -1,0 +1,2 @@
+2025-10-04 19:30:42 INFO Starting test: 'test_verify_main_image_variable_prod'
+2025-10-04 19:30:43 INFO Displayed image url: http://dev.bootcamp.store.supersqa.com/wp-content/uploads/2024/10/hoodie-2.jpg
