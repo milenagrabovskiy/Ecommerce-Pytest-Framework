@@ -1,5 +1,4 @@
 from selenium.webdriver import Keys
-
 from demostore_automation.src.selenium_extended.SeleniumExtended import SeleniumExtended
 from demostore_automation.src.configs.MainConfigs import MainConfigs
 from demostore_automation.src.pages.locators.HomePageLocators import HomePageLocators
@@ -38,8 +37,20 @@ class HomePage(HomePageLocators):
 
     def get_all_product_names(self):
         products = self.sl.wait_and_get_elements(self.PRODUCT_NAMES)
-        return [product.text for product in products]
+        return [product.text for product in products] #returns a list of strings (product names)
 
     def verify_no_products_found_msg(self):
         error = 'No products were found matching your selection.'
         self.sl.wait_until_element_contains_text(self.NO_PRODUCTS_MSG_LOCATOR, error)
+
+    def get_sorting_dropdown_menu(self):
+        return self.sl.wait_until_element_is_visible(self.SORTING_MENU)
+
+    def get_product_images(self):
+        return self.sl.wait_and_get_elements(self.PRODUCT_IMAGES)
+
+    def get_product_prices(self):
+        return self.sl.wait_and_get_elements(self.PRICES)
+
+    def get_product_names(self):
+        return self.sl.wait_and_get_elements(self.PRODUCT_NAMES) # returns the name elements
