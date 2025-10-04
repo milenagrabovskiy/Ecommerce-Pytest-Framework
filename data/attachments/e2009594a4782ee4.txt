@@ -1,0 +1,3 @@
+2025-10-04 07:20:33 INFO Starting remote Chrome
+2025-10-04 07:20:47 INFO Created order with order number: 41505
+2025-10-04 07:20:48 INFO Successfully deleted order with order_id: 41505
