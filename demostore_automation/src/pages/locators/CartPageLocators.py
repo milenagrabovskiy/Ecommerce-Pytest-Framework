@@ -21,3 +21,5 @@ class CartPageLocators:
     INCREASE_PRODUCT_BTN = (By.CSS_SELECTOR, )
     PRODUCT_QTY = (By.CLASS_NAME, 'wc-block-components-quantity-selector__input')
     EMPTY_CART = (By.CSS_SELECTOR, 'h2.wp-block-heading.has-text-align-center.with-empty-cart-icon.wc-block-cart__empty-cart__title')
+    #NEW_IN_STORE_HEADING = (By.CSS_SELECTOR, 'h2.wp-block-heading.has-text-align-center')
+    NEW_IN_STORE_HEADING = (By.XPATH, '//*[@id="post-7"]/div/div/div[4]/div/div/h2[2]')

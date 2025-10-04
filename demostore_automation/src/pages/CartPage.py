@@ -69,4 +69,7 @@ class CartPage(CartPageLocators):
         return actual_qty
 
     def verify_empty_cart(self):
-        self.sl.wait_until_element_contains_text(self.EMPTY_CART, 'Your cart is currently empty!')
+        return self.sl.wait_and_get_text(self.EMPTY_CART)
+
+    def get_new_in_store_heading(self):
+        return self.sl.wait_and_get_text(self.NEW_IN_STORE_HEADING)
