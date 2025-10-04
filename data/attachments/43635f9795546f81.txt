@@ -1,1 +1,0 @@
-2025-10-04 21:44:05 INFO Post response for param: sku is: {'code': 'woocommerce_rest_product_not_created', 'message': 'The SKU (invalid_sku) you are trying to insert is already under processing', 'data': {'status': 400}}

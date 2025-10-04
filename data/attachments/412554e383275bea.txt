@@ -1,0 +1,1 @@
+2025-10-04 21:46:38 INFO Post response for param: type is: {'code': 'rest_invalid_param', 'message': 'Invalid parameter(s): type', 'data': {'status': 400, 'params': {'type': 'type is not one of simple, grouped, external, and variable.'}, 'details': {'type': {'code': 'rest_not_in_enum', 'message': 'type is not one of simple, grouped, external, and variable.', 'data': None}}}}
