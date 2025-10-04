@@ -67,3 +67,6 @@ class MyAccountSignedOutPage(MyAccountSignedOutPageLocators):
     def get_bread_crumbs_text(self):
         breadcrumbs = self.sl.wait_and_get_text(self.BREADCRUMBS)
         return breadcrumbs
+
+    def get_my_acct_header(self):
+        return self.sl.wait_and_get_text(self.MY_ACCOUNT_HEADER)

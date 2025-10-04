@@ -20,7 +20,7 @@ def setup_cart_page(request):
     request.cls.cart_page.go_to_cart_page()
 
 @pytest.mark.usefixtures("init_driver")
-class TestEmptyCart:
+class TestCartSmoke:
     """Test suite for validating the behavior of an empty cart page."""
     @pytest.mark.efe59
     def test_verify_empty_cart_by_default(self, setup_cart_page):
@@ -47,5 +47,18 @@ class TestEmptyCart:
         Expected Result:
             The heading should read "New in store", and the section should be visible.
         """
+        expected_heading = "New in store"
         heading = self.cart_page.get_new_in_store_heading()
-        assert heading == "New in store", f"ERROR. Wrong heading. Expected: 'New In Store', Actual: {heading}"
+        assert heading == expected_heading, f"ERROR. Wrong heading. Expected: {expected_heading}, Actual: {heading}"
+
+    @pytest.mark.efe61
+    def test_verify_cart_heading(self, setup_cart_page):
+        """Verify that the cart page heading is displayed correctly.
+
+        This test checks that the cart page displays the correct heading text
+        to confirm that the user is on the Cart page.
+        """
+        expected_heading = 'Cart'
+        heading = self.cart_page.get_cart_header()
+        assert heading == expected_heading, (f"ERROR. Wrong heading on cart page."
+                                             f"Expected: {expected_heading}, Actual: {heading}")

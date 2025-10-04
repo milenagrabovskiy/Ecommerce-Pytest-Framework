@@ -22,3 +22,5 @@ class MyAccountSignedOutPageLocators:
 
     PRIVACY_POLICY = (By.CSS_SELECTOR, 'div.woocommerce-privacy-policy-text a.woocommerce-privacy-policy-link')
     BREADCRUMBS = (By.CSS_SELECTOR, 'div.storefront-breadcrumb nav.woocommerce-breadcrumb')
+
+    MY_ACCOUNT_HEADER = (By.CSS_SELECTOR, 'h1.entry-title')

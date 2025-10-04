@@ -12,7 +12,7 @@ pytestmark = [pytest.mark.feregression, pytest.mark.fesmoke, pytest.mark.my_acco
 
 
 @pytest.mark.usefixtures("init_driver")
-class TestRegisterNewUser:
+class TestRegisterNewUserSmoke:
 
 
     @pytest.mark.tcid13
