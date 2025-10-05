@@ -177,31 +177,20 @@ def create_registered_user(request):
 #                 extras.append(pytest_html.extras.image(screenshot_path))
 #             report.extras = extras
 @pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    """Capture and attach screenshot for failed frontend tests."""
+def pytest_runtest_makereport(item, _call):
     outcome = yield
     report = outcome.get_result()
-    extras = getattr(report, "extras", [])
 
-    # Only act at test call phase
     if report.when == "call" and report.failed:
-        is_frontend = "init_driver" in item.fixturenames or hasattr(item.cls, "driver")
-
+        is_frontend = 'init_driver' in item.fixturenames
         if is_frontend:
-            # Ensure screenshot directory exists
-            results_dir = os.environ.get("RESULTS_DIR", "screenshots")
+            results_dir = os.environ.get("RESULTS_DIR", os.path.join(tempfile.gettempdir(), "screenshots"))
             os.makedirs(results_dir, exist_ok=True)
 
             screenshot_path = os.path.join(results_dir, f"{item.name}.png")
+            driver = item.instance.driver
+            driver.save_screenshot(screenshot_path)
 
-            driver = getattr(getattr(item.cls, "driver", None), "save_screenshot", None)
-            if callable(driver):
-                try:
-                    item.cls.driver.save_screenshot(screenshot_path)
-                    extras.append(pytest_html.extras.image(screenshot_path))
-                except Exception as e:
-                    print(f"[WARN] Failed to capture screenshot for {item.name}: {e}")
-            else:
-                print(f"[INFO] No driver found for {item.name}, skipping screenshot capture.")
-
-    report.extras = extras
+            if hasattr(report, "extras"):
+                import pytest_html
+                report.extras.append(pytest_html.extras.image(screenshot_path))
