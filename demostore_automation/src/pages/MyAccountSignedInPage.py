@@ -52,9 +52,11 @@ class MyAccountSignedInPage(MyAccountSignedInPageLocators):
         return email_input.get_attribute("value")
 
     def input_first_name(self, f_name):
+        self.sl.wait_until_element_is_visible(self.FIRST_NAME)
         self.sl.wait_and_input_text(self.FIRST_NAME, f_name)
 
     def input_last_name(self, l_name):
+        self.sl.wait_until_element_is_visible(self.LAST_NAME)
         self.sl.wait_and_input_text(self.LAST_NAME, l_name)
 
     def input_current_password(self, current_password):
@@ -74,3 +76,6 @@ class MyAccountSignedInPage(MyAccountSignedInPageLocators):
 
     def go_to_dashboard(self):
         self.sl.wait_and_click(self.DASHBOARD)
+
+    def get_error_message(self):
+        return self.sl.wait_and_get_text(self.ERROR_MSG)

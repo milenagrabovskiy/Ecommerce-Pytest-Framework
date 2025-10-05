@@ -21,3 +21,4 @@ class MyAccountSignedInPageLocators:
     SAVE_CHANGES_BTN = (By.CSS_SELECTOR, 'button.woocommerce-Button.button')
     CHANGE_PASSWORD_SUCCESS_MSG = (By.CSS_SELECTOR, 'div.woocommerce div.woocommerce-message')
     DASHBOARD = (By.CSS_SELECTOR, 'li.woocommerce-MyAccount-navigation-link.woocommerce-MyAccount-navigation-link')
+    ERROR_MSG = (By.CSS_SELECTOR, 'div.woocommerce ul.woocommerce-error')
