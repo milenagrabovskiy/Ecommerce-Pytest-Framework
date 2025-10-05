@@ -155,24 +155,53 @@ def create_registered_user(request):
     return {'email': email, 'password': password}
 
 
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_runtest_makereport(item, call):
+#         outcome = yield
+#         report = outcome.get_result()
+#         extras = getattr(report, "extras", [])
+#         if report.when == "call":
+#             # always add url to report
+#             extras.append(pytest_html.extras.url("http://www.example.com/"))
+#             xfail = hasattr(report, "wasxfail")
+#             if (report.skipped and xfail) or (report.failed and not xfail):
+#                 is_frontend = True if 'init_driver' in item.fixturenames else False
+#                 if is_frontend:
+#                     results_dir = os.environ.get('RESULTS_DIR')
+#                     screenshot_path = os.path.join(results_dir, item.name + '.png')
+#                     driver_fixture = item.funcargs['request']
+#                     driver = driver_fixture.cls.driver.save_screenshot(screenshot_path)
+#                     if not results_dir:
+#                         raise Exception("'RESULTS_DIR env variable must be set")
+#                 # only add additional html on failure
+#                 extras.append(pytest_html.extras.image(screenshot_path))
+#             report.extras = extras
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-        outcome = yield
-        report = outcome.get_result()
-        extras = getattr(report, "extras", [])
-        if report.when == "call":
-            # always add url to report
-            extras.append(pytest_html.extras.url("http://www.example.com/"))
-            xfail = hasattr(report, "wasxfail")
-            if (report.skipped and xfail) or (report.failed and not xfail):
-                is_frontend = True if 'init_driver' in item.fixturenames else False
-                if is_frontend:
-                    results_dir = os.environ.get('RESULTS_DIR')
-                    screenshot_path = os.path.join(results_dir, item.name + '.png')
-                    driver_fixture = item.funcargs['request']
-                    driver = driver_fixture.cls.driver.save_screenshot(screenshot_path)
-                    if not results_dir:
-                        raise Exception("'RESULTS_DIR env variable must be set")
-                # only add additional html on failure
-                extras.append(pytest_html.extras.image(screenshot_path))
-            report.extras = extras
+    """Capture and attach screenshot for failed frontend tests."""
+    outcome = yield
+    report = outcome.get_result()
+    extras = getattr(report, "extras", [])
+
+    # Only act at test call phase
+    if report.when == "call" and report.failed:
+        is_frontend = "init_driver" in item.fixturenames or hasattr(item.cls, "driver")
+
+        if is_frontend:
+            # Ensure screenshot directory exists
+            results_dir = os.environ.get("RESULTS_DIR", "screenshots")
+            os.makedirs(results_dir, exist_ok=True)
+
+            screenshot_path = os.path.join(results_dir, f"{item.name}.png")
+
+            driver = getattr(getattr(item.cls, "driver", None), "save_screenshot", None)
+            if callable(driver):
+                try:
+                    item.cls.driver.save_screenshot(screenshot_path)
+                    extras.append(pytest_html.extras.image(screenshot_path))
+                except Exception as e:
+                    print(f"[WARN] Failed to capture screenshot for {item.name}: {e}")
+            else:
+                print(f"[INFO] No driver found for {item.name}, skipping screenshot capture.")
+
+    report.extras = extras
