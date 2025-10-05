@@ -1,35 +1,5 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Sun Oct 05 21:12:08 UTC 2025","Sun Oct 05 21:12:08 UTC 2025","543","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to same status]","Test changing WooCommerce order status and verifying API and DB consistency.
-
-Steps:
-1. Create an order with default status 'processing'.
-2. Update the order to the specified `order_status`.
-3. Verify the update via the API response.
-4. Verify the order exists in the database with the correct updated status.
-5. For certain statuses (completed, cancelled, refunded), validate specific fields like
-   'needs_payment', 'date_completed', and 'refunds'.
-
-Args:
-    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
-    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
-
-Assertions:
-    - The order status is correctly updated in the API response.
-    - The order ID remains unchanged after update.
-    - API and DB responses match for the updated order.
-    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
-"
-"passed","Sun Oct 05 21:12:04 UTC 2025","Sun Oct 05 21:12:04 UTC 2025","225","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_only_email_password","Test customer creation using only email and password.
-
-Verifies:
-    - HTTP 201 response from API
-    - Valid response fields such as ID and role
-    - Customer is stored correctly in the database
-
-Raises:
-    AssertionError: If any of the API or DB validations fail.
-"
-"passed","Sun Oct 05 21:12:37 UTC 2025","Sun Oct 05 21:12:37 UTC 2025","403","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[very large sale_price == regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
+"passed","Sun Oct 05 21:28:09 UTC 2025","Sun Oct 05 21:28:10 UTC 2025","1442","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[very large sale_price == regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
 results in the API ignoring the sale_price and setting it to an empty string.
 
 Args:
@@ -40,89 +10,18 @@ Args:
 Raises:
     AssertionError: If the API or DB does not handle invalid sale_price correctly.
 "
-"passed","Sun Oct 05 21:12:11 UTC 2025","Sun Oct 05 21:12:12 UTC 2025","631","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_1_notes]","Test creating one or multiple order notes for a given user type.
+"passed","Sun Oct 05 21:28:05 UTC 2025","Sun Oct 05 21:28:07 UTC 2025","1713","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[sale_price > regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
+results in the API ignoring the sale_price and setting it to an empty string.
 
 Args:
-    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
-    user_type (str): 'guest_user' or 'registered_user'.
-    quantity (int): Number of notes to create.
-"
-"passed","Sun Oct 05 21:11:59 UTC 2025","Sun Oct 05 21:12:00 UTC 2025","1163","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_free_coupon]","Test applying a coupon to a newly created order.
-
-This test:
-1. Creates a new order for a random or fixed product.
-2. Retrieves or creates a coupon depending on the discount type.
-3. Applies the coupon to the order via API.
-4. Verifies that the order total and discount are correct.
-5. Checks that the customer is listed as having used the coupon.
-
-Args:
-    apply_coupon_setup (dict): Fixture providing setup info and helpers.
-    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
-
-Asserts:
-    - Order total before and after applying coupon.
-    - Discount applied matches expected.
-    - Coupon is valid and published.
-    - Customer is correctly listed as a coupon user.
-"
-"passed","Sun Oct 05 21:11:58 UTC 2025","Sun Oct 05 21:11:59 UTC 2025","1305","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_'fixed_product'_coupon]","Test applying a coupon to a newly created order.
-
-This test:
-1. Creates a new order for a random or fixed product.
-2. Retrieves or creates a coupon depending on the discount type.
-3. Applies the coupon to the order via API.
-4. Verifies that the order total and discount are correct.
-5. Checks that the customer is listed as having used the coupon.
-
-Args:
-    apply_coupon_setup (dict): Fixture providing setup info and helpers.
-    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
-
-Asserts:
-    - Order total before and after applying coupon.
-    - Discount applied matches expected.
-    - Coupon is valid and published.
-    - Customer is correctly listed as a coupon user.
-"
-"passed","Sun Oct 05 21:12:00 UTC 2025","Sun Oct 05 21:12:01 UTC 2025","739","tests.backend.coupons","test_apply_coupons","","","","test_apply_expired_coupon_neg","Verify that applying an expired coupon to an order fails.
-
-Creates an expired coupon, attempts to apply it to a new order,
-and checks that the API returns the correct error and that the coupon
-is recognized as invalid.
-
-Args:
-    apply_coupon_setup (dict): Fixture with DAOs, API helpers, and test data.
-
-Asserts:
-    - Coupon is expired.
-    - API response matches expected error for expired coupons.
-"
-"passed","Sun Oct 05 21:12:03 UTC 2025","Sun Oct 05 21:12:03 UTC 2025","224","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_product]","Test creating a coupon with various valid discount types.
-
-Verifies that the POST API creates the coupon correctly and the GET API
-retrieves the coupon with the expected values.
-
-Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
-    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+    setup_teardown (fixture): Fixture providing API helpers.
+    regular_price (str): Regular price of the product.
+    sale_price (str): Sale price of the product.
 
 Raises:
-    AssertionError: If the POST or GET API responses do not match expected values.
+    AssertionError: If the API or DB does not handle invalid sale_price correctly.
 "
-"passed","Sun Oct 05 21:12:03 UTC 2025","Sun Oct 05 21:12:03 UTC 2025","215","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[None]","Test creating a coupon with various valid discount types.
-
-Verifies that the POST API creates the coupon correctly and the GET API
-retrieves the coupon with the expected values.
-
-Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
-    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
-
-Raises:
-    AssertionError: If the POST or GET API responses do not match expected values.
-"
-"passed","Sun Oct 05 21:12:05 UTC 2025","Sun Oct 05 21:12:05 UTC 2025","556","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to on-hold]","Test changing WooCommerce order status and verifying API and DB consistency.
+"passed","Sun Oct 05 21:26:41 UTC 2025","Sun Oct 05 21:26:43 UTC 2025","2251","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to completed]","Test changing WooCommerce order status and verifying API and DB consistency.
 
 Steps:
 1. Create an order with default status 'processing'.
@@ -142,7 +41,42 @@ Assertions:
     - API and DB responses match for the updated order.
     - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
 "
-"passed","Sun Oct 05 21:12:03 UTC 2025","Sun Oct 05 21:12:03 UTC 2025","220","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_cart]","Test creating a coupon with various valid discount types.
+"passed","Sun Oct 05 21:26:33 UTC 2025","Sun Oct 05 21:26:34 UTC 2025","234","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_invalid_discount_type","Negative test: Verify invalid discount type returns an error.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance.
+
+Raises:
+    AssertionError: If the API response does not match the expected error response.
+"
+"skipped","Sun Oct 05 21:28:03 UTC 2025","Sun Oct 05 21:28:04 UTC 2025","335","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price: random string]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"skipped","Sun Oct 05 21:27:56 UTC 2025","Sun Oct 05 21:27:57 UTC 2025","1431","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[review-out of range]","Test creation and verification of a product review.
+
+Steps:
+1. Create a simple product via API.
+2. Optionally create a registered customer and order if `customer_bought` is True.
+3. Create a product review with the given rating.
+4. Verify review exists and is correct via both API and database.
+
+Args:
+    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
+    rating (int): Rating for the review (0-5 recommended).
+    customer_bought (bool): Whether the review is by a registered customer.
+
+Assertions:
+    - Review exists in API response with correct rating, status, and reviewer info.
+    - Review exists in DB with correct customer_id (if registered), email, and approved status.
+"
+"passed","Sun Oct 05 21:26:31 UTC 2025","Sun Oct 05 21:26:32 UTC 2025","514","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[percent]","Test creating a coupon with various valid discount types.
 
 Verifies that the POST API creates the coupon correctly and the GET API
 retrieves the coupon with the expected values.
@@ -154,17 +88,659 @@ Args:
 Raises:
     AssertionError: If the POST or GET API responses do not match expected values.
 "
-"passed","Sun Oct 05 21:12:03 UTC 2025","Sun Oct 05 21:12:03 UTC 2025","88","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_invalid_discount_type","Negative test: Verify invalid discount type returns an error.
+"passed","Sun Oct 05 21:28:01 UTC 2025","Sun Oct 05 21:28:02 UTC 2025","415","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product type:int]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
 
 Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance.
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"passed","Sun Oct 05 21:27:31 UTC 2025","Sun Oct 05 21:27:39 UTC 2025","7536","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_5_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Sun Oct 05 21:28:02 UTC 2025","Sun Oct 05 21:28:02 UTC 2025","228","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product sku:int]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"passed","Sun Oct 05 21:26:47 UTC 2025","Sun Oct 05 21:26:49 UTC 2025","2292","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to failed]","Test changing WooCommerce order status and verifying API and DB consistency.
+
+Steps:
+1. Create an order with default status 'processing'.
+2. Update the order to the specified `order_status`.
+3. Verify the update via the API response.
+4. Verify the order exists in the database with the correct updated status.
+5. For certain statuses (completed, cancelled, refunded), validate specific fields like
+   'needs_payment', 'date_completed', and 'refunds'.
+
+Args:
+    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
+    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
+
+Assertions:
+    - The order status is correctly updated in the API response.
+    - The order ID remains unchanged after update.
+    - API and DB responses match for the updated order.
+    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
+"
+"passed","Sun Oct 05 21:28:01 UTC 2025","Sun Oct 05 21:28:01 UTC 2025","275","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product type:str]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"passed","Sun Oct 05 21:28:27 UTC 2025","Sun Oct 05 21:28:29 UTC 2025","1402","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product2]",""
+"passed","Sun Oct 05 21:27:52 UTC 2025","Sun Oct 05 21:27:53 UTC 2025","1728","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[review-lowest boundary]","Test creation and verification of a product review.
+
+Steps:
+1. Create a simple product via API.
+2. Optionally create a registered customer and order if `customer_bought` is True.
+3. Create a product review with the given rating.
+4. Verify review exists and is correct via both API and database.
+
+Args:
+    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
+    rating (int): Rating for the review (0-5 recommended).
+    customer_bought (bool): Whether the review is by a registered customer.
+
+Assertions:
+    - Review exists in API response with correct rating, status, and reviewer info.
+    - Review exists in DB with correct customer_id (if registered), email, and approved status.
+"
+"passed","Sun Oct 05 21:28:35 UTC 2025","Sun Oct 05 21:28:36 UTC 2025","471","tests.backend.products","test_get_products_smoke","","","","test_get_all_products_returns_not_empty",""
+"passed","Sun Oct 05 21:28:18 UTC 2025","Sun Oct 05 21:28:19 UTC 2025","1423","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[very small sale price]","Test creating a product with valid sale_price within acceptable boundaries.
+
+This test verifies that when a product is created with a sale_price that is
+less than the regular_price, the API stores the correct values for both
+regular_price and sale_price, and the product is properly recorded in the DB.
+
+Args:
+    setup_teardown (fixture): Fixture providing API and database helpers.
+    regular_price (str): Regular price to use when creating the product.
+    sale_price (str): Sale price to use when creating the product.
 
 Raises:
-    AssertionError: If the API response does not match the expected error response.
+    AssertionError: If the API or database does not store prices correctly.
 "
-"passed","Sun Oct 05 21:12:42 UTC 2025","Sun Oct 05 21:12:43 UTC 2025","441","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product0]",""
-"passed","Sun Oct 05 21:12:47 UTC 2025","Sun Oct 05 21:12:47 UTC 2025","127","tests.backend.products","test_get_products_smoke","","","","test_get_product_by_id",""
-"passed","Sun Oct 05 21:12:23 UTC 2025","Sun Oct 05 21:12:23 UTC 2025","335","tests.backend.orders","test_create_order_smoke","","","","test_create_order_no_payment_info","Verify order creation with missing billing, shipping, and payment data.
+"passed","Sun Oct 05 21:28:16 UTC 2025","Sun Oct 05 21:28:18 UTC 2025","1473","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[sale price=0.01]","Test creating a product with valid sale_price within acceptable boundaries.
+
+This test verifies that when a product is created with a sale_price that is
+less than the regular_price, the API stores the correct values for both
+regular_price and sale_price, and the product is properly recorded in the DB.
+
+Args:
+    setup_teardown (fixture): Fixture providing API and database helpers.
+    regular_price (str): Regular price to use when creating the product.
+    sale_price (str): Sale price to use when creating the product.
+
+Raises:
+    AssertionError: If the API or database does not store prices correctly.
+"
+"passed","Sun Oct 05 21:28:32 UTC 2025","Sun Oct 05 21:28:33 UTC 2025","1010","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_variable_product]",""
+"passed","Sun Oct 05 21:26:43 UTC 2025","Sun Oct 05 21:26:45 UTC 2025","2038","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to cancelled]","Test changing WooCommerce order status and verifying API and DB consistency.
+
+Steps:
+1. Create an order with default status 'processing'.
+2. Update the order to the specified `order_status`.
+3. Verify the update via the API response.
+4. Verify the order exists in the database with the correct updated status.
+5. For certain statuses (completed, cancelled, refunded), validate specific fields like
+   'needs_payment', 'date_completed', and 'refunds'.
+
+Args:
+    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
+    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
+
+Assertions:
+    - The order status is correctly updated in the API response.
+    - The order ID remains unchanged after update.
+    - API and DB responses match for the updated order.
+    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
+"
+"passed","Sun Oct 05 21:26:20 UTC 2025","Sun Oct 05 21:26:23 UTC 2025","2719","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_'fixed_product'_coupon]","Test applying a coupon to a newly created order.
+
+This test:
+1. Creates a new order for a random or fixed product.
+2. Retrieves or creates a coupon depending on the discount type.
+3. Applies the coupon to the order via API.
+4. Verifies that the order total and discount are correct.
+5. Checks that the customer is listed as having used the coupon.
+
+Args:
+    apply_coupon_setup (dict): Fixture providing setup info and helpers.
+    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
+
+Asserts:
+    - Order total before and after applying coupon.
+    - Discount applied matches expected.
+    - Coupon is valid and published.
+    - Customer is correctly listed as a coupon user.
+"
+"skipped","Sun Oct 05 21:27:48 UTC 2025","Sun Oct 05 21:27:49 UTC 2025","766","tests.backend.orders","test_order_refunds","","","","test_order_refund[update to same status]","Test WooCommerce order refunds via API.
+
+Steps:
+1. Create a new order with a product.
+2. Apply refund based on `refund_type`:
+   - full: refund entire order
+   - partial: refund half the order
+   - refund_1_product: refund a single product
+3. Verify that the refund amount returned by the API matches expected value.
+
+Args:
+    my_orders_smoke_setup (fixture): Fixture providing product, order, and helper setup.
+    refund_type (str): Type of refund to apply. One of ""full"", ""partial"", ""refund_1_product"".
+
+Assertions:
+    - Order creation API returns valid responses.
+    - Refund API returns the correct refund amount.
+"
+"passed","Sun Oct 05 21:28:13 UTC 2025","Sun Oct 05 21:28:15 UTC 2025","1450","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[sale price one cent off of regular]","Test creating a product with valid sale_price within acceptable boundaries.
+
+This test verifies that when a product is created with a sale_price that is
+less than the regular_price, the API stores the correct values for both
+regular_price and sale_price, and the product is properly recorded in the DB.
+
+Args:
+    setup_teardown (fixture): Fixture providing API and database helpers.
+    regular_price (str): Regular price to use when creating the product.
+    sale_price (str): Sale price to use when creating the product.
+
+Raises:
+    AssertionError: If the API or database does not store prices correctly.
+"
+"passed","Sun Oct 05 21:28:29 UTC 2025","Sun Oct 05 21:28:31 UTC 2025","1656","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_grouped_product]",""
+"passed","Sun Oct 05 21:27:21 UTC 2025","Sun Oct 05 21:27:23 UTC 2025","1134","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Sun Oct 05 21:28:03 UTC 2025","Sun Oct 05 21:28:03 UTC 2025","225","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid stock_quantity: rand str]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"passed","Sun Oct 05 21:26:53 UTC 2025","Sun Oct 05 21:26:55 UTC 2025","1673","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_1_note]","Test creating one or multiple order notes for a given user type.
+
+Args:
+    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
+    user_type (str): 'guest_user' or 'registered_user'.
+    quantity (int): Number of notes to create.
+"
+"skipped","Sun Oct 05 21:27:49 UTC 2025","Sun Oct 05 21:27:50 UTC 2025","1172","tests.backend.orders","test_order_refunds","","","","test_order_refund[update to empty string]","Test WooCommerce order refunds via API.
+
+Steps:
+1. Create a new order with a product.
+2. Apply refund based on `refund_type`:
+   - full: refund entire order
+   - partial: refund half the order
+   - refund_1_product: refund a single product
+3. Verify that the refund amount returned by the API matches expected value.
+
+Args:
+    my_orders_smoke_setup (fixture): Fixture providing product, order, and helper setup.
+    refund_type (str): Type of refund to apply. One of ""full"", ""partial"", ""refund_1_product"".
+
+Assertions:
+    - Order creation API returns valid responses.
+    - Refund API returns the correct refund amount.
+"
+"passed","Sun Oct 05 21:27:13 UTC 2025","Sun Oct 05 21:27:15 UTC 2025","1654","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Sun Oct 05 21:27:57 UTC 2025","Sun Oct 05 21:28:00 UTC 2025","2622","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[registered customer review]","Test creation and verification of a product review.
+
+Steps:
+1. Create a simple product via API.
+2. Optionally create a registered customer and order if `customer_bought` is True.
+3. Create a product review with the given rating.
+4. Verify review exists and is correct via both API and database.
+
+Args:
+    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
+    rating (int): Rating for the review (0-5 recommended).
+    customer_bought (bool): Whether the review is by a registered customer.
+
+Assertions:
+    - Review exists in API response with correct rating, status, and reviewer info.
+    - Review exists in DB with correct customer_id (if registered), email, and approved status.
+"
+"passed","Sun Oct 05 21:28:15 UTC 2025","Sun Oct 05 21:28:16 UTC 2025","1518","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[very large price and sale price]","Test creating a product with valid sale_price within acceptable boundaries.
+
+This test verifies that when a product is created with a sale_price that is
+less than the regular_price, the API stores the correct values for both
+regular_price and sale_price, and the product is properly recorded in the DB.
+
+Args:
+    setup_teardown (fixture): Fixture providing API and database helpers.
+    regular_price (str): Regular price to use when creating the product.
+    sale_price (str): Sale price to use when creating the product.
+
+Raises:
+    AssertionError: If the API or database does not store prices correctly.
+"
+"passed","Sun Oct 05 21:26:49 UTC 2025","Sun Oct 05 21:26:51 UTC 2025","1868","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to same status]","Test changing WooCommerce order status and verifying API and DB consistency.
+
+Steps:
+1. Create an order with default status 'processing'.
+2. Update the order to the specified `order_status`.
+3. Verify the update via the API response.
+4. Verify the order exists in the database with the correct updated status.
+5. For certain statuses (completed, cancelled, refunded), validate specific fields like
+   'needs_payment', 'date_completed', and 'refunds'.
+
+Args:
+    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
+    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
+
+Assertions:
+    - The order status is correctly updated in the API response.
+    - The order ID remains unchanged after update.
+    - API and DB responses match for the updated order.
+    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
+"
+"passed","Sun Oct 05 21:28:23 UTC 2025","Sun Oct 05 21:28:24 UTC 2025","1416","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_product]",""
+"passed","Sun Oct 05 21:26:55 UTC 2025","Sun Oct 05 21:27:01 UTC 2025","6186","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_5_notes]","Test creating one or multiple order notes for a given user type.
+
+Args:
+    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
+    user_type (str): 'guest_user' or 'registered_user'.
+    quantity (int): Number of notes to create.
+"
+"passed","Sun Oct 05 21:26:37 UTC 2025","Sun Oct 05 21:26:37 UTC 2025","318","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_for_existing_email","Test API fails when trying to create a customer with an existing email.
+
+Verifies:
+    - API returns 400
+    - Appropriate error code and message are returned
+
+Raises:
+    AssertionError: If API response doesn't contain expected error code/message.
+"
+"passed","Sun Oct 05 21:28:02 UTC 2025","Sun Oct 05 21:28:02 UTC 2025","233","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:float]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"passed","Sun Oct 05 21:28:10 UTC 2025","Sun Oct 05 21:28:12 UTC 2025","1642","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[very large sale_price > regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
+results in the API ignoring the sale_price and setting it to an empty string.
+
+Args:
+    setup_teardown (fixture): Fixture providing API helpers.
+    regular_price (str): Regular price of the product.
+    sale_price (str): Sale price of the product.
+
+Raises:
+    AssertionError: If the API or DB does not handle invalid sale_price correctly.
+"
+"passed","Sun Oct 05 21:27:23 UTC 2025","Sun Oct 05 21:27:24 UTC 2025","1930","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Sun Oct 05 21:28:02 UTC 2025","Sun Oct 05 21:28:03 UTC 2025","229","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:int]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"passed","Sun Oct 05 21:28:31 UTC 2025","Sun Oct 05 21:28:32 UTC 2025","1428","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_external_product]",""
+"passed","Sun Oct 05 21:26:32 UTC 2025","Sun Oct 05 21:26:33 UTC 2025","494","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_product]","Test creating a coupon with various valid discount types.
+
+Verifies that the POST API creates the coupon correctly and the GET API
+retrieves the coupon with the expected values.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
+    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+
+Raises:
+    AssertionError: If the POST or GET API responses do not match expected values.
+"
+"passed","Sun Oct 05 21:28:12 UTC 2025","Sun Oct 05 21:28:13 UTC 2025","1577","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[letter string sale_price]","Test that creating a product with sale_price greater than or equal to regular_price
+results in the API ignoring the sale_price and setting it to an empty string.
+
+Args:
+    setup_teardown (fixture): Fixture providing API helpers.
+    regular_price (str): Regular price of the product.
+    sale_price (str): Sale price of the product.
+
+Raises:
+    AssertionError: If the API or DB does not handle invalid sale_price correctly.
+"
+"passed","Sun Oct 05 21:26:17 UTC 2025","Sun Oct 05 21:26:20 UTC 2025","3189","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_'fixed_cart'_coupon]","Test applying a coupon to a newly created order.
+
+This test:
+1. Creates a new order for a random or fixed product.
+2. Retrieves or creates a coupon depending on the discount type.
+3. Applies the coupon to the order via API.
+4. Verifies that the order total and discount are correct.
+5. Checks that the customer is listed as having used the coupon.
+
+Args:
+    apply_coupon_setup (dict): Fixture providing setup info and helpers.
+    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
+
+Asserts:
+    - Order total before and after applying coupon.
+    - Discount applied matches expected.
+    - Coupon is valid and published.
+    - Customer is correctly listed as a coupon user.
+"
+"passed","Sun Oct 05 21:27:39 UTC 2025","Sun Oct 05 21:27:40 UTC 2025","644","tests.backend.orders","test_create_order_smoke","","","","test_create_order_empty_line_items_negative","Verify that an order can be created without products (empty line_items).
+
+WooCommerce allows order creation without mandatory product fields.
+This test ensures:
+  - The order is created with an empty `line_items` list.
+  - The order status is returned as ""completed"".
+
+Args:
+    my_orders_smoke_setup (fixture): Provides API helpers and teardown tracking.
+"
+"passed","Sun Oct 05 21:28:36 UTC 2025","Sun Oct 05 21:28:36 UTC 2025","690","tests.backend.products","test_get_products_smoke","","","","test_get_product_by_id",""
+"passed","Sun Oct 05 21:26:35 UTC 2025","Sun Oct 05 21:26:36 UTC 2025","800","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_only_email_password","Test customer creation using only email and password.
+
+Verifies:
+    - HTTP 201 response from API
+    - Valid response fields such as ID and role
+    - Customer is stored correctly in the database
+
+Raises:
+    AssertionError: If any of the API or DB validations fail.
+"
+"passed","Sun Oct 05 21:26:33 UTC 2025","Sun Oct 05 21:26:33 UTC 2025","594","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[None]","Test creating a coupon with various valid discount types.
+
+Verifies that the POST API creates the coupon correctly and the GET API
+retrieves the coupon with the expected values.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
+    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+
+Raises:
+    AssertionError: If the POST or GET API responses do not match expected values.
+"
+"passed","Sun Oct 05 21:26:23 UTC 2025","Sun Oct 05 21:26:26 UTC 2025","3067","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_free_coupon]","Test applying a coupon to a newly created order.
+
+This test:
+1. Creates a new order for a random or fixed product.
+2. Retrieves or creates a coupon depending on the discount type.
+3. Applies the coupon to the order via API.
+4. Verifies that the order total and discount are correct.
+5. Checks that the customer is listed as having used the coupon.
+
+Args:
+    apply_coupon_setup (dict): Fixture providing setup info and helpers.
+    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
+
+Asserts:
+    - Order total before and after applying coupon.
+    - Discount applied matches expected.
+    - Coupon is valid and published.
+    - Customer is correctly listed as a coupon user.
+"
+"skipped","Sun Oct 05 21:28:03 UTC 2025","Sun Oct 05 21:28:03 UTC 2025","339","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:negative]","Test product creation with invalid parameters.
+
+Sends a create product request with invalid parameter values and
+verifies that the WooCommerce API returns an appropriate error.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
+    value (any): The invalid value to send for the parameter.
+"
+"passed","Sun Oct 05 21:26:32 UTC 2025","Sun Oct 05 21:26:32 UTC 2025","503","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[fixed_cart]","Test creating a coupon with various valid discount types.
+
+Verifies that the POST API creates the coupon correctly and the GET API
+retrieves the coupon with the expected values.
+
+Args:
+    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
+    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+
+Raises:
+    AssertionError: If the POST or GET API responses do not match expected values.
+"
+"passed","Sun Oct 05 21:26:27 UTC 2025","Sun Oct 05 21:26:29 UTC 2025","2029","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_twice_neg","Verify that applying the same coupon twice to one order does not change the discount or order total.
+
+Args:
+    apply_coupon_setup (dict): Fixture with DAOs, API helpers, and test data.
+
+Asserts:
+    - Order ID remains the same.
+    - Discount and total do not change after second application.
+    - Coupon code is identical for both applications.
+"
+"passed","Sun Oct 05 21:27:04 UTC 2025","Sun Oct 05 21:27:11 UTC 2025","7172","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_5_notes]","Test creating one or multiple order notes for a given user type.
+
+Args:
+    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
+    user_type (str): 'guest_user' or 'registered_user'.
+    quantity (int): Number of notes to create.
+"
+"skipped","Sun Oct 05 21:27:50 UTC 2025","Sun Oct 05 21:27:51 UTC 2025","1069","tests.backend.orders","test_order_refunds","","","","test_order_refund[update to random string]","Test WooCommerce order refunds via API.
+
+Steps:
+1. Create a new order with a product.
+2. Apply refund based on `refund_type`:
+   - full: refund entire order
+   - partial: refund half the order
+   - refund_1_product: refund a single product
+3. Verify that the refund amount returned by the API matches expected value.
+
+Args:
+    my_orders_smoke_setup (fixture): Fixture providing product, order, and helper setup.
+    refund_type (str): Type of refund to apply. One of ""full"", ""partial"", ""refund_1_product"".
+
+Assertions:
+    - Order creation API returns valid responses.
+    - Refund API returns the correct refund amount.
+"
+"passed","Sun Oct 05 21:27:53 UTC 2025","Sun Oct 05 21:27:56 UTC 2025","2093","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[review-highest boundary]","Test creation and verification of a product review.
+
+Steps:
+1. Create a simple product via API.
+2. Optionally create a registered customer and order if `customer_bought` is True.
+3. Create a product review with the given rating.
+4. Verify review exists and is correct via both API and database.
+
+Args:
+    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
+    rating (int): Rating for the review (0-5 recommended).
+    customer_bought (bool): Whether the review is by a registered customer.
+
+Assertions:
+    - Review exists in API response with correct rating, status, and reviewer info.
+    - Review exists in DB with correct customer_id (if registered), email, and approved status.
+"
+"passed","Sun Oct 05 21:28:26 UTC 2025","Sun Oct 05 21:28:27 UTC 2025","1825","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product1]",""
+"passed","Sun Oct 05 21:26:45 UTC 2025","Sun Oct 05 21:26:47 UTC 2025","1941","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to refunded]","Test changing WooCommerce order status and verifying API and DB consistency.
+
+Steps:
+1. Create an order with default status 'processing'.
+2. Update the order to the specified `order_status`.
+3. Verify the update via the API response.
+4. Verify the order exists in the database with the correct updated status.
+5. For certain statuses (completed, cancelled, refunded), validate specific fields like
+   'needs_payment', 'date_completed', and 'refunds'.
+
+Args:
+    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
+    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
+
+Assertions:
+    - The order status is correctly updated in the API response.
+    - The order ID remains unchanged after update.
+    - API and DB responses match for the updated order.
+    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
+"
+"passed","Sun Oct 05 21:27:24 UTC 2025","Sun Oct 05 21:27:31 UTC 2025","6685","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Sun Oct 05 21:28:07 UTC 2025","Sun Oct 05 21:28:09 UTC 2025","1614","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[sale_price == regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
+results in the API ignoring the sale_price and setting it to an empty string.
+
+Args:
+    setup_teardown (fixture): Fixture providing API helpers.
+    regular_price (str): Regular price of the product.
+    sale_price (str): Sale price of the product.
+
+Raises:
+    AssertionError: If the API or DB does not handle invalid sale_price correctly.
+"
+"passed","Sun Oct 05 21:28:04 UTC 2025","Sun Oct 05 21:28:05 UTC 2025","1178","tests.backend.products","test_create_products_negative","","","","test_create_empty_product_neg","Test creating a product with an empty payload.
+
+Verifies that WooCommerce creates a product with default values when
+no fields are provided. Also checks that the product exists in the API
+and the database.
+
+Args:
+    setup_teardown (dict): Fixture providing helpers for API and DB access.
+"
+"passed","Sun Oct 05 21:27:15 UTC 2025","Sun Oct 05 21:27:21 UTC 2025","6400","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
+
+This test covers multiple scenarios using parameterization:
+    - Guest user creating 1 order with 1 item.
+    - Guest user creating 1 order with multiple items.
+    - Guest user creating multiple orders with 1 item each.
+    - Registered user creating 1 order with multiple items.
+    - Registered user creating multiple orders with 1 item each.
+    - Registered user creating multiple orders with multiple items each.
+
+For each scenario, asserts the following:
+    - API response is not empty.
+    - Order ID is an integer.
+    - Customer ID matches expected value (0 for guest, or the correct customer ID).
+    - Order key format starts with 'wc_order_'.
+    - Newly created order can be retrieved via API and exists in the database.
+
+Args:
+    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
+    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
+    order_qty (int): Quantity of orders created via API.
+    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
+"
+"passed","Sun Oct 05 21:27:39 UTC 2025","Sun Oct 05 21:27:39 UTC 2025","426","tests.backend.orders","test_create_order_smoke","","","","test_create_order_no_payment_info","Verify order creation with missing billing, shipping, and payment data.
 
 Ensures the API still creates an order when critical fields are empty and
 sets the correct flags and status.
@@ -180,27 +756,7 @@ Asserts:
     - `needs_payment` is True.
     - Status equals ""pending"".
 "
-"passed","Sun Oct 05 21:12:42 UTC 2025","Sun Oct 05 21:12:42 UTC 2025","663","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_product]",""
-"passed","Sun Oct 05 21:11:55 UTC 2025","Sun Oct 05 21:11:56 UTC 2025","1434","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_'percent'_coupon]","Test applying a coupon to a newly created order.
-
-This test:
-1. Creates a new order for a random or fixed product.
-2. Retrieves or creates a coupon depending on the discount type.
-3. Applies the coupon to the order via API.
-4. Verifies that the order total and discount are correct.
-5. Checks that the customer is listed as having used the coupon.
-
-Args:
-    apply_coupon_setup (dict): Fixture providing setup info and helpers.
-    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
-
-Asserts:
-    - Order total before and after applying coupon.
-    - Discount applied matches expected.
-    - Coupon is valid and published.
-    - Customer is correctly listed as a coupon user.
-"
-"passed","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:34 UTC 2025","119","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product sku:str]","Test product creation with invalid parameters.
+"passed","Sun Oct 05 21:28:02 UTC 2025","Sun Oct 05 21:28:02 UTC 2025","285","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product sku:str]","Test product creation with invalid parameters.
 
 Sends a create product request with invalid parameter values and
 verifies that the WooCommerce API returns an appropriate error.
@@ -210,82 +766,28 @@ Args:
     param (str): The product parameter being tested (e.g., ""type"", ""sku"").
     value (any): The invalid value to send for the parameter.
 "
-"passed","Sun Oct 05 21:12:01 UTC 2025","Sun Oct 05 21:12:02 UTC 2025","836","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_twice_neg","Verify that applying the same coupon twice to one order does not change the discount or order total.
+"passed","Sun Oct 05 21:28:24 UTC 2025","Sun Oct 05 21:28:26 UTC 2025","1620","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product0]",""
+"passed","Sun Oct 05 21:26:26 UTC 2025","Sun Oct 05 21:26:27 UTC 2025","1363","tests.backend.coupons","test_apply_coupons","","","","test_apply_expired_coupon_neg","Verify that applying an expired coupon to an order fails.
+
+Creates an expired coupon, attempts to apply it to a new order,
+and checks that the API returns the correct error and that the coupon
+is recognized as invalid.
 
 Args:
     apply_coupon_setup (dict): Fixture with DAOs, API helpers, and test data.
 
 Asserts:
-    - Order ID remains the same.
-    - Discount and total do not change after second application.
-    - Coupon code is identical for both applications.
+    - Coupon is expired.
+    - API response matches expected error for expired coupons.
 "
-"passed","Sun Oct 05 21:12:47 UTC 2025","Sun Oct 05 21:12:47 UTC 2025","209","tests.backend.products","test_get_products_smoke","","","","test_get_all_products_returns_not_empty",""
-"passed","Sun Oct 05 21:12:35 UTC 2025","Sun Oct 05 21:12:36 UTC 2025","744","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[sale_price > regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
-results in the API ignoring the sale_price and setting it to an empty string.
-
-Args:
-    setup_teardown (fixture): Fixture providing API helpers.
-    regular_price (str): Regular price of the product.
-    sale_price (str): Sale price of the product.
-
-Raises:
-    AssertionError: If the API or DB does not handle invalid sale_price correctly.
-"
-"passed","Sun Oct 05 21:12:12 UTC 2025","Sun Oct 05 21:12:13 UTC 2025","1606","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_5_notes]","Test creating one or multiple order notes for a given user type.
+"passed","Sun Oct 05 21:27:01 UTC 2025","Sun Oct 05 21:27:04 UTC 2025","2617","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[reg_user_1_notes]","Test creating one or multiple order notes for a given user type.
 
 Args:
     order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
     user_type (str): 'guest_user' or 'registered_user'.
     quantity (int): Number of notes to create.
 "
-"passed","Sun Oct 05 21:11:56 UTC 2025","Sun Oct 05 21:11:58 UTC 2025","1278","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_'fixed_cart'_coupon]","Test applying a coupon to a newly created order.
-
-This test:
-1. Creates a new order for a random or fixed product.
-2. Retrieves or creates a coupon depending on the discount type.
-3. Applies the coupon to the order via API.
-4. Verifies that the order total and discount are correct.
-5. Checks that the customer is listed as having used the coupon.
-
-Args:
-    apply_coupon_setup (dict): Fixture providing setup info and helpers.
-    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
-
-Asserts:
-    - Order total before and after applying coupon.
-    - Discount applied matches expected.
-    - Coupon is valid and published.
-    - Customer is correctly listed as a coupon user.
-"
-"passed","Sun Oct 05 21:12:43 UTC 2025","Sun Oct 05 21:12:44 UTC 2025","533","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product2]",""
-"passed","Sun Oct 05 21:12:30 UTC 2025","Sun Oct 05 21:12:31 UTC 2025","518","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[review-highest boundary]","Test creation and verification of a product review.
-
-Steps:
-1. Create a simple product via API.
-2. Optionally create a registered customer and order if `customer_bought` is True.
-3. Create a product review with the given rating.
-4. Verify review exists and is correct via both API and database.
-
-Args:
-    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
-    rating (int): Rating for the review (0-5 recommended).
-    customer_bought (bool): Whether the review is by a registered customer.
-
-Assertions:
-    - Review exists in API response with correct rating, status, and reviewer info.
-    - Review exists in DB with correct customer_id (if registered), email, and approved status.
-"
-"passed","Sun Oct 05 21:12:04 UTC 2025","Sun Oct 05 21:12:04 UTC 2025","91","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_for_existing_email","Test API fails when trying to create a customer with an existing email.
-
-Verifies:
-    - API returns 400
-    - Appropriate error code and message are returned
-
-Raises:
-    AssertionError: If API response doesn't contain expected error code/message.
-"
-"passed","Sun Oct 05 21:12:06 UTC 2025","Sun Oct 05 21:12:06 UTC 2025","662","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to cancelled]","Test changing WooCommerce order status and verifying API and DB consistency.
+"passed","Sun Oct 05 21:26:38 UTC 2025","Sun Oct 05 21:26:41 UTC 2025","2142","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to on-hold]","Test changing WooCommerce order status and verifying API and DB consistency.
 
 Steps:
 1. Create an order with default status 'processing'.
@@ -305,81 +807,26 @@ Assertions:
     - API and DB responses match for the updated order.
     - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
 "
-"passed","Sun Oct 05 21:12:38 UTC 2025","Sun Oct 05 21:12:39 UTC 2025","325","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[very large price and sale price]","Test creating a product with valid sale_price within acceptable boundaries.
+"passed","Sun Oct 05 21:26:14 UTC 2025","Sun Oct 05 21:26:17 UTC 2025","3558","tests.backend.coupons","test_apply_coupons","","","","test_apply_coupon_to_new_order[apply_'percent'_coupon]","Test applying a coupon to a newly created order.
 
-This test verifies that when a product is created with a sale_price that is
-less than the regular_price, the API stores the correct values for both
-regular_price and sale_price, and the product is properly recorded in the DB.
-
-Args:
-    setup_teardown (fixture): Fixture providing API and database helpers.
-    regular_price (str): Regular price to use when creating the product.
-    sale_price (str): Sale price to use when creating the product.
-
-Raises:
-    AssertionError: If the API or database does not store prices correctly.
-"
-"passed","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:34 UTC 2025","89","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:int]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
+This test:
+1. Creates a new order for a random or fixed product.
+2. Retrieves or creates a coupon depending on the discount type.
+3. Applies the coupon to the order via API.
+4. Verifies that the order total and discount are correct.
+5. Checks that the customer is listed as having used the coupon.
 
 Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
+    apply_coupon_setup (dict): Fixture providing setup info and helpers.
+    discount_type (str): Type of coupon to apply (percent, fixed_cart, fixed_product, free_coupon).
+
+Asserts:
+    - Order total before and after applying coupon.
+    - Discount applied matches expected.
+    - Coupon is valid and published.
+    - Customer is correctly listed as a coupon user.
 "
-"passed","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:34 UTC 2025","93","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product sku:int]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Sun Oct 05 21:12:23 UTC 2025","Sun Oct 05 21:12:24 UTC 2025","592","tests.backend.orders","test_create_order_smoke","","","","test_create_order_empty_line_items_negative","Verify that an order can be created without products (empty line_items).
-
-WooCommerce allows order creation without mandatory product fields.
-This test ensures:
-  - The order is created with an empty `line_items` list.
-  - The order status is returned as ""completed"".
-
-Args:
-    my_orders_smoke_setup (fixture): Provides API helpers and teardown tracking.
-"
-"passed","Sun Oct 05 21:12:37 UTC 2025","Sun Oct 05 21:12:38 UTC 2025","342","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[very large sale_price > regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
-results in the API ignoring the sale_price and setting it to an empty string.
-
-Args:
-    setup_teardown (fixture): Fixture providing API helpers.
-    regular_price (str): Regular price of the product.
-    sale_price (str): Sale price of the product.
-
-Raises:
-    AssertionError: If the API or DB does not handle invalid sale_price correctly.
-"
-"skipped","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:35 UTC 2025","219","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:negative]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Sun Oct 05 21:12:35 UTC 2025","Sun Oct 05 21:12:35 UTC 2025","326","tests.backend.products","test_create_products_negative","","","","test_create_empty_product_neg","Test creating a product with an empty payload.
-
-Verifies that WooCommerce creates a product with default values when
-no fields are provided. Also checks that the product exists in the API
-and the database.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-"
-"passed","Sun Oct 05 21:12:04 UTC 2025","Sun Oct 05 21:12:04 UTC 2025","85","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_when_no_password_is_provided","Test API fails when no password is provided.
+"passed","Sun Oct 05 21:26:38 UTC 2025","Sun Oct 05 21:26:38 UTC 2025","237","tests.backend.customers","test_create_customer_smoke","TestCreateCustomer","","","test_create_customer_fail_when_no_password_is_provided","Test API fails when no password is provided.
 
 Verifies:
     - API returns 400
@@ -388,525 +835,27 @@ Verifies:
 Raises:
     AssertionError: If missing param error is not correctly returned.
 "
-"passed","Sun Oct 05 21:12:10 UTC 2025","Sun Oct 05 21:12:11 UTC 2025","1525","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_5_notes]","Test creating one or multiple order notes for a given user type.
+"passed","Sun Oct 05 21:28:41 UTC 2025","Sun Oct 05 21:28:43 UTC 2025","1989","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid email]","Verify invalid registration prevents sign-in and displays errors.
 
 Args:
-    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
-    user_type (str): 'guest_user' or 'registered_user'.
-    quantity (int): Number of notes to create.
-"
-"passed","Sun Oct 05 21:12:05 UTC 2025","Sun Oct 05 21:12:06 UTC 2025","613","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to completed]","Test changing WooCommerce order status and verifying API and DB consistency.
-
-Steps:
-1. Create an order with default status 'processing'.
-2. Update the order to the specified `order_status`.
-3. Verify the update via the API response.
-4. Verify the order exists in the database with the correct updated status.
-5. For certain statuses (completed, cancelled, refunded), validate specific fields like
-   'needs_payment', 'date_completed', and 'refunds'.
-
-Args:
-    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
-    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
-
-Assertions:
-    - The order status is correctly updated in the API response.
-    - The order ID remains unchanged after update.
-    - API and DB responses match for the updated order.
-    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
-"
-"passed","Sun Oct 05 21:12:39 UTC 2025","Sun Oct 05 21:12:39 UTC 2025","482","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[sale price=0.01]","Test creating a product with valid sale_price within acceptable boundaries.
-
-This test verifies that when a product is created with a sale_price that is
-less than the regular_price, the API stores the correct values for both
-regular_price and sale_price, and the product is properly recorded in the DB.
-
-Args:
-    setup_teardown (fixture): Fixture providing API and database helpers.
-    regular_price (str): Regular price to use when creating the product.
-    sale_price (str): Sale price to use when creating the product.
+    email (str): The email address to use for registration.
+    password (str): The password to use for registration.
+    expected_error (str or None): Expected error message, or None if no error.
 
 Raises:
-    AssertionError: If the API or database does not store prices correctly.
+    AssertionError: If registration behavior does not match expected results.
 "
-"skipped","Sun Oct 05 21:12:28 UTC 2025","Sun Oct 05 21:12:29 UTC 2025","786","tests.backend.orders","test_order_refunds","","","","test_order_refund[update to random string]","Test WooCommerce order refunds via API.
-
-Steps:
-1. Create a new order with a product.
-2. Apply refund based on `refund_type`:
-   - full: refund entire order
-   - partial: refund half the order
-   - refund_1_product: refund a single product
-3. Verify that the refund amount returned by the API matches expected value.
+"passed","Sun Oct 05 21:28:43 UTC 2025","Sun Oct 05 21:28:43 UTC 2025","297","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid password]","Verify invalid registration prevents sign-in and displays errors.
 
 Args:
-    my_orders_smoke_setup (fixture): Fixture providing product, order, and helper setup.
-    refund_type (str): Type of refund to apply. One of ""full"", ""partial"", ""refund_1_product"".
-
-Assertions:
-    - Order creation API returns valid responses.
-    - Refund API returns the correct refund amount.
-"
-"passed","Sun Oct 05 21:12:31 UTC 2025","Sun Oct 05 21:12:33 UTC 2025","1774","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[registered customer review]","Test creation and verification of a product review.
-
-Steps:
-1. Create a simple product via API.
-2. Optionally create a registered customer and order if `customer_bought` is True.
-3. Create a product review with the given rating.
-4. Verify review exists and is correct via both API and database.
-
-Args:
-    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
-    rating (int): Rating for the review (0-5 recommended).
-    customer_bought (bool): Whether the review is by a registered customer.
-
-Assertions:
-    - Review exists in API response with correct rating, status, and reviewer info.
-    - Review exists in DB with correct customer_id (if registered), email, and approved status.
-"
-"passed","Sun Oct 05 21:12:06 UTC 2025","Sun Oct 05 21:12:07 UTC 2025","748","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to refunded]","Test changing WooCommerce order status and verifying API and DB consistency.
-
-Steps:
-1. Create an order with default status 'processing'.
-2. Update the order to the specified `order_status`.
-3. Verify the update via the API response.
-4. Verify the order exists in the database with the correct updated status.
-5. For certain statuses (completed, cancelled, refunded), validate specific fields like
-   'needs_payment', 'date_completed', and 'refunds'.
-
-Args:
-    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
-    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
-
-Assertions:
-    - The order status is correctly updated in the API response.
-    - The order ID remains unchanged after update.
-    - API and DB responses match for the updated order.
-    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
-"
-"skipped","Sun Oct 05 21:12:35 UTC 2025","Sun Oct 05 21:12:35 UTC 2025","262","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price: random string]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Sun Oct 05 21:12:17 UTC 2025","Sun Oct 05 21:12:18 UTC 2025","479","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Sun Oct 05 21:12:18 UTC 2025","Sun Oct 05 21:12:20 UTC 2025","2580","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Sun Oct 05 21:12:02 UTC 2025","Sun Oct 05 21:12:03 UTC 2025","227","tests.backend.coupons","test_create_coupons_smoke","","","","test_create_coupon_with_discount_type[percent]","Test creating a coupon with various valid discount types.
-
-Verifies that the POST API creates the coupon correctly and the GET API
-retrieves the coupon with the expected values.
-
-Args:
-    setup_teardown (dict): Fixture providing CouponAPIHelper instance and coupon IDs list.
-    discount_type (str or None): Discount type to test; defaults to 'fixed_cart' if None.
+    email (str): The email address to use for registration.
+    password (str): The password to use for registration.
+    expected_error (str or None): Expected error message, or None if no error.
 
 Raises:
-    AssertionError: If the POST or GET API responses do not match expected values.
+    AssertionError: If registration behavior does not match expected results.
 "
-"skipped","Sun Oct 05 21:12:28 UTC 2025","Sun Oct 05 21:12:28 UTC 2025","550","tests.backend.orders","test_order_refunds","","","","test_order_refund[update to empty string]","Test WooCommerce order refunds via API.
-
-Steps:
-1. Create a new order with a product.
-2. Apply refund based on `refund_type`:
-   - full: refund entire order
-   - partial: refund half the order
-   - refund_1_product: refund a single product
-3. Verify that the refund amount returned by the API matches expected value.
-
-Args:
-    my_orders_smoke_setup (fixture): Fixture providing product, order, and helper setup.
-    refund_type (str): Type of refund to apply. One of ""full"", ""partial"", ""refund_1_product"".
-
-Assertions:
-    - Order creation API returns valid responses.
-    - Refund API returns the correct refund amount.
-"
-"passed","Sun Oct 05 21:12:17 UTC 2025","Sun Oct 05 21:12:17 UTC 2025","445","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Sun Oct 05 21:12:14 UTC 2025","Sun Oct 05 21:12:15 UTC 2025","462","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_1_ord_5_prods]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Sun Oct 05 21:12:36 UTC 2025","Sun Oct 05 21:12:37 UTC 2025","660","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[sale_price == regular_price]","Test that creating a product with sale_price greater than or equal to regular_price
-results in the API ignoring the sale_price and setting it to an empty string.
-
-Args:
-    setup_teardown (fixture): Fixture providing API helpers.
-    regular_price (str): Regular price of the product.
-    sale_price (str): Sale price of the product.
-
-Raises:
-    AssertionError: If the API or DB does not handle invalid sale_price correctly.
-"
-"passed","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:34 UTC 2025","160","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid stock_quantity: rand str]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Sun Oct 05 21:12:44 UTC 2025","Sun Oct 05 21:12:44 UTC 2025","424","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_grouped_product]",""
-"passed","Sun Oct 05 21:12:43 UTC 2025","Sun Oct 05 21:12:43 UTC 2025","427","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_simple_virtual_product1]",""
-"skipped","Sun Oct 05 21:12:27 UTC 2025","Sun Oct 05 21:12:28 UTC 2025","919","tests.backend.orders","test_order_refunds","","","","test_order_refund[update to same status]","Test WooCommerce order refunds via API.
-
-Steps:
-1. Create a new order with a product.
-2. Apply refund based on `refund_type`:
-   - full: refund entire order
-   - partial: refund half the order
-   - refund_1_product: refund a single product
-3. Verify that the refund amount returned by the API matches expected value.
-
-Args:
-    my_orders_smoke_setup (fixture): Fixture providing product, order, and helper setup.
-    refund_type (str): Type of refund to apply. One of ""full"", ""partial"", ""refund_1_product"".
-
-Assertions:
-    - Order creation API returns valid responses.
-    - Refund API returns the correct refund amount.
-"
-"passed","Sun Oct 05 21:12:45 UTC 2025","Sun Oct 05 21:12:45 UTC 2025","511","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_variable_product]",""
-"passed","Sun Oct 05 21:12:09 UTC 2025","Sun Oct 05 21:12:10 UTC 2025","563","tests.backend.orders","test_create_order_notes","","","","test_create_order_note[guestuser_1_note]","Test creating one or multiple order notes for a given user type.
-
-Args:
-    order_notes_setup (dict): Fixture providing DAOs, helpers, product ID, note text, and order tracking.
-    user_type (str): 'guest_user' or 'registered_user'.
-    quantity (int): Number of notes to create.
-"
-"passed","Sun Oct 05 21:12:07 UTC 2025","Sun Oct 05 21:12:08 UTC 2025","583","tests.backend.orders","test_change_order_status","","","","test_change_order_status[update to failed]","Test changing WooCommerce order status and verifying API and DB consistency.
-
-Steps:
-1. Create an order with default status 'processing'.
-2. Update the order to the specified `order_status`.
-3. Verify the update via the API response.
-4. Verify the order exists in the database with the correct updated status.
-5. For certain statuses (completed, cancelled, refunded), validate specific fields like
-   'needs_payment', 'date_completed', and 'refunds'.
-
-Args:
-    my_orders_smoke_setup (fixture): Fixture providing product info, API helpers, and teardown logic.
-    order_status (str): The target status to update the order to (e.g., ""completed"", ""refunded"").
-
-Assertions:
-    - The order status is correctly updated in the API response.
-    - The order ID remains unchanged after update.
-    - API and DB responses match for the updated order.
-    - Relevant fields (like 'needs_payment' or 'date_completed') are correctly set for specific statuses.
-"
-"passed","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:34 UTC 2025","107","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product type:str]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Sun Oct 05 21:12:30 UTC 2025","Sun Oct 05 21:12:30 UTC 2025","457","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[review-lowest boundary]","Test creation and verification of a product review.
-
-Steps:
-1. Create a simple product via API.
-2. Optionally create a registered customer and order if `customer_bought` is True.
-3. Create a product review with the given rating.
-4. Verify review exists and is correct via both API and database.
-
-Args:
-    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
-    rating (int): Rating for the review (0-5 recommended).
-    customer_bought (bool): Whether the review is by a registered customer.
-
-Assertions:
-    - Review exists in API response with correct rating, status, and reviewer info.
-    - Review exists in DB with correct customer_id (if registered), email, and approved status.
-"
-"passed","Sun Oct 05 21:12:39 UTC 2025","Sun Oct 05 21:12:39 UTC 2025","342","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[very small sale price]","Test creating a product with valid sale_price within acceptable boundaries.
-
-This test verifies that when a product is created with a sale_price that is
-less than the regular_price, the API stores the correct values for both
-regular_price and sale_price, and the product is properly recorded in the DB.
-
-Args:
-    setup_teardown (fixture): Fixture providing API and database helpers.
-    regular_price (str): Regular price to use when creating the product.
-    sale_price (str): Sale price to use when creating the product.
-
-Raises:
-    AssertionError: If the API or database does not store prices correctly.
-"
-"passed","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:34 UTC 2025","91","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid regular_price:float]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Sun Oct 05 21:12:44 UTC 2025","Sun Oct 05 21:12:45 UTC 2025","632","tests.backend.products","test_create_products_smoke","","","","test_create_product[create_external_product]",""
-"passed","Sun Oct 05 21:12:38 UTC 2025","Sun Oct 05 21:12:38 UTC 2025","324","tests.backend.products","test_create_products_regression","","","","test_price_boundaries[sale price one cent off of regular]","Test creating a product with valid sale_price within acceptable boundaries.
-
-This test verifies that when a product is created with a sale_price that is
-less than the regular_price, the API stores the correct values for both
-regular_price and sale_price, and the product is properly recorded in the DB.
-
-Args:
-    setup_teardown (fixture): Fixture providing API and database helpers.
-    regular_price (str): Regular price to use when creating the product.
-    sale_price (str): Sale price to use when creating the product.
-
-Raises:
-    AssertionError: If the API or database does not store prices correctly.
-"
-"skipped","Sun Oct 05 21:12:31 UTC 2025","Sun Oct 05 21:12:31 UTC 2025","436","tests.backend.products","test_create_product_reviews","","","","test_create_product_review[review-out of range]","Test creation and verification of a product review.
-
-Steps:
-1. Create a simple product via API.
-2. Optionally create a registered customer and order if `customer_bought` is True.
-3. Create a product review with the given rating.
-4. Verify review exists and is correct via both API and database.
-
-Args:
-    setup_teardown (fixture): Fixture providing product helpers, API helpers, and teardown logic.
-    rating (int): Rating for the review (0-5 recommended).
-    customer_bought (bool): Whether the review is by a registered customer.
-
-Assertions:
-    - Review exists in API response with correct rating, status, and reviewer info.
-    - Review exists in DB with correct customer_id (if registered), email, and approved status.
-"
-"passed","Sun Oct 05 21:12:38 UTC 2025","Sun Oct 05 21:12:38 UTC 2025","377","tests.backend.products","test_create_products_regression","","","","test_invalid_sales_price[letter string sale_price]","Test that creating a product with sale_price greater than or equal to regular_price
-results in the API ignoring the sale_price and setting it to an empty string.
-
-Args:
-    setup_teardown (fixture): Fixture providing API helpers.
-    regular_price (str): Regular price of the product.
-    sale_price (str): Sale price of the product.
-
-Raises:
-    AssertionError: If the API or DB does not handle invalid sale_price correctly.
-"
-"passed","Sun Oct 05 21:12:20 UTC 2025","Sun Oct 05 21:12:23 UTC 2025","2375","tests.backend.orders","test_create_order_smoke","","","","test_create_order[reg_user_5_ord_5_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Sun Oct 05 21:12:15 UTC 2025","Sun Oct 05 21:12:17 UTC 2025","2182","tests.backend.orders","test_create_order_smoke","","","","test_create_order[guestuser_5_ord_1_prod]","Verify that orders can be created and retrieved via the WooCommerce API.
-
-This test covers multiple scenarios using parameterization:
-    - Guest user creating 1 order with 1 item.
-    - Guest user creating 1 order with multiple items.
-    - Guest user creating multiple orders with 1 item each.
-    - Registered user creating 1 order with multiple items.
-    - Registered user creating multiple orders with 1 item each.
-    - Registered user creating multiple orders with multiple items each.
-
-For each scenario, asserts the following:
-    - API response is not empty.
-    - Order ID is an integer.
-    - Customer ID matches expected value (0 for guest, or the correct customer ID).
-    - Order key format starts with 'wc_order_'.
-    - Newly created order can be retrieved via API and exists in the database.
-
-Args:
-    my_orders_smoke_setup (dict): Fixture providing product info, API helpers, and order tracking.
-    user_type (str): Type of user creating the order, either ""guest_user"" or ""registered_user"".
-    order_qty (int): Quantity of orders created via API.
-    product_qty (int): Quantity of products in 'line_items' in payload to create order via API.
-"
-"passed","Sun Oct 05 21:12:34 UTC 2025","Sun Oct 05 21:12:34 UTC 2025","90","tests.backend.products","test_create_products_negative","","","","test_create_product_invalid_param[invalid product type:int]","Test product creation with invalid parameters.
-
-Sends a create product request with invalid parameter values and
-verifies that the WooCommerce API returns an appropriate error.
-
-Args:
-    setup_teardown (dict): Fixture providing helpers for API and DB access.
-    param (str): The product parameter being tested (e.g., ""type"", ""sku"").
-    value (any): The invalid value to send for the parameter.
-"
-"passed","Sun Oct 05 21:12:41 UTC 2025","Sun Oct 05 21:12:50 UTC 2025","8459","tests.frontend.cart","test_apply_coupon_neg_fe","TestApplyCouponNegFE","","","test_apply_coupon_neg_fe[add expired coupon]","Apply a coupon and verify order total or error message.
-
-Args:
-    coupon_type (str): Type of coupon to apply (e.g., ZERO_OFF, EXPIRED_COUPON)
-"
-"passed","Sun Oct 05 21:14:26 UTC 2025","Sun Oct 05 21:14:29 UTC 2025","2896","tests.frontend.my_account","test_my_account_signed_in_neg","TestMyAccountSignedInNeg","","","test_change_password_neg[missing current password]","Verify validation errors appear when required fields are missing.
-
-This test covers negative password change scenarios, confirming
-that the process fails gracefully when specific fields are left blank.
-
-Args:
-    missing_field (str): Specifies which field to leave blank. Accepted values:
-        - ""name""
-        - ""current_password""
-        - ""confirm_password""
-
-Assertions:
-    - Verifies that the success message is not displayed.
-    - Ensures the correct error message appears when a field is missing.
-
-Raises:
-    AssertionError: If the success message is displayed despite a missing field.
-"
-"passed","Sun Oct 05 21:14:08 UTC 2025","Sun Oct 05 21:14:10 UTC 2025","1283","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_my_acct_header","Verify that the My Account page heading is displayed correctly.
-
-This test ensures that when navigating to the My Account page,
-the correct header text ('My account') is shown, indicating
-that the user has successfully reached the My Account section.
-
-"
-"passed","Sun Oct 05 21:13:35 UTC 2025","Sun Oct 05 21:13:35 UTC 2025","46","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_sorting_menu_present","Verify that the product sorting dropdown is present and has multiple options.
-
-Uses the Selenium Select class to inspect the dropdown options.
-Asserts:
-    Dropdown contains more than one option.
-"
-"passed","Sun Oct 05 21:14:51 UTC 2025","Sun Oct 05 21:14:51 UTC 2025","34","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_product_name_displayed_variable_product","Verify that the product name (h1 header) is correctly displayed for a variable product.
-
-This test checks that the displayed product name on the frontend matches the expected value
-for a known variable product. The product is hardcoded to keep the test frontend-only.
-
-Args:
-    setup: A pytest fixture that sets up the test environment and necessary page objects.
-
-Raises:
-    AssertionError: If the displayed product name does not match the expected name.
-"
-"passed","Sun Oct 05 21:14:10 UTC 2025","Sun Oct 05 21:14:11 UTC 2025","1357","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_account_details_match","Verify the account email matches the registered user email.
-
-Navigates to 'Account details' and retrieves the email displayed. Validates that
-it matches the registered user's email to ensure data consistency.
-
-Args:
-    create_registered_user (dict): Fixture providing registered user credentials.
-
-Expected Result:
-    Displayed email equals the registered user's email.
-"
-"passed","Sun Oct 05 21:14:52 UTC 2025","Sun Oct 05 21:14:52 UTC 2025","52","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_alternate_images_variable_prod","Verify that all alternate product images on the frontend match the API response.
-
-This test retrieves all alternate product image URLs displayed on the frontend
-and compares them to the image URLs returned by the WooCommerce API.
-
-The comparison ignores the order of images but requires exact URL matches.
-
-Args:
-    setup: A pytest fixture that initializes the test environment and page objects.
-
-Raises:
-    AssertionError: If the displayed alternate image URLs do not match the API URLs.
-"
-"passed","Sun Oct 05 21:14:48 UTC 2025","Sun Oct 05 21:14:50 UTC 2025","1729","tests.frontend.product_description_page","test_change_product_quantity","TestChangeProductQuantity","","","test_change_product_quantity[negative product qty]","Verify product quantity can be set on PDP and reflected in cart.
+"passed","Sun Oct 05 21:29:27 UTC 2025","Sun Oct 05 21:29:34 UTC 2025","6644","tests.frontend.product_description_page","test_change_product_quantity","TestChangeProductQuantity","","","test_change_product_quantity[mid range product qty]","Verify product quantity can be set on PDP and reflected in cart.
 
 Handles edge cases for zero, negative, and high quantities.
 Removes product and checks cart emptiness for cleanup.
@@ -914,36 +863,21 @@ Removes product and checks cart emptiness for cleanup.
 Args:
     quantity (int): Quantity to set for the product.
 "
-"passed","Sun Oct 05 21:14:56 UTC 2025","Sun Oct 05 21:14:57 UTC 2025","39","tests.frontend.product_description_page","test_sale_product","TestOnSaleProduct","","","test_verify_sale_sign_displayed","Verify sale sign and original price on product page.
-Checks that the sale badge is visible and the original price is crossed out.
+"passed","Sun Oct 05 21:28:30 UTC 2025","Sun Oct 05 21:28:33 UTC 2025","2717","tests.frontend.my_account","test_lost_password","TestForgotPassword","","","test_lost_password_link_invalid_email","Verify 'Lost your password?' link for invalid email.
+
+Steps:
+    1. Click the lost password link.
+    2. Input a random invalid email.
+    3. Verify the error alert is displayed.
 "
-"passed","Sun Oct 05 21:13:52 UTC 2025","Sun Oct 05 21:13:54 UTC 2025","2192","tests.frontend.my_account","test_login_negative","TestLoginNegative","","","test_login_none_existing_user",""
-"passed","Sun Oct 05 21:12:56 UTC 2025","Sun Oct 05 21:12:58 UTC 2025","2579","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_checkout_page",""
-"passed","Sun Oct 05 21:13:49 UTC 2025","Sun Oct 05 21:13:52 UTC 2025","2311","tests.frontend.my_account","test_cart_persistence_after_logout","TestCartPersistenceAfterLogout","","","test_guest_cart_does_not_persist_after_session_end","Verify that a guest user's cart does not persist after browser session ends.
+"passed","Sun Oct 05 21:28:01 UTC 2025","Sun Oct 05 21:28:01 UTC 2025","24","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_sorting_menu_present","Verify that the product sorting dropdown is present and has multiple options.
 
-This test ensures that when a guest (unauthenticated) user adds an item to their cart
-and then the browser session ends (simulated by clearing cookies),
-the cart becomes empty when the user revisits the site.
-It validates that guest cart data is stored only in the session and not persisted.
-
-Expected Result:
-    After clearing cookies and refreshing, the cart is empty.
-"
-"passed","Sun Oct 05 21:14:10 UTC 2025","Sun Oct 05 21:14:10 UTC 2025","15","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_side_navigation","Verify the side navigation menu is visible for signed-in users.
-
-Ensures that after login, the side navigation panel is present, providing access
-to account-related sections like Orders, Downloads, and Account Details.
-
-Args:
-    create_registered_user (dict): Fixture providing registered user credentials.
-"
-"passed","Sun Oct 05 21:12:54 UTC 2025","Sun Oct 05 21:12:56 UTC 2025","1553","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_cart_page",""
-"passed","Sun Oct 05 21:13:35 UTC 2025","Sun Oct 05 21:13:35 UTC 2025","162","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_product_images_displayed","Verify that all product images are visible on the homepage.
-
+Uses the Selenium Select class to inspect the dropdown options.
 Asserts:
-    Each product image element is displayed in the UI.
+    Dropdown contains more than one option.
 "
-"passed","Sun Oct 05 21:14:51 UTC 2025","Sun Oct 05 21:14:52 UTC 2025","536","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_main_image_variable_prod","Verify that the main product image on the frontend matches the one returned by the API.
+"passed","Sun Oct 05 21:27:17 UTC 2025","Sun Oct 05 21:27:21 UTC 2025","3424","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_not_displayed_in_my_account_page",""
+"passed","Sun Oct 05 21:29:39 UTC 2025","Sun Oct 05 21:29:39 UTC 2025","17","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_main_image_variable_prod","Verify that the main product image on the frontend matches the one returned by the API.
 
 This test fetches the displayed product image URL from the frontend and compares it
 against a list of image URLs retrieved from the API. It also checks that the displayed
@@ -955,23 +889,133 @@ Args:
 Raises:
     AssertionError: If the image URL is invalid or does not match any from the API.
 "
-"passed","Sun Oct 05 21:13:02 UTC 2025","Sun Oct 05 21:13:17 UTC 2025","14886","tests.frontend.end_to_end","test_end_to_end_checkout_guest_user","TestEndToEndCheckout","","","test_end_to_end_checkout[guest_user]","Validate end-to-end checkout for guest and registered users.
+"passed","Sun Oct 05 21:28:45 UTC 2025","Sun Oct 05 21:28:46 UTC 2025","1338","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_my_acct_details_header","Verify that the My Account page heading is displayed correctly.
 
-This test relies on the `setup_fixture` class-scoped fixture, which initializes
-all required page objects.
+This test ensures that when navigating to the My Account page,
+the correct header text ('My account') is shown, indicating
+that the user has successfully reached the My Account section.
 
-Args:
-    user_type (str): The type of user to test with. Can be:
-        * ""guest_user"" – goes through checkout without creating an account.
-        * ""registered_user"" – registers a new account and verifies order history.
+"
+"passed","Sun Oct 05 21:28:00 UTC 2025","Sun Oct 05 21:28:01 UTC 2025","75","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_header_menu_is_displayed","Verify that all header menu items are visible on the homepage."
+"passed","Sun Oct 05 21:28:49 UTC 2025","Sun Oct 05 21:28:55 UTC 2025","6359","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_change_password","Verify that a signed-in user can successfully change their password.
+
+This test navigates to the Account Details page, updates first and last
+names, changes the account password, and validates that a success message
+appears. It also confirms that the user can log back in using the new password.
+
+Expected Result:
+    The system displays a success message confirming the password change,
+    and login with the new password is successful.
+"
+"passed","Sun Oct 05 21:27:10 UTC 2025","Sun Oct 05 21:27:10 UTC 2025","38","tests.frontend.cart","test_cart_smoke","TestCartSmoke","","","test_verify_empty_cart_by_default","Verify that the cart is empty by default when no products are added.
+
+This test checks that the correct empty cart message is displayed
+when a user visits the cart page without adding any products.
+
+Expected Result:
+    The page should display the message: ""Your cart is currently empty!"".
+"
+"passed","Sun Oct 05 21:28:01 UTC 2025","Sun Oct 05 21:28:01 UTC 2025","379","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_product_prices_displayed","Verify that all product prices are visible on the homepage.
 
 Asserts:
-    * A product can be successfully added to the cart.
-    * The coupon is applied and the order total is updated.
-    * An order number is generated upon successful checkout.
-    * For registered users, the order number appears in account history.
+    Each product price element is displayed in the UI.
 "
-"passed","Sun Oct 05 21:14:23 UTC 2025","Sun Oct 05 21:14:26 UTC 2025","3014","tests.frontend.my_account","test_my_account_signed_in_neg","TestMyAccountSignedInNeg","","","test_change_password_neg[missing name]","Verify validation errors appear when required fields are missing.
+"passed","Sun Oct 05 21:28:01 UTC 2025","Sun Oct 05 21:28:01 UTC 2025","199","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_product_names_displayed","Verify that all product names are visible on the homepage.
+
+Asserts:
+    Each product name element is displayed in the UI.
+"
+"passed","Sun Oct 05 21:27:10 UTC 2025","Sun Oct 05 21:27:10 UTC 2025","17","tests.frontend.cart","test_cart_smoke","TestCartSmoke","","","test_verify_cart_heading","Verify that the cart page heading is displayed correctly.
+
+This test checks that the cart page displays the correct heading text
+to confirm that the user is on the Cart page.
+"
+"skipped","Sun Oct 05 21:29:11 UTC 2025","Sun Oct 05 21:29:13 UTC 2025","2063","tests.frontend.my_account","test_privacy_link","TestPrivacyPolicy","","","test_privacy_policy_link","
+Verify that the 'Privacy Policy' link on the My Account page navigates correctly.
+
+Steps:
+1. Go to the My Account page.
+2. Click on the 'Privacy Policy' link.
+3. Verify that the breadcrumbs contain the text 'Privacy Policy'.
+
+Notes:
+    This test is marked as expected to fail (xfail) because the Privacy Policy
+    link currently leads to a 404 page.
+"
+"broken","Sun Oct 05 21:28:06 UTC 2025","Sun Oct 05 21:28:07 UTC 2025","802","tests.frontend.home_page","test_search_products","TestSearchProduct","","","test_search_up_product[search for variable product]","Verifies product search results by product type.
+
+Args:
+    setup: Test fixture to initialize page objects.
+    product_type (str): Type of product to search ('simple', 'variable', 'invalid').
+
+Assertions:
+    - Simple product: Navigates to PDP and matches product name.
+    - Variable product: Product is listed on the home page.
+    - Invalid product: Displays 'no products found' message.
+"
+"passed","Sun Oct 05 21:28:04 UTC 2025","Sun Oct 05 21:28:06 UTC 2025","1388","tests.frontend.home_page","test_search_products","TestSearchProduct","","","test_search_up_product[search for simple product]","Verifies product search results by product type.
+
+Args:
+    setup: Test fixture to initialize page objects.
+    product_type (str): Type of product to search ('simple', 'variable', 'invalid').
+
+Assertions:
+    - Simple product: Navigates to PDP and matches product name.
+    - Variable product: Product is listed on the home page.
+    - Invalid product: Displays 'no products found' message.
+"
+"passed","Sun Oct 05 21:29:15 UTC 2025","Sun Oct 05 21:29:17 UTC 2025","2559","tests.frontend.my_account","test_register_new_user","TestRegisterNewUserSmoke","","","test_register_valid_new_user","
+Test to verify a valid user can register to the site.
+It generates a random email and password, then registers the user.
+:return:
+"
+"passed","Sun Oct 05 21:29:22 UTC 2025","Sun Oct 05 21:29:22 UTC 2025","330","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid password]","Verify invalid registration prevents sign-in and displays errors.
+
+Args:
+    email (str): The email address to use for registration.
+    password (str): The password to use for registration.
+    expected_error (str or None): Expected error message, or None if no error.
+
+Raises:
+    AssertionError: If registration behavior does not match expected results.
+"
+"passed","Sun Oct 05 21:27:12 UTC 2025","Sun Oct 05 21:27:13 UTC 2025","1097","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_home_page",""
+"passed","Sun Oct 05 21:28:07 UTC 2025","Sun Oct 05 21:28:07 UTC 2025","841","tests.frontend.home_page","test_search_products","TestSearchProduct","","","test_search_up_product[search for nonexisting product]","Verifies product search results by product type.
+
+Args:
+    setup: Test fixture to initialize page objects.
+    product_type (str): Type of product to search ('simple', 'variable', 'invalid').
+
+Assertions:
+    - Simple product: Navigates to PDP and matches product name.
+    - Variable product: Product is listed on the home page.
+    - Invalid product: Displays 'no products found' message.
+"
+"passed","Sun Oct 05 21:26:49 UTC 2025","Sun Oct 05 21:26:58 UTC 2025","8763","tests.frontend.cart","test_apply_coupon_neg_fe","TestApplyCouponNegFE","","","test_apply_coupon_neg_fe[add 0% off coupon]","Apply a coupon and verify order total or error message.
+
+Args:
+    coupon_type (str): Type of coupon to apply (e.g., ZERO_OFF, EXPIRED_COUPON)
+"
+"passed","Sun Oct 05 21:28:00 UTC 2025","Sun Oct 05 21:28:00 UTC 2025","17","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_heading_is_displayed","Verify that the main heading is correctly displayed on the homepage.
+
+Asserts:
+    The displayed heading text matches the expected heading ('Shop').
+"
+"passed","Sun Oct 05 21:28:14 UTC 2025","Sun Oct 05 21:28:19 UTC 2025","5404","tests.frontend.my_account","test_cart_persistence_after_logout","TestCartPersistenceAfterLogout","","","test_cart_persistence_after_logout","Verify that a registered user's cart persists after logging out and logging back in.
+
+This test ensures that when a registered user adds an item to their shopping cart,
+logs out, and then logs back in, the item remains in their cart.
+It validates that the application correctly maintains the user's cart data
+across authenticated sessions.
+
+Args:
+    create_registered_user (dict): Fixture that creates and returns a registered
+        user's credentials (email and password).
+
+Expected Result:
+    The product added before logging out remains in the cart after logging back in.
+"
+"passed","Sun Oct 05 21:29:00 UTC 2025","Sun Oct 05 21:29:03 UTC 2025","2840","tests.frontend.my_account","test_my_account_signed_in_neg","TestMyAccountSignedInNeg","","","test_change_password_neg[missing confirm password]","Verify validation errors appear when required fields are missing.
 
 This test covers negative password change scenarios, confirming
 that the process fails gracefully when specific fields are left blank.
@@ -989,58 +1033,18 @@ Assertions:
 Raises:
     AssertionError: If the success message is displayed despite a missing field.
 "
-"passed","Sun Oct 05 21:13:35 UTC 2025","Sun Oct 05 21:13:35 UTC 2025","169","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_product_names_displayed","Verify that all product names are visible on the homepage.
+"passed","Sun Oct 05 21:28:48 UTC 2025","Sun Oct 05 21:28:49 UTC 2025","1338","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_account_details_match","Verify the account email matches the registered user email.
 
-Asserts:
-    Each product name element is displayed in the UI.
-"
-"passed","Sun Oct 05 21:12:23 UTC 2025","Sun Oct 05 21:12:32 UTC 2025","8839","tests.frontend.cart","test_apply_coupon_fe","TestApplyCouponFE","","","test_apply_coupon_fe","Test applying a 50% off coupon to a single cart item.
-
-Assertions:
-    - The cart contains exactly one product.
-    - The order total after applying the coupon matches the expected discounted value.
-
-Raises:
-    AssertionError: If the cart item count or order total does not match expectations.
-"
-"passed","Sun Oct 05 21:13:35 UTC 2025","Sun Oct 05 21:13:35 UTC 2025","317","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_product_prices_displayed","Verify that all product prices are visible on the homepage.
-
-Asserts:
-    Each product price element is displayed in the UI.
-"
-"passed","Sun Oct 05 21:12:32 UTC 2025","Sun Oct 05 21:12:41 UTC 2025","9227","tests.frontend.cart","test_apply_coupon_neg_fe","TestApplyCouponNegFE","","","test_apply_coupon_neg_fe[add 0% off coupon]","Apply a coupon and verify order total or error message.
+Navigates to 'Account details' and retrieves the email displayed. Validates that
+it matches the registered user's email to ensure data consistency.
 
 Args:
-    coupon_type (str): Type of coupon to apply (e.g., ZERO_OFF, EXPIRED_COUPON)
+    create_registered_user (dict): Fixture providing registered user credentials.
+
+Expected Result:
+    Displayed email equals the registered user's email.
 "
-"passed","Sun Oct 05 21:12:58 UTC 2025","Sun Oct 05 21:13:02 UTC 2025","3461","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_not_displayed_in_my_account_page",""
-"passed","Sun Oct 05 21:12:52 UTC 2025","Sun Oct 05 21:12:52 UTC 2025","24","tests.frontend.cart","test_cart_smoke","TestCartSmoke","","","test_verify_cart_heading","Verify that the cart page heading is displayed correctly.
-
-This test checks that the cart page displays the correct heading text
-to confirm that the user is on the Cart page.
-"
-"passed","Sun Oct 05 21:13:37 UTC 2025","Sun Oct 05 21:13:38 UTC 2025","1444","tests.frontend.home_page","test_search_products","TestSearchProduct","","","test_search_up_product[search for simple product]","Verifies product search results by product type.
-
-Args:
-    setup: Test fixture to initialize page objects.
-    product_type (str): Type of product to search ('simple', 'variable', 'invalid').
-
-Assertions:
-    - Simple product: Navigates to PDP and matches product name.
-    - Variable product: Product is listed on the home page.
-    - Invalid product: Displays 'no products found' message.
-"
-"passed","Sun Oct 05 21:14:38 UTC 2025","Sun Oct 05 21:14:38 UTC 2025","286","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[empty email and password]","Verify invalid registration prevents sign-in and displays errors.
-
-Args:
-    email (str): The email address to use for registration.
-    password (str): The password to use for registration.
-    expected_error (str or None): Expected error message, or None if no error.
-
-Raises:
-    AssertionError: If registration behavior does not match expected results.
-"
-"passed","Sun Oct 05 21:14:39 UTC 2025","Sun Oct 05 21:14:41 UTC 2025","2653","tests.frontend.product_description_page","test_change_product_quantity","TestChangeProductQuantity","","","test_change_product_quantity[product qty 0]","Verify product quantity can be set on PDP and reflected in cart.
+"passed","Sun Oct 05 21:29:34 UTC 2025","Sun Oct 05 21:29:36 UTC 2025","1678","tests.frontend.product_description_page","test_change_product_quantity","TestChangeProductQuantity","","","test_change_product_quantity[negative product qty]","Verify product quantity can be set on PDP and reflected in cart.
 
 Handles edge cases for zero, negative, and high quantities.
 Removes product and checks cart emptiness for cleanup.
@@ -1048,51 +1052,17 @@ Removes product and checks cart emptiness for cleanup.
 Args:
     quantity (int): Quantity to set for the product.
 "
-"passed","Sun Oct 05 21:14:35 UTC 2025","Sun Oct 05 21:14:37 UTC 2025","2282","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid email]","Verify invalid registration prevents sign-in and displays errors.
+"passed","Sun Oct 05 21:28:19 UTC 2025","Sun Oct 05 21:28:23 UTC 2025","3669","tests.frontend.my_account","test_cart_persistence_after_logout","TestCartPersistenceAfterLogout","","","test_guest_cart_does_not_persist_after_session_end","Verify that a guest user's cart does not persist after browser session ends.
 
-Args:
-    email (str): The email address to use for registration.
-    password (str): The password to use for registration.
-    expected_error (str or None): Expected error message, or None if no error.
+This test ensures that when a guest (unauthenticated) user adds an item to their cart
+and then the browser session ends (simulated by clearing cookies),
+the cart becomes empty when the user revisits the site.
+It validates that guest cart data is stored only in the session and not persisted.
 
-Raises:
-    AssertionError: If registration behavior does not match expected results.
+Expected Result:
+    After clearing cookies and refreshing, the cart is empty.
 "
-"passed","Sun Oct 05 21:14:41 UTC 2025","Sun Oct 05 21:14:48 UTC 2025","6779","tests.frontend.product_description_page","test_change_product_quantity","TestChangeProductQuantity","","","test_change_product_quantity[mid range product qty]","Verify product quantity can be set on PDP and reflected in cart.
-
-Handles edge cases for zero, negative, and high quantities.
-Removes product and checks cart emptiness for cleanup.
-
-Args:
-    quantity (int): Quantity to set for the product.
-"
-"passed","Sun Oct 05 21:15:02 UTC 2025","Sun Oct 05 21:15:08 UTC 2025","6075","tests.frontend.product_description_page","test_write_product_review","TestWriteProductReview","","","test_write_product_review[create review as guest user]","Submit a product review.
-
-Args:
-    user_type (str): Either 'guest_user' or 'registered_user'.
-
-Flow:
-    - Register a new account if testing as registered user.
-    - Navigate to a product page.
-    - Open the reviews tab.
-    - Select a star rating and write a review.
-    - If guest user, provide name and email.
-    - Submit and verify success message.
-"
-"passed","Sun Oct 05 21:15:08 UTC 2025","Sun Oct 05 21:15:15 UTC 2025","7476","tests.frontend.product_description_page","test_write_product_review","TestWriteProductReview","","","test_write_product_review[create review as registered user]","Submit a product review.
-
-Args:
-    user_type (str): Either 'guest_user' or 'registered_user'.
-
-Flow:
-    - Register a new account if testing as registered user.
-    - Navigate to a product page.
-    - Open the reviews tab.
-    - Select a star rating and write a review.
-    - If guest user, provide name and email.
-    - Submit and verify success message.
-"
-"passed","Sun Oct 05 21:13:17 UTC 2025","Sun Oct 05 21:13:33 UTC 2025","15836","tests.frontend.end_to_end","test_end_to_end_checkout_guest_user","TestEndToEndCheckout","","","test_end_to_end_checkout[registered_user]","Validate end-to-end checkout for guest and registered users.
+"passed","Sun Oct 05 21:27:38 UTC 2025","Sun Oct 05 21:27:57 UTC 2025","18745","tests.frontend.end_to_end","test_end_to_end_checkout_guest_user","TestEndToEndCheckout","","","test_end_to_end_checkout[registered_user]","Validate end-to-end checkout for guest and registered users.
 
 This test relies on the `setup_fixture` class-scoped fixture, which initializes
 all required page objects.
@@ -1108,22 +1078,71 @@ Asserts:
     * An order number is generated upon successful checkout.
     * For registered users, the order number appears in account history.
 "
-"passed","Sun Oct 05 21:13:55 UTC 2025","Sun Oct 05 21:13:58 UTC 2025","2763","tests.frontend.my_account","test_lost_password","TestForgotPassword","","","test_lost_password_link_invalid_email","Verify 'Lost your password?' link for invalid email.
+"passed","Sun Oct 05 21:29:19 UTC 2025","Sun Oct 05 21:29:22 UTC 2025","2331","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid email]","Verify invalid registration prevents sign-in and displays errors.
 
-Steps:
-    1. Click the lost password link.
-    2. Input a random invalid email.
-    3. Verify the error alert is displayed.
+Args:
+    email (str): The email address to use for registration.
+    password (str): The password to use for registration.
+    expected_error (str or None): Expected error message, or None if no error.
+
+Raises:
+    AssertionError: If registration behavior does not match expected results.
 "
-"passed","Sun Oct 05 21:12:52 UTC 2025","Sun Oct 05 21:12:52 UTC 2025","35","tests.frontend.cart","test_cart_smoke","TestCartSmoke","","","test_verify_empty_cart_by_default","Verify that the cart is empty by default when no products are added.
+"passed","Sun Oct 05 21:29:39 UTC 2025","Sun Oct 05 21:29:39 UTC 2025","34","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_product_name_displayed_variable_product","Verify that the product name (h1 header) is correctly displayed for a variable product.
 
-This test checks that the correct empty cart message is displayed
-when a user visits the cart page without adding any products.
+This test checks that the displayed product name on the frontend matches the expected value
+for a known variable product. The product is hardcoded to keep the test frontend-only.
 
-Expected Result:
-    The page should display the message: ""Your cart is currently empty!"".
+Args:
+    setup: A pytest fixture that sets up the test environment and necessary page objects.
+
+Raises:
+    AssertionError: If the displayed product name does not match the expected name.
 "
-"passed","Sun Oct 05 21:14:52 UTC 2025","Sun Oct 05 21:14:53 UTC 2025","1305","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_changing_options_changes_product","Verify that selecting variable product options updates the SKU correctly
+"passed","Sun Oct 05 21:29:52 UTC 2025","Sun Oct 05 21:29:58 UTC 2025","5910","tests.frontend.product_description_page","test_write_product_review","TestWriteProductReview","","","test_write_product_review[create review as guest user]","Submit a product review.
+
+Args:
+    user_type (str): Either 'guest_user' or 'registered_user'.
+
+Flow:
+    - Register a new account if testing as registered user.
+    - Navigate to a product page.
+    - Open the reviews tab.
+    - Select a star rating and write a review.
+    - If guest user, provide name and email.
+    - Submit and verify success message.
+"
+"passed","Sun Oct 05 21:27:23 UTC 2025","Sun Oct 05 21:27:38 UTC 2025","15459","tests.frontend.end_to_end","test_end_to_end_checkout_guest_user","TestEndToEndCheckout","","","test_end_to_end_checkout[guest_user]","Validate end-to-end checkout for guest and registered users.
+
+This test relies on the `setup_fixture` class-scoped fixture, which initializes
+all required page objects.
+
+Args:
+    user_type (str): The type of user to test with. Can be:
+        * ""guest_user"" – goes through checkout without creating an account.
+        * ""registered_user"" – registers a new account and verifies order history.
+
+Asserts:
+    * A product can be successfully added to the cart.
+    * The coupon is applied and the order total is updated.
+    * An order number is generated upon successful checkout.
+    * For registered users, the order number appears in account history.
+"
+"passed","Sun Oct 05 21:27:15 UTC 2025","Sun Oct 05 21:27:17 UTC 2025","2658","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_checkout_page",""
+"passed","Sun Oct 05 21:29:25 UTC 2025","Sun Oct 05 21:29:27 UTC 2025","2623","tests.frontend.product_description_page","test_change_product_quantity","TestChangeProductQuantity","","","test_change_product_quantity[product qty 0]","Verify product quantity can be set on PDP and reflected in cart.
+
+Handles edge cases for zero, negative, and high quantities.
+Removes product and checks cart emptiness for cleanup.
+
+Args:
+    quantity (int): Quantity to set for the product.
+"
+"failed","Sun Oct 05 21:28:00 UTC 2025","Sun Oct 05 21:28:00 UTC 2025","187","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_number_of_products_displayed","Verify that the expected number of products are displayed on the homepage.
+
+Asserts:
+    The number of product elements matches the expected count (14).
+"
+"passed","Sun Oct 05 21:29:39 UTC 2025","Sun Oct 05 21:29:41 UTC 2025","1375","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_changing_options_changes_product","Verify that selecting variable product options updates the SKU correctly
 and clearing the options resets the SKU to the default product.
 
 Steps:
@@ -1140,51 +1159,21 @@ Assertions:
 Raises:
     AssertionError: If the SKU does not match expected values at any step.
 "
-"passed","Sun Oct 05 21:14:57 UTC 2025","Sun Oct 05 21:15:00 UTC 2025","3733","tests.frontend.product_description_page","test_sale_product","TestOnSaleProduct","","","test_verify_sale_in_cart","Verify sale badge appears correctly in the cart.
+"passed","Sun Oct 05 21:29:22 UTC 2025","Sun Oct 05 21:29:23 UTC 2025","289","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[empty email and password]","Verify invalid registration prevents sign-in and displays errors.
+
+Args:
+    email (str): The email address to use for registration.
+    password (str): The password to use for registration.
+    expected_error (str or None): Expected error message, or None if no error.
+
+Raises:
+    AssertionError: If registration behavior does not match expected results.
+"
+"passed","Sun Oct 05 21:29:45 UTC 2025","Sun Oct 05 21:29:49 UTC 2025","3597","tests.frontend.product_description_page","test_sale_product","TestOnSaleProduct","","","test_verify_sale_in_cart","Verify sale badge appears correctly in the cart.
 
 Adds the first product to the cart and checks that the discounted price is displayed.
 "
-"passed","Sun Oct 05 21:13:34 UTC 2025","Sun Oct 05 21:13:35 UTC 2025","130","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_number_of_products_displayed","Verify that the expected number of products are displayed on the homepage.
-
-Asserts:
-    The number of product elements matches the expected count (14).
-"
-"passed","Sun Oct 05 21:14:07 UTC 2025","Sun Oct 05 21:14:08 UTC 2025","1327","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_my_acct_details_header","Verify that the My Account page heading is displayed correctly.
-
-This test ensures that when navigating to the My Account page,
-the correct header text ('My account') is shown, indicating
-that the user has successfully reached the My Account section.
-
-"
-"passed","Sun Oct 05 21:14:00 UTC 2025","Sun Oct 05 21:14:04 UTC 2025","4263","tests.frontend.my_account","test_lost_password","TestForgotPassword","","","test_lost_password_link_registered_email","Verify 'Lost your password?' link for registered email.
-
-Steps:
-    1. Log out of registered user session.
-    2. Click the lost password link.
-    3. Input the registered email.
-    4. Verify password reset confirmation is displayed.
-"
-"passed","Sun Oct 05 21:12:52 UTC 2025","Sun Oct 05 21:12:52 UTC 2025","27","tests.frontend.cart","test_cart_smoke","TestCartSmoke","","","test_verify_new_products_displayed","Verify that 'New In Store' products are displayed when the cart is empty.
-
-This test ensures that even when the user's cart is empty,
-the ""New In Store"" section appears with the appropriate heading.
-
-Expected Result:
-    The heading should read ""New in store"", and the section should be visible.
-"
-"skipped","Sun Oct 05 21:14:30 UTC 2025","Sun Oct 05 21:14:32 UTC 2025","1950","tests.frontend.my_account","test_privacy_link","TestPrivacyPolicy","","","test_privacy_policy_link","
-Verify that the 'Privacy Policy' link on the My Account page navigates correctly.
-
-Steps:
-1. Go to the My Account page.
-2. Click on the 'Privacy Policy' link.
-3. Verify that the breadcrumbs contain the text 'Privacy Policy'.
-
-Notes:
-    This test is marked as expected to fail (xfail) because the Privacy Policy
-    link currently leads to a 404 page.
-"
-"passed","Sun Oct 05 21:14:20 UTC 2025","Sun Oct 05 21:14:23 UTC 2025","3020","tests.frontend.my_account","test_my_account_signed_in_neg","TestMyAccountSignedInNeg","","","test_change_password_neg[missing confirm password]","Verify validation errors appear when required fields are missing.
+"passed","Sun Oct 05 21:29:03 UTC 2025","Sun Oct 05 21:29:06 UTC 2025","2854","tests.frontend.my_account","test_my_account_signed_in_neg","TestMyAccountSignedInNeg","","","test_change_password_neg[missing name]","Verify validation errors appear when required fields are missing.
 
 This test covers negative password change scenarios, confirming
 that the process fails gracefully when specific fields are left blank.
@@ -1202,95 +1191,112 @@ Assertions:
 Raises:
     AssertionError: If the success message is displayed despite a missing field.
 "
-"passed","Sun Oct 05 21:12:52 UTC 2025","Sun Oct 05 21:12:54 UTC 2025","1898","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_home_page",""
-"passed","Sun Oct 05 21:13:44 UTC 2025","Sun Oct 05 21:13:49 UTC 2025","5361","tests.frontend.my_account","test_cart_persistence_after_logout","TestCartPersistenceAfterLogout","","","test_cart_persistence_after_logout","Verify that a registered user's cart persists after logging out and logging back in.
+"passed","Sun Oct 05 21:27:10 UTC 2025","Sun Oct 05 21:27:10 UTC 2025","18","tests.frontend.cart","test_cart_smoke","TestCartSmoke","","","test_verify_new_products_displayed","Verify that 'New In Store' products are displayed when the cart is empty.
 
-This test ensures that when a registered user adds an item to their shopping cart,
-logs out, and then logs back in, the item remains in their cart.
-It validates that the application correctly maintains the user's cart data
-across authenticated sessions.
-
-Args:
-    create_registered_user (dict): Fixture that creates and returns a registered
-        user's credentials (email and password).
+This test ensures that even when the user's cart is empty,
+the ""New In Store"" section appears with the appropriate heading.
 
 Expected Result:
-    The product added before logging out remains in the cart after logging back in.
+    The heading should read ""New in store"", and the section should be visible.
 "
-"passed","Sun Oct 05 21:13:38 UTC 2025","Sun Oct 05 21:13:39 UTC 2025","656","tests.frontend.home_page","test_search_products","TestSearchProduct","","","test_search_up_product[search for variable product]","Verifies product search results by product type.
-
-Args:
-    setup: Test fixture to initialize page objects.
-    product_type (str): Type of product to search ('simple', 'variable', 'invalid').
+"passed","Sun Oct 05 21:26:39 UTC 2025","Sun Oct 05 21:26:47 UTC 2025","8136","tests.frontend.cart","test_apply_coupon_fe","TestApplyCouponFE","","","test_apply_coupon_fe","Test applying a 50% off coupon to a single cart item.
 
 Assertions:
-    - Simple product: Navigates to PDP and matches product name.
-    - Variable product: Product is listed on the home page.
-    - Invalid product: Displays 'no products found' message.
+    - The cart contains exactly one product.
+    - The order total after applying the coupon matches the expected discounted value.
+
+Raises:
+    AssertionError: If the cart item count or order total does not match expectations.
 "
-"passed","Sun Oct 05 21:13:35 UTC 2025","Sun Oct 05 21:13:35 UTC 2025","37","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_heading_is_displayed","Verify that the main heading is correctly displayed on the homepage.
+"passed","Sun Oct 05 21:29:06 UTC 2025","Sun Oct 05 21:29:08 UTC 2025","2769","tests.frontend.my_account","test_my_account_signed_in_neg","TestMyAccountSignedInNeg","","","test_change_password_neg[missing current password]","Verify validation errors appear when required fields are missing.
+
+This test covers negative password change scenarios, confirming
+that the process fails gracefully when specific fields are left blank.
+
+Args:
+    missing_field (str): Specifies which field to leave blank. Accepted values:
+        - ""name""
+        - ""current_password""
+        - ""confirm_password""
+
+Assertions:
+    - Verifies that the success message is not displayed.
+    - Ensures the correct error message appears when a field is missing.
+
+Raises:
+    AssertionError: If the success message is displayed despite a missing field.
+"
+"passed","Sun Oct 05 21:28:35 UTC 2025","Sun Oct 05 21:28:40 UTC 2025","4576","tests.frontend.my_account","test_lost_password","TestForgotPassword","","","test_lost_password_link_registered_email","Verify 'Lost your password?' link for registered email.
+
+Steps:
+    1. Log out of registered user session.
+    2. Click the lost password link.
+    3. Input the registered email.
+    4. Verify password reset confirmation is displayed.
+"
+"passed","Sun Oct 05 21:29:22 UTC 2025","Sun Oct 05 21:29:22 UTC 2025","303","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid email password]","Verify invalid registration prevents sign-in and displays errors.
+
+Args:
+    email (str): The email address to use for registration.
+    password (str): The password to use for registration.
+    expected_error (str or None): Expected error message, or None if no error.
+
+Raises:
+    AssertionError: If registration behavior does not match expected results.
+"
+"passed","Sun Oct 05 21:28:48 UTC 2025","Sun Oct 05 21:28:48 UTC 2025","11","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_side_navigation","Verify the side navigation menu is visible for signed-in users.
+
+Ensures that after login, the side navigation panel is present, providing access
+to account-related sections like Orders, Downloads, and Account Details.
+
+Args:
+    create_registered_user (dict): Fixture providing registered user credentials.
+"
+"passed","Sun Oct 05 21:28:25 UTC 2025","Sun Oct 05 21:28:27 UTC 2025","2246","tests.frontend.my_account","test_login_negative","TestLoginNegative","","","test_login_none_existing_user",""
+"passed","Sun Oct 05 21:28:46 UTC 2025","Sun Oct 05 21:28:48 UTC 2025","1318","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_verify_my_acct_header","Verify that the My Account page heading is displayed correctly.
+
+This test ensures that when navigating to the My Account page,
+the correct header text ('My account') is shown, indicating
+that the user has successfully reached the My Account section.
+
+"
+"passed","Sun Oct 05 21:27:13 UTC 2025","Sun Oct 05 21:27:15 UTC 2025","1843","tests.frontend.components","test_free_shipping_banner","TestFreeShippingBanner","","","test_verify_free_shipping_banner_displayed_in_cart_page",""
+"passed","Sun Oct 05 21:28:01 UTC 2025","Sun Oct 05 21:28:01 UTC 2025","153","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_product_images_displayed","Verify that all product images are visible on the homepage.
 
 Asserts:
-    The displayed heading text matches the expected heading ('Shop').
+    Each product image element is displayed in the UI.
 "
-"passed","Sun Oct 05 21:13:35 UTC 2025","Sun Oct 05 21:13:35 UTC 2025","92","tests.frontend.home_page","test_home_page_smoke","TestHomePageSmoke","","","test_verify_header_menu_is_displayed","Verify that all header menu items are visible on the homepage."
-"passed","Sun Oct 05 21:14:32 UTC 2025","Sun Oct 05 21:14:35 UTC 2025","2624","tests.frontend.my_account","test_register_new_user","TestRegisterNewUserSmoke","","","test_register_valid_new_user","
-Test to verify a valid user can register to the site.
-It generates a random email and password, then registers the user.
-:return:
-"
-"passed","Sun Oct 05 21:13:39 UTC 2025","Sun Oct 05 21:13:39 UTC 2025","665","tests.frontend.home_page","test_search_products","TestSearchProduct","","","test_search_up_product[search for nonexisting product]","Verifies product search results by product type.
+"passed","Sun Oct 05 21:29:39 UTC 2025","Sun Oct 05 21:29:39 UTC 2025","58","tests.frontend.product_description_page","test_pdp_variable_product","TestProductDescriptionPageVariableProduct","","","test_verify_alternate_images_variable_prod","Verify that all alternate product images on the frontend match the API response.
+
+This test retrieves all alternate product image URLs displayed on the frontend
+and compares them to the image URLs returned by the WooCommerce API.
+
+The comparison ignores the order of images but requires exact URL matches.
 
 Args:
-    setup: Test fixture to initialize page objects.
-    product_type (str): Type of product to search ('simple', 'variable', 'invalid').
-
-Assertions:
-    - Simple product: Navigates to PDP and matches product name.
-    - Variable product: Product is listed on the home page.
-    - Invalid product: Displays 'no products found' message.
-"
-"passed","Sun Oct 05 21:14:38 UTC 2025","Sun Oct 05 21:14:38 UTC 2025","322","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid email password]","Verify invalid registration prevents sign-in and displays errors.
-
-Args:
-    email (str): The email address to use for registration.
-    password (str): The password to use for registration.
-    expected_error (str or None): Expected error message, or None if no error.
+    setup: A pytest fixture that initializes the test environment and page objects.
 
 Raises:
-    AssertionError: If registration behavior does not match expected results.
+    AssertionError: If the displayed alternate image URLs do not match the API URLs.
 "
-"passed","Sun Oct 05 21:14:37 UTC 2025","Sun Oct 05 21:14:38 UTC 2025","318","tests.frontend.my_account","test_register_user_neg","TestRegisterUserNeg","","","test_register_user_invalid[invalid password]","Verify invalid registration prevents sign-in and displays errors.
+"passed","Sun Oct 05 21:26:58 UTC 2025","Sun Oct 05 21:27:06 UTC 2025","8131","tests.frontend.cart","test_apply_coupon_neg_fe","TestApplyCouponNegFE","","","test_apply_coupon_neg_fe[add expired coupon]","Apply a coupon and verify order total or error message.
 
 Args:
-    email (str): The email address to use for registration.
-    password (str): The password to use for registration.
-    expected_error (str or None): Expected error message, or None if no error.
-
-Raises:
-    AssertionError: If registration behavior does not match expected results.
+    coupon_type (str): Type of coupon to apply (e.g., ZERO_OFF, EXPIRED_COUPON)
 "
-"passed","Sun Oct 05 21:14:11 UTC 2025","Sun Oct 05 21:14:17 UTC 2025","6346","tests.frontend.my_account","test_my_account_signed_in","TestMyAccountSignedIn","","","test_change_password","Verify that a signed-in user can successfully change their password.
-
-This test navigates to the Account Details page, updates first and last
-names, changes the account password, and validates that a success message
-appears. It also confirms that the user can log back in using the new password.
-
-Expected Result:
-    The system displays a success message confirming the password change,
-    and login with the new password is successful.
+"passed","Sun Oct 05 21:29:45 UTC 2025","Sun Oct 05 21:29:45 UTC 2025","23","tests.frontend.product_description_page","test_sale_product","TestOnSaleProduct","","","test_verify_sale_sign_displayed","Verify sale sign and original price on product page.
+Checks that the sale badge is visible and the original price is crossed out.
 "
-"passed","Sun Oct 05 21:13:41 UTC 2025","Sun Oct 05 21:13:49 UTC 2025","7939","","","","","","test_cart_persistence_after_logout","Verify that a registered user's cart persists after logging out and logging back in.
-
-This test ensures that when a registered user adds an item to their shopping cart,
-logs out, and then logs back in, the item remains in their cart.
-It validates that the application correctly maintains the user's cart data
-across authenticated sessions.
+"passed","Sun Oct 05 21:29:58 UTC 2025","Sun Oct 05 21:30:05 UTC 2025","7319","tests.frontend.product_description_page","test_write_product_review","TestWriteProductReview","","","test_write_product_review[create review as registered user]","Submit a product review.
 
 Args:
-    create_registered_user (dict): Fixture that creates and returns a registered
-        user's credentials (email and password).
+    user_type (str): Either 'guest_user' or 'registered_user'.
 
-Expected Result:
-    The product added before logging out remains in the cart after logging back in.
+Flow:
+    - Register a new account if testing as registered user.
+    - Navigate to a product page.
+    - Open the reviews tab.
+    - Select a star rating and write a review.
+    - If guest user, provide name and email.
+    - Submit and verify success message.
 "
