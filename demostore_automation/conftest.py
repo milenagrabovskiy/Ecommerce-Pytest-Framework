@@ -1,6 +1,8 @@
 
 import pytest
 import os
+import pytest_html
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChOptions
 from selenium.webdriver.firefox.options import Options as FFOptions
@@ -151,3 +153,44 @@ def create_registered_user(request):
     my_acct_si.verify_user_is_signed_in()
 
     return {'email': email, 'password': password}
+
+
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_runtest_makereport(item, call):
+#         outcome = yield
+#         report = outcome.get_result()
+#         extras = getattr(report, "extras", [])
+#         if report.when == "call":
+#             # always add url to report
+#             extras.append(pytest_html.extras.url("http://www.example.com/"))
+#             xfail = hasattr(report, "wasxfail")
+#             if (report.skipped and xfail) or (report.failed and not xfail):
+#                 is_frontend = True if 'init_driver' in item.fixturenames else False
+#                 if is_frontend:
+#                     results_dir = os.environ.get('RESULTS_DIR')
+#                     screenshot_path = os.path.join(results_dir, item.name + '.png')
+#                     driver_fixture = item.funcargs['request']
+#                     driver = driver_fixture.cls.driver.save_screenshot(screenshot_path)
+#                     if not results_dir:
+#                         raise Exception("'RESULTS_DIR env variable must be set")
+#                 # only add additional html on failure
+#                 extras.append(pytest_html.extras.image(screenshot_path))
+#             report.extras = extras
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+        is_frontend = 'init_driver' in item.fixturenames
+        if is_frontend:
+            results_dir = os.environ.get("RESULTS_DIR", os.path.join(tempfile.gettempdir(), "screenshots"))
+            os.makedirs(results_dir, exist_ok=True)
+
+            screenshot_path = os.path.join(results_dir, f"{item.name}.png")
+            driver = item.instance.driver
+            driver.save_screenshot(screenshot_path)
+
+            if hasattr(report, "extras"):
+                import pytest_html
+                report.extras.append(pytest_html.extras.image(screenshot_path))
