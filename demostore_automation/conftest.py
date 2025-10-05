@@ -177,7 +177,7 @@ def create_registered_user(request):
 #                 extras.append(pytest_html.extras.image(screenshot_path))
 #             report.extras = extras
 @pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, _call):
+def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
 
