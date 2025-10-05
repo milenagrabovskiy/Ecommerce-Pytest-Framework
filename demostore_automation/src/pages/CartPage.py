@@ -17,6 +17,9 @@ class CartPage(CartPageLocators):
         cart_url = base_url + self.endpoint
         self.driver.get(cart_url)
 
+    def get_cart_header(self):
+        return self.sl.wait_and_get_text(self.CART_HEADER)
+
     def get_all_product_names_in_cart(self):
 
         product_name_elements = self.sl.wait_and_get_elements(self.PRODUCT_NAMES_IN_CART)
