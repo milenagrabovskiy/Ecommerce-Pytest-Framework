@@ -12,11 +12,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git credentialsId: 'github repo access 1', url: 'https://github.com/milenagrabovskiy/Ecommerce-Pytest-Framework.git'
-            }
-        }
 
         stage('Setup Python Environment') {
             steps {
