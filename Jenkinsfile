@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'github repo access 1', url: 'https://github.com/milenagrabovskiy/WooCommerce-Helpers.git'
+                git credentialsId: 'github repo access 1', url: 'https://github.com/milenagrabovskiy/Ecommerce-Pytest-Framework.git'
             }
         }
 
