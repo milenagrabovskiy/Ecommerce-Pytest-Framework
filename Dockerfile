@@ -1,7 +1,8 @@
 FROM python:3.11
 
-RUN ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
-RUN echo "America/Los_Angeles" > /etc/timezone
+# EST timezone
+RUN ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+RUN echo "America/New_York" > /etc/timezone
 
 RUN mkdir /automation
 
@@ -17,6 +18,6 @@ RUN python3 -m pip install -r requirements.txt
 COPY . .
 
 WORKDIR /automation/demostore_automation
-ENTRYPOINT ["python3", "-m", "pytest", "tests"]
+ENTRYPOINT ["python3", "-m", "pytest", "tests", "tests/backend"]
 
 #CMD []
