@@ -1,2 +1,0 @@
-2025-10-09 07:26:31 INFO Starting test: 'test_verify_product_name_displayed_variable_product'
-2025-10-09 07:26:31 INFO Test 'test_verify_product_name_displayed_variable_product' successfully passed
