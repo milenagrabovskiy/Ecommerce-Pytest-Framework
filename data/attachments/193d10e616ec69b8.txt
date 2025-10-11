@@ -1,3 +1,0 @@
-2025-10-10 07:24:00 INFO Starting remote Chrome
-2025-10-10 07:24:13 INFO Created order with order number: 44333
-2025-10-10 07:24:13 INFO Successfully deleted order with order_id: 44333
