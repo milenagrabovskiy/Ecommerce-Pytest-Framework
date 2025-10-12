@@ -1,2 +1,0 @@
-2025-10-11 07:21:02 INFO Created order with order number: 44495
-2025-10-11 07:21:03 INFO Successfully deleted order with order_id: 44495
