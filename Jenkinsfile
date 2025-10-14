@@ -2,21 +2,24 @@ pipeline {
     agent any
 
     environment {
-        DB_PORT        = '3308'
-        DB_HOST        = 'dev.bootcamp.store.supersqa.com'
-        DB_DATABASE    = 'demostore'
+        DB_PORT         = '3308'
+        DB_HOST         = 'dev.bootcamp.store.supersqa.com'
+        DB_DATABASE     = 'demostore'
         DB_TABLE_PREFIX = 'wp_'
-        BASE_URL       = 'http://dev.bootcamp.store.supersqa.com'
-        BROWSER        = 'chrome'
+        BASE_URL        = 'http://dev.bootcamp.store.supersqa.com'
+        BROWSER         = 'chrome'
 
-        WOO_KEY        = credentials('WOO_KEY')
-        WOO_SECRET     = credentials('WOO_SECRET')
-        DB_USER        = credentials('DB_USER')
-        DB_PASSWORD    = credentials('DB_PASSWORD')
+        WOO_KEY         = credentials('WOO_KEY')
+        WOO_SECRET      = credentials('WOO_SECRET')
+        DB_USER         = credentials('DB_USER')
+        DB_PASSWORD     = credentials('DB_PASSWORD')
     }
 
     stages {
 
+        // -------------------
+        // Setup Python Env
+        // -------------------
         stage('Setup Python Environment') {
             steps {
                 sh '''
@@ -37,7 +40,7 @@ pipeline {
                         set -xe
                         . my_venv/bin/activate
                         set -a
-                        source variables_local.env
+                        . variables_local.env
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         cd demostore_automation
@@ -46,15 +49,13 @@ pipeline {
                 }
             }
             post {
-                always {
-                    junit 'output/backend_smoke.xml'
-                }
+                always { junit 'output/backend_smoke.xml' }
             }
         }
 
-        // -----------------------
+        // -------------------
         // Backend Regression Tests
-        // -----------------------
+        // -------------------
         stage('Backend Regression Tests') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
@@ -62,7 +63,7 @@ pipeline {
                         set -xe
                         . my_venv/bin/activate
                         set -a
-                        source variables_local.env
+                        . variables_local.env
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         cd demostore_automation
@@ -71,9 +72,7 @@ pipeline {
                 }
             }
             post {
-                always {
-                    junit 'output/backend_regression.xml'
-                }
+                always { junit 'output/backend_regression.xml' }
             }
         }
 
@@ -87,7 +86,7 @@ pipeline {
                         set -xe
                         . my_venv/bin/activate
                         set -a
-                        source variables_local.env
+                        . variables_local.env
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlessfirefox
@@ -97,9 +96,7 @@ pipeline {
                 }
             }
             post {
-                always {
-                    junit 'output/frontend_smoke_firefox.xml'
-                }
+                always { junit 'output/frontend_smoke_firefox.xml' }
             }
         }
 
@@ -113,7 +110,7 @@ pipeline {
                         set -xe
                         . my_venv/bin/activate
                         set -a
-                        source variables_local.env
+                        . variables_local.env
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlesschrome
@@ -123,9 +120,7 @@ pipeline {
                 }
             }
             post {
-                always {
-                    junit 'output/frontend_smoke_chrome.xml'
-                }
+                always { junit 'output/frontend_smoke_chrome.xml' }
             }
         }
 
@@ -139,7 +134,7 @@ pipeline {
                         set -xe
                         . my_venv/bin/activate
                         set -a
-                        source variables_local.env
+                        . variables_local.env
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlessfirefox
@@ -149,9 +144,7 @@ pipeline {
                 }
             }
             post {
-                always {
-                    junit 'output/frontend_regression_firefox.xml'
-                }
+                always { junit 'output/frontend_regression_firefox.xml' }
             }
         }
 
@@ -165,7 +158,7 @@ pipeline {
                         set -xe
                         . my_venv/bin/activate
                         set -a
-                        source variables_local.env
+                        . variables_local.env
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlesschrome
@@ -175,9 +168,7 @@ pipeline {
                 }
             }
             post {
-                always {
-                    junit 'output/frontend_regression_chrome.xml'
-                }
+                always { junit 'output/frontend_regression_chrome.xml' }
             }
         }
     }
