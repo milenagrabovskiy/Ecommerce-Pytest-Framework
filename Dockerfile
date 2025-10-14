@@ -1,22 +1,24 @@
 FROM python:3.11
 
-RUN ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
-RUN echo "America/Los_Angeles" > /etc/timezone
+# EST timezone
+RUN ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+RUN echo "America/New_York" > /etc/timezone
 
-RUN mkdir /automation
+# Create working directory inside container
+RUN mkdir /demostore
+WORKDIR /demostore
 
-# Option 1
-#COPY requirements.txt /automation
-#RUN python3 -m pip install -r /automation/requirements.txt
-
-# Option 2
-WORKDIR /automation
+# Copy requirements and install dependencies
 COPY requirements.txt .
 RUN python3 -m pip install -r requirements.txt
 
+# Copy the entire project
 COPY . .
 
-WORKDIR /automation/demostore_automation
-ENTRYPOINT ["python3", "-m", "pytest", "tests"]
+# Set PYTHONPATH to the project root so Python can find demostore_automation
+ENV PYTHONPATH=/demostore
 
-#CMD []
+# Run pytest from project root
+WORKDIR /demostore
+ENTRYPOINT ["python3", "-m", "pytest", "demostore_automation/tests/backend"]
+

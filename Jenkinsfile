@@ -2,6 +2,10 @@ pipeline {
     agent any
 
     environment {
+        DB_PORT = '3308'
+        DB_HOST = 'dev.bootcamp.store.supersqa.com'
+        DB_DATABASE = 'demostore'
+        DB_TABLE_PREFIX = 'wp_'
         BASE_URL = 'http://dev.bootcamp.store.supersqa.com'
         BROWSER = 'chrome'
 
