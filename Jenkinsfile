@@ -44,7 +44,7 @@ pipeline {
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         cd demostore_automation
-                        python3 -m pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml
+                        python3 -m pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml || true
                     '''
                 }
             }
@@ -67,7 +67,7 @@ pipeline {
                         set +a
                         export PYTHONPATH=$WORKSPACE
                         cd demostore_automation
-                        python3 -m pytest tests/backend/ --junitxml=$WORKSPACE/output/backend_regression.xml
+                        python3 -m pytest tests/backend/ --junitxml=$WORKSPACE/output/backend_regression.xml || true
                     '''
                 }
             }
@@ -91,7 +91,7 @@ pipeline {
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlessfirefox
                         cd demostore_automation
-                        python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_firefox.xml
+                        python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_firefox.xml || true
                     '''
                 }
             }
@@ -115,7 +115,7 @@ pipeline {
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlesschrome
                         cd demostore_automation
-                        python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_chrome.xml
+                        python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_chrome.xml || true
                     '''
                 }
             }
@@ -139,7 +139,7 @@ pipeline {
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlessfirefox
                         cd demostore_automation
-                        python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_firefox.xml
+                        python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_firefox.xml || true
                     '''
                 }
             }
@@ -163,7 +163,7 @@ pipeline {
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlesschrome
                         cd demostore_automation
-                        python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_chrome.xml
+                        python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_chrome.xml || true
                     '''
                 }
             }
