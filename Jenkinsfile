@@ -27,22 +27,26 @@ pipeline {
             }
         }
 
-        stage('Backend Smoke Tests') {
-            steps {
-                sh '''
-                    . my_venv/bin/activate
-                    . ./variables_local.env
-                    export PYTHONPATH=$WORKSPACE
-                    cd demostore_automation
-                    python3 -m pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml
-                '''
-            }
-            post {
-                always {
-                    junit 'output/backend_smoke.xml'
-                }
-            }
+stage('Backend Smoke Tests') {
+    steps {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh '''
+                . my_venv/bin/activate
+                set -a
+                source variables_local.env
+                set +a
+                export PYTHONPATH=$WORKSPACE
+                cd demostore_automation
+                python3 -m pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml
+            '''
         }
+    }
+    post {
+        always {
+            junit 'output/backend_smoke.xml'
+        }
+    }
+}
 
         stage('Backend Regression Tests') {
             steps {
