@@ -18,11 +18,12 @@ pipeline {
     stages {
 
         // -------------------
-        // Setup Python Env
+        // Setup Python Environment
         // -------------------
         stage('Setup Python Environment') {
             steps {
-                sh '''
+                sh '''#!/bin/bash
+                    set -xe
                     python3 -m venv my_venv
                     . my_venv/bin/activate
                     pip install -r requirements.txt
@@ -36,7 +37,7 @@ pipeline {
         stage('Backend Smoke Tests') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                    sh '''
+                    sh '''#!/bin/bash
                         set -xe
                         . my_venv/bin/activate
                         set -a
@@ -48,9 +49,7 @@ pipeline {
                     '''
                 }
             }
-            post {
-                always { junit 'output/backend_smoke.xml' }
-            }
+            post { always { junit 'output/backend_smoke.xml' } }
         }
 
         // -------------------
@@ -59,7 +58,7 @@ pipeline {
         stage('Backend Regression Tests') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                    sh '''
+                    sh '''#!/bin/bash
                         set -xe
                         . my_venv/bin/activate
                         set -a
@@ -71,9 +70,7 @@ pipeline {
                     '''
                 }
             }
-            post {
-                always { junit 'output/backend_regression.xml' }
-            }
+            post { always { junit 'output/backend_regression.xml' } }
         }
 
         // -------------------
@@ -82,7 +79,7 @@ pipeline {
         stage('Frontend Smoke Firefox') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                    sh '''
+                    sh '''#!/bin/bash
                         set -xe
                         . my_venv/bin/activate
                         set -a
@@ -95,9 +92,7 @@ pipeline {
                     '''
                 }
             }
-            post {
-                always { junit 'output/frontend_smoke_firefox.xml' }
-            }
+            post { always { junit 'output/frontend_smoke_firefox.xml' } }
         }
 
         // -------------------
@@ -106,7 +101,7 @@ pipeline {
         stage('Frontend Smoke Chrome') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                    sh '''
+                    sh '''#!/bin/bash
                         set -xe
                         . my_venv/bin/activate
                         set -a
@@ -119,9 +114,7 @@ pipeline {
                     '''
                 }
             }
-            post {
-                always { junit 'output/frontend_smoke_chrome.xml' }
-            }
+            post { always { junit 'output/frontend_smoke_chrome.xml' } }
         }
 
         // -------------------
@@ -130,7 +123,7 @@ pipeline {
         stage('Frontend Regression Firefox') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                    sh '''
+                    sh '''#!/bin/bash
                         set -xe
                         . my_venv/bin/activate
                         set -a
@@ -143,9 +136,7 @@ pipeline {
                     '''
                 }
             }
-            post {
-                always { junit 'output/frontend_regression_firefox.xml' }
-            }
+            post { always { junit 'output/frontend_regression_firefox.xml' } }
         }
 
         // -------------------
@@ -154,7 +145,7 @@ pipeline {
         stage('Frontend Regression Chrome') {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                    sh '''
+                    sh '''#!/bin/bash
                         set -xe
                         . my_venv/bin/activate
                         set -a
@@ -167,9 +158,7 @@ pipeline {
                     '''
                 }
             }
-            post {
-                always { junit 'output/frontend_regression_chrome.xml' }
-            }
+            post { always { junit 'output/frontend_regression_chrome.xml' } }
         }
     }
 }
