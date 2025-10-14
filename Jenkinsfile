@@ -40,9 +40,6 @@ pipeline {
                     sh '''#!/bin/bash
                         set -xe
                         source my_venv/bin/activate
-                        set -a
-                        source variables_local.env
-                        set +a
                         export PYTHONPATH=$WORKSPACE
                         cd demostore_automation
                         pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml || true
@@ -61,9 +58,6 @@ pipeline {
                     sh '''#!/bin/bash
                         set -xe
                         source my_venv/bin/activate
-                        set -a
-                        source variables_local.env
-                        set +a
                         export PYTHONPATH=$WORKSPACE
                         cd demostore_automation
                         pytest tests/backend/ --junitxml=$WORKSPACE/output/backend_regression.xml || true
@@ -82,9 +76,6 @@ pipeline {
                     sh '''#!/bin/bash
                         set -xe
                         source my_venv/bin/activate
-                        set -a
-                        source variables_local.env
-                        set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlessfirefox
                         cd demostore_automation
@@ -104,9 +95,6 @@ pipeline {
                     sh '''#!/bin/bash
                         set -xe
                         source my_venv/bin/activate
-                        set -a
-                        source variables_local.env
-                        set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlesschrome
                         cd demostore_automation
@@ -126,9 +114,6 @@ pipeline {
                     sh '''#!/bin/bash
                         set -xe
                         source my_venv/bin/activate
-                        set -a
-                        source variables_local.env
-                        set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlessfirefox
                         cd demostore_automation
@@ -148,9 +133,6 @@ pipeline {
                     sh '''#!/bin/bash
                         set -xe
                         source my_venv/bin/activate
-                        set -a
-                        source variables_local.env
-                        set +a
                         export PYTHONPATH=$WORKSPACE
                         export BROWSER=headlesschrome
                         cd demostore_automation
