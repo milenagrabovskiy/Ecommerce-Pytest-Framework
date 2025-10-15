@@ -27,9 +27,10 @@ pipeline {
             }
         }
 
-        stage('Run Tests in Parallel') {
+        stage('Run All Tests in Parallel') {
             parallel {
-                stage('Backend Smoke') {
+
+                'Backend Smoke': {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                             sh '''
@@ -38,15 +39,15 @@ pipeline {
                                 source variables_local.env
                                 set +a
                                 export PYTHONPATH=$WORKSPACE
-                                cd demostore_automation
-                                python3 -m pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml
+                                cd demostore_automation/tests/backend
+                                python3 -m pytest -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml -v
                             '''
                         }
                     }
                     post { always { junit 'output/backend_smoke.xml' } }
                 }
 
-                stage('Backend Regression') {
+                'Backend Regression': {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                             sh '''
@@ -61,7 +62,7 @@ pipeline {
                     post { always { junit 'output/backend_regression.xml' } }
                 }
 
-                stage('Frontend Smoke Firefox') {
+                'Frontend Smoke Firefox': {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                             sh '''
@@ -77,7 +78,7 @@ pipeline {
                     post { always { junit 'output/frontend_smoke_firefox.xml' } }
                 }
 
-                stage('Frontend Smoke Chrome') {
+                'Frontend Smoke Chrome': {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                             sh '''
@@ -93,7 +94,7 @@ pipeline {
                     post { always { junit 'output/frontend_smoke_chrome.xml' } }
                 }
 
-                stage('Frontend Regression Firefox') {
+                'Frontend Regression Firefox': {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                             sh '''
@@ -109,7 +110,7 @@ pipeline {
                     post { always { junit 'output/frontend_regression_firefox.xml' } }
                 }
 
-                stage('Frontend Regression Chrome') {
+                'Frontend Regression Chrome': {
                     steps {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                             sh '''
