@@ -27,106 +27,102 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Tests in Parallel') {
             parallel {
-                stage('Backend Tests') {
-                    parallel {
-                        stage('Backend Smoke') {
-                            steps {
-                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                                    sh '''
-                                        . my_venv/bin/activate
-                                        set -a
-                                        source variables_local.env
-                                        set +a
-                                        export PYTHONPATH=$WORKSPACE
-                                        cd demostore_automation
-                                        python3 -m pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml
-                                    '''
-                                }
-                            }
-                            post { always { junit 'output/backend_smoke.xml' } }
-                        }
-                        stage('Backend Regression') {
-                            steps {
-                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                                    sh '''
-                                        . my_venv/bin/activate
-                                        . ./variables_local.env
-                                        export PYTHONPATH=$WORKSPACE
-                                        cd demostore_automation
-                                        python3 -m pytest tests/backend/ --junitxml=$WORKSPACE/output/backend_regression.xml
-                                    '''
-                                }
-                            }
-                            post { always { junit 'output/backend_regression.xml' } }
+                stage('Backend Smoke') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            sh '''
+                                . my_venv/bin/activate
+                                set -a
+                                source variables_local.env
+                                set +a
+                                export PYTHONPATH=$WORKSPACE
+                                cd demostore_automation
+                                python3 -m pytest tests/backend/ -m smoke --junitxml=$WORKSPACE/output/backend_smoke.xml
+                            '''
                         }
                     }
+                    post { always { junit 'output/backend_smoke.xml' } }
                 }
 
-                stage('Frontend Tests') {
-                    parallel {
-                        stage('Frontend Smoke Firefox') {
-                            steps {
-                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                                    sh '''
-                                        . my_venv/bin/activate
-                                        . ./variables_local.env
-                                        export PYTHONPATH=$WORKSPACE
-                                        export BROWSER=headlessfirefox
-                                        cd demostore_automation
-                                        python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_firefox.xml
-                                    '''
-                                }
-                            }
-                            post { always { junit 'output/frontend_smoke_firefox.xml' } }
-                        }
-                        stage('Frontend Smoke Chrome') {
-                            steps {
-                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                                    sh '''
-                                        . my_venv/bin/activate
-                                        . ./variables_local.env
-                                        export PYTHONPATH=$WORKSPACE
-                                        export BROWSER=headlesschrome
-                                        cd demostore_automation
-                                        python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_chrome.xml
-                                    '''
-                                }
-                            }
-                            post { always { junit 'output/frontend_smoke_chrome.xml' } }
-                        }
-                        stage('Frontend Regression Firefox') {
-                            steps {
-                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                                    sh '''
-                                        . my_venv/bin/activate
-                                        . ./variables_local.env
-                                        export PYTHONPATH=$WORKSPACE
-                                        export BROWSER=headlessfirefox
-                                        cd demostore_automation
-                                        python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_firefox.xml
-                                    '''
-                                }
-                            }
-                            post { always { junit 'output/frontend_regression_firefox.xml' } }
-                        }
-                        stage('Frontend Regression Chrome') {
-                            steps {
-                                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                                    sh '''
-                                        . my_venv/bin/activate
-                                        . ./variables_local.env
-                                        export PYTHONPATH=$WORKSPACE
-                                        export BROWSER=headlesschrome
-                                        cd demostore_automation
-                                        python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_chrome.xml
-                                    '''
-                                }
-                            }
-                            post { always { junit 'output/frontend_regression_chrome.xml' } }
+                stage('Backend Regression') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            sh '''
+                                . my_venv/bin/activate
+                                . ./variables_local.env
+                                export PYTHONPATH=$WORKSPACE
+                                cd demostore_automation
+                                python3 -m pytest tests/backend/ --junitxml=$WORKSPACE/output/backend_regression.xml
+                            '''
                         }
                     }
+                    post { always { junit 'output/backend_regression.xml' } }
+                }
+
+                stage('Frontend Smoke Firefox') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            sh '''
+                                . my_venv/bin/activate
+                                . ./variables_local.env
+                                export PYTHONPATH=$WORKSPACE
+                                export BROWSER=headlessfirefox
+                                cd demostore_automation
+                                python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_firefox.xml
+                            '''
+                        }
+                    }
+                    post { always { junit 'output/frontend_smoke_firefox.xml' } }
+                }
+
+                stage('Frontend Smoke Chrome') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            sh '''
+                                . my_venv/bin/activate
+                                . ./variables_local.env
+                                export PYTHONPATH=$WORKSPACE
+                                export BROWSER=headlesschrome
+                                cd demostore_automation
+                                python3 -m pytest tests/frontend/ -m smoke --junitxml=$WORKSPACE/output/frontend_smoke_chrome.xml
+                            '''
+                        }
+                    }
+                    post { always { junit 'output/frontend_smoke_chrome.xml' } }
+                }
+
+                stage('Frontend Regression Firefox') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            sh '''
+                                . my_venv/bin/activate
+                                . ./variables_local.env
+                                export PYTHONPATH=$WORKSPACE
+                                export BROWSER=headlessfirefox
+                                cd demostore_automation
+                                python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_firefox.xml
+                            '''
+                        }
+                    }
+                    post { always { junit 'output/frontend_regression_firefox.xml' } }
+                }
+
+                stage('Frontend Regression Chrome') {
+                    steps {
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                            sh '''
+                                . my_venv/bin/activate
+                                . ./variables_local.env
+                                export PYTHONPATH=$WORKSPACE
+                                export BROWSER=headlesschrome
+                                cd demostore_automation
+                                python3 -m pytest tests/frontend/ --junitxml=$WORKSPACE/output/frontend_regression_chrome.xml
+                            '''
+                        }
+                    }
+                    post { always { junit 'output/frontend_regression_chrome.xml' } }
                 }
             }
         }
