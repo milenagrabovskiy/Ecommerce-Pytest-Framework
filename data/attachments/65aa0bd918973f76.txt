@@ -1,4 +1,0 @@
-2025-10-14 18:51:57 INFO Successfully found product with id: 46623 via api GET call
-2025-10-14 18:51:57 INFO Connecting to database: dev.bootcamp.store.supersqa.com
-2025-10-14 18:51:57 INFO Successfully found product with id: 46623 in DB
-2025-10-14 18:51:58 INFO Successfully deleted products with ids: [46623]
