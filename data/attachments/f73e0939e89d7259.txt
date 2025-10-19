@@ -1,2 +1,0 @@
-2025-10-18 07:21:50 INFO Created order with order number: 48270
-2025-10-18 07:21:52 INFO Successfully deleted order with order_id: 48270

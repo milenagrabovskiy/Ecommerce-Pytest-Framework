@@ -1,0 +1,2 @@
+2025-10-19 07:19:54 INFO Connecting to database: dev.bootcamp.store.supersqa.com
+2025-10-19 07:19:54 INFO Found 401 random users from db.
