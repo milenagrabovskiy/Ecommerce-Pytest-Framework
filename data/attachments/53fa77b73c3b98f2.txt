@@ -1,0 +1,2 @@
+2025-10-27 07:24:14 INFO Running test: 'test_create_coupon_invalid_discount_type'
+2025-10-27 07:24:14 INFO Deleted coupon ids: [49804, 49805, 49806, 49807]
