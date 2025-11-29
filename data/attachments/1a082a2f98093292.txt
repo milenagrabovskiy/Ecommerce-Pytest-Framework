@@ -1,2 +1,0 @@
-2025-11-28 07:27:06 INFO Starting remote Chrome
-2025-11-28 07:27:09 INFO Successfully ran test for simple product, Album
