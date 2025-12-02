@@ -1,0 +1,1 @@
+2025-12-02 07:29:00 INFO Successfully ran test for variable product, Hoodie
