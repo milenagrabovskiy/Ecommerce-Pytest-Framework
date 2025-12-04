@@ -1,0 +1,1 @@
+2025-12-04 07:27:08 INFO Running test: 'test_create_coupon_with_valid_discount_types' for 'fixed_product'
