@@ -1,0 +1,1 @@
+2025-12-14 07:24:39 INFO Connecting to database: dev.bootcamp.store.supersqa.com
