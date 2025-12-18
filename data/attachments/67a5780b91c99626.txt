@@ -1,1 +1,0 @@
-2025-12-17 07:29:42 INFO Successfully ran test for simple product, Album
