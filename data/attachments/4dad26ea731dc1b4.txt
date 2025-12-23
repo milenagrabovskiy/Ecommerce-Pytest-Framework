@@ -1,0 +1,1 @@
+2025-12-23 07:32:23 INFO Successfully passed negative test case with 0 or negative quantity.
