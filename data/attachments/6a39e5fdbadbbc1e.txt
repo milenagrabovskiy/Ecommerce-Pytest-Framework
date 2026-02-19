@@ -1,2 +1,0 @@
-2026-02-18 07:57:16 INFO Starting remote Chrome
-2026-02-18 07:57:18 INFO Successfully passed negative test case with 0 or negative quantity.
