@@ -1,0 +1,1 @@
+2026-06-01 12:42:00 INFO Successfully deleted products with ids: []
