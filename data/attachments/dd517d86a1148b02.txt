@@ -1,0 +1,2 @@
+2026-06-08 12:02:30 INFO Getting random products from db. qty= 3
+2026-06-08 12:02:30 INFO Connecting to database: dev.bootcamp.store.supersqa.com
